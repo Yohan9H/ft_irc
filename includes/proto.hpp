@@ -18,13 +18,13 @@ class Channel;
 class Client;
 
 typedef struct s_perm
-		{
-			bool	i; // INVITE
-			bool	t; // TOPIC
-			bool	k; // MDP
-			bool	o; // OPERATOR
-			bool	l; // LIMIT USER
-		} t_perm;
+{
+	bool	i; // INVITE
+	bool	t; // TOPIC
+	bool	k; // MDP
+	bool	o; // OPERATOR
+	bool	l; // LIMIT USER
+} t_perm;
 
 Channel 	&createChannel(Server &server, std::string name_channel, Client &first_membre);
 

@@ -10,8 +10,14 @@ struct Command {
     std::string command;
     std::vector<std::string> params;
     std::string trailing; 
-
 };
+
+typedef struct s_timeServ
+{
+	int	day;
+	int	month;
+	int	year;
+} t_timeServ;
 
 void 	handlePrivmsg(const Command &cmd);
 Command parseCommand(Server &serv, Client &cli, const std::string &input);

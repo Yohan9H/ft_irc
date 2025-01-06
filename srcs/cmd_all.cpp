@@ -196,9 +196,9 @@ bool	User(Server &serv, Client &client, std::string username)
 
 	client.setName(username);
 
-	msg = ":" + std::string(NAME_SERV) + " 001 " + client.getNick() + " :Welcome to the Internet Relay Network" + client.getNick() + "!" + client.getName() + "@" + "\n"; // + hostname (hostname pas encore implemente)  
-	msg += ":" + std::string(NAME_SERV) + " 002 " + client.getNick() + " :Your host is " + std::string(NAME_SERV) + ", running version ... (a  voir)\n";
-	msg += ":" + std::string(NAME_SERV) + " 003 " + client.getNick() + " :This server was created ... (a voir)\n";
+	msg = ":" + std::string(NAME_SERV) + " 001 " + client.getNick() + " :Welcome to the ft_irc" + client.getNick() + "!" + client.getName() + "@" + "localhost\n";
+	msg += ":" + std::string(NAME_SERV) + " 002 " + client.getNick() + " :Your host is " + std::string(NAME_SERV) + "Your host is ft_irc 1.0\n";
+	msg += ":" + std::string(NAME_SERV) + " 003 " + client.getNick() + " :Created at [" + serv.getTime() + "]\n";
 	send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
 	
 	client.print_for_test();

@@ -23,6 +23,7 @@ int   main(int argc, char **argv)
     }
     //Perform mini parsing to validate the args
     Server serv(std::atoi(argv[1]), argv[2]);
+	serv.setTime();
     //Handling the signals
     signal(SIGQUIT, &Server::signalHandler);
     signal(SIGINT, &Server::signalHandler);

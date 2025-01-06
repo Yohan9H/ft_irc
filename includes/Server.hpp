@@ -32,6 +32,7 @@
 #include <iterator>
 #include <exception>
 #include <cctype>
+#include <ctime>
 #include "Channel.hpp"
 #include "proto.hpp"
 #include "Client.hpp"
@@ -61,6 +62,7 @@ private:
 	struct sockaddr_in					_serverAddress;
 	struct sockaddr_in					_cliAddress;
 	struct pollfd						_newClient;
+	std::string							_timeBeginServ;
 
 	Server(const Server& other);
 
@@ -76,7 +78,7 @@ public:
 	bool			createServerSocket();
 	bool 			manageEvents();
 	int 			getServSocket() const;
-	int 			getPort() const;
+	// int 			getPort() const;
 	bool 			acceptClients();
 	Client* 		getClientFromFd(int fd);
 	bool 			receiveData(int fd);
@@ -92,6 +94,8 @@ public:
 	void					delClient(Client client);
 	void					addChannel(Channel &chan);
 	void					delChannel(Channel channel);
+	void					setTime();
+	std::string				getTime();
 };
 
 #endif

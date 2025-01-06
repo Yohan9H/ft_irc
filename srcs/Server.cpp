@@ -358,3 +358,19 @@ Channel	&Server::getOneChan(std::string name, Channel &new_chan)
 	}
 	return new_chan;
 }
+
+void	Server::setTime()
+{
+	std::time_t current_time = std::time(NULL);
+	std::tm* local_time = std::localtime(&current_time);
+
+	// arret sur le time cela ne fonctionne pas (normal)
+	_timeBeginServ = local_time->tm_mday + '.';
+	_timeBeginServ =+ (local_time->tm_mon + 1) + '.';
+	_timeBeginServ =+ (local_time->tm_year + 1900);
+}
+
+std::string		Server::getTime()
+{
+	return _timeBeginServ;
+}
