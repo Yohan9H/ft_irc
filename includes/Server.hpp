@@ -49,42 +49,46 @@ struct Command;
 class Server
 {
 private:
-  int _serverSocket;
-  int _port;
-  std::string _password;
-  static bool _signal;
-  std::vector<Client> _clientsVec;
-  std::map<std::string, Channel>	_channelArr;
-  std::map<std::string, Client>		_clientsArr;
+	int									_serverSocket;
+	int									_port;
+	std::string							_password;
+	static bool							_signal;
+	std::vector<Client>					_clientsVec;
+	std::map<std::string, Channel>		_channelArr;
+	std::map<std::string, Client>		_clientsArr;
 
-  std::vector<struct pollfd> _fds;
-  struct sockaddr_in _serverAddress;
-  struct sockaddr_in _cliAddress;
-  struct pollfd _newClient;
-  Server(const Server& other);
+	std::vector<struct pollfd>			_fds;
+	struct sockaddr_in					_serverAddress;
+	struct sockaddr_in					_cliAddress;
+	struct pollfd						_newClient;
+
+	Server(const Server& other);
 
 public:
-  Server();
-  Server(int port, std::string password);
-  Server &operator=(const Server& other);
-  ~Server();
-  static void  signalHandler(int signum);
-  static bool getSignal();
-  bool initServer();
-  bool createServerSocket();
-  bool manageEvents();
-  int getServSocket() const;
-  int getPort() const;
-  bool acceptClients();
-  Client* getClientFromFd(int fd);
-  bool receiveData(int fd);
-  void clearClient(int fd);
-  void closeAndClear();
-  const std::map<std::string, Channel>				&getChannel() const;
-  const std::map<std::string, Client>				&getClients() const;
-  std::map<std::string, Channel>::iterator			findChan(std::string name);
-  Channel					&getOneChan(std::string name, Channel &new_chan);
-  	void					addClient(Client client);
+	Server();
+	Server(int port, std::string password);
+	Server &operator=(const Server& other);
+	~Server();
+
+	static void		signalHandler(int signum);
+	static bool		getSignal();
+	bool			initServer();
+	bool			createServerSocket();
+	bool 			manageEvents();
+	int 			getServSocket() const;
+	int 			getPort() const;
+	bool 			acceptClients();
+	Client* 		getClientFromFd(int fd);
+	bool 			receiveData(int fd);
+	void 			clearClient(int fd);
+	void 			closeAndClear();
+
+	const std::map<std::string, Channel>				&getChannel() const;
+	const std::map<std::string, Client>					&getClients() const;
+	std::map<std::string, Channel>::iterator			findChan(std::string name);
+
+	Channel					&getOneChan(std::string name, Channel &new_chan);
+	void					addClient(Client client);
 	void					delClient(Client client);
 	void					addChannel(Channel &chan);
 	void					delChannel(Channel channel);

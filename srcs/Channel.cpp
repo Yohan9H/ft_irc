@@ -123,11 +123,7 @@ void	Channel::delOperatores(std::string name)
 
 void	Channel::addMembres(Client &client)
 {
-	_membres.insert(std::make_pair(client.getName(), client));
-
-	std::string msg = ":" + client.getName() + " JOIN #" + this->getName();  
-	int	bytesSent = send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
-	(void)bytesSent; // ajouter des verifs si le msg a bien etait envoye 
+	_membres.insert(std::make_pair(client.getName(), client)); 
 }
 
 void	Channel::delMembres(std::string name)
@@ -135,18 +131,21 @@ void	Channel::delMembres(std::string name)
 	_membres.erase(name);
 }
 
-std::string	Channel::formatJoinMessage(Client client, Channel channel)
+std::string	Channel::formatJoinMessage(std::string name_new_client, Channel channel)
 {
-	std::string msg = ":" + client.getName() + " JOIN " + channel.getName();
+	std::string msg = ":" + name_new_client + " JOIN " + channel.getName();
 	return msg;
 }
 
-void	Channel::sendJoinMsgAll(Channel &channel)
+void	Channel::sendJoinMsgAll(Channel &channel, std::string name_new_client)
 {
-	for (std::map<std::string, Client>::iterator it = _membres.end(); it != _membres.end(); it++)
+	for (std::map<std::string, Client>::iterator it = _membres.begin(); it != _membres.end(); it++)
 	{
-		std::string msg = formatJoinMessage(it->second, channel);
-		send(it->second.getClientSocket(), msg.c_str(), msg.size(), 0);
+		if (it->first != name_new_client)
+		{
+			std::string msg = formatJoinMessage(name_new_client, channel);
+			send(it->second.getClientSocket(), msg.c_str(), msg.size(), 0);
+		}
 	}
 }
 

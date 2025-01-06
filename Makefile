@@ -30,9 +30,6 @@ FILES     = ./srcs/main.cpp \
 			./srcs/cmd_all.cpp \
 			./srcs/cmd_ope.cpp \
 
-
-
-
 #### MACROS ####
 
 DIRPATH 		=	$(sh pwd)

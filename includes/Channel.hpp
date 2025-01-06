@@ -32,7 +32,6 @@ class Channel
 		std::map<std::string, Client>		_operators;
 		std::map<std::string, Client>		_membres;
 		std::map<std::string, Client>		_invited;
-
  
 	public:
 		Channel();
@@ -57,8 +56,8 @@ class Channel
 		void		delOperatores(std::string name);
 		void		addMembres(Client &client);
 		void		delMembres(std::string name);
-		std::string	formatJoinMessage(Client client, Channel channel);
-		void		sendJoinMsgAll(Channel &channel);
+		std::string	formatJoinMessage(std::string name_new_client, Channel channel);
+		void		sendJoinMsgAll(Channel &channel, std::string name_new_client);
 		void		infoJoinChannel(std::string name_serv, Channel &channe, Client &client);
 		std::string giveAllNameMembres();
 		void		sendMsgMembre(std::string msg);

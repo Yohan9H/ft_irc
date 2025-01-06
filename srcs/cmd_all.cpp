@@ -15,6 +15,10 @@
 
 bool	join(Server &serv, Client &client, std::string name_chan, std::string mdp)
 {
+	// Verif if '#'
+	if (name_chan[0] && name_chan[0] != '#')
+		return false;
+
 	// Recup de la chaine
 	Channel channel = createChannel(serv, name_chan, client);
 	std::string msg;
@@ -53,7 +57,7 @@ bool	join(Server &serv, Client &client, std::string name_chan, std::string mdp)
 	channel.addMembres(client);
 
 	// Notifier les autres membres et le nouveau
-	channel.sendJoinMsgAll(channel);
+	channel.sendJoinMsgAll(channel, client.getName());
 
 	// Envoyer les infos du channel au client
 	channel.infoJoinChannel(NAME_SERV, channel, client);
@@ -121,7 +125,7 @@ bool	Nick(Server &serv, Client &client, std::string nick)
 
 	// Voir si besoin d'envoye un msg a client qui met ou change son nom
 
-	//Informe tous les channels dont il fait partie de son changement
+	// Informe tous les channels dont il fait partie de son changement
 	if (client.getName().empty())
 	{
 		msg = ":_NoName_!user@" + std::string(NAME_SERV) + "NICK :";
