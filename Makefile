@@ -39,8 +39,8 @@ DIRPATH 		=	$(sh pwd)
 SRCPATH			=	$(DIRPATH)
 SRC				=	$(addprefix $(SRCPATH), $(FILES))
 OBJ				= $(SRC:.cpp=.o)
-NAME			= irc
-CC				= c++
+NAME			= ircserv
+CC				= c++ -g
 CFLAGS 			= -Wall -Werror -Wextra --std=c++98
 
 
