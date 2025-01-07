@@ -32,6 +32,7 @@
 #include <iterator>
 #include <exception>
 #include <cctype>
+#include <sstream>
 #include <ctime>
 #include <sstream>
 #include "Channel.hpp"
@@ -39,6 +40,7 @@
 #include "Client.hpp"
 #include "irc_head.hpp"
 #include "command.hpp"
+
 
 #define MAX_CONNEXIONS 5
 #define BUFFER_MAX 1024

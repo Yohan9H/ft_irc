@@ -10,6 +10,50 @@
 #                                                                              #
 # **************************************************************************** #
 
+#### SOURCES ####
+
+
+INCLUDES	= ./includes/Server.hpp \
+			./includes/Client.hpp \
+			./includes/irc_head.hpp \
+			./includes/command.hpp \
+			./includes/Channel.hpp \
+			./includes/proto.hpp \
+
+FILES     = ./srcs/main.cpp \
+			./srcs/Server.cpp \
+			./srcs/Client.cpp \
+			./srcs/command.cpp \
+			./srcs/Channel.cpp \
+			./srcs/manip_chan.cpp \
+			./srcs/msg.cpp \
+			./srcs/cmd_all.cpp \
+			./srcs/cmd_ope.cpp \
+
+
+
+
+#### MACROS ####
+
+DIRPATH 		=	$(sh pwd)
+SRCPATH			=	$(DIRPATH)
+SRC				=	$(addprefix $(SRCPATH), $(FILES))
+OBJ				= $(SRC:.cpp=.o)
+NAME			= ircserv
+CC				= c++ -g
+CFLAGS 			= -Wall -Werror -Wextra --std=c++98
+
+
+#### RULES ####
+
+%.o: %.cpp
+	$(CC) $(CFLAGS) -c $< -o $@
+
+all : $(NAME)
+
+$(NAME) : $(OBJ) $(INCLUDES)
+	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
+
 NAME = irc
 
 SRC_DIR = srcs
