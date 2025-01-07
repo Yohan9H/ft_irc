@@ -31,4 +31,9 @@ bool	Nick(Server &serv, Client &client, std::string nick);
 
 bool	User(Server &serv, Client &client, std::string username);
 
+// FOR TEST
+void	showMapClient(Server &serv);
+
+void	showMapChannel(Server &serv);
+
 #endif

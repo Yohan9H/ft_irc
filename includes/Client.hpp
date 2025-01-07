@@ -31,7 +31,7 @@ private:
 
     std::string        				 _username;
 	std::string						 _nick;
-	std::map<std::string, Channel>	 _listChan;
+	std::map<std::string, Channel*>	 _listChan;
 
 public:
     Client();
@@ -39,26 +39,27 @@ public:
     Client (const Client& other);
     Client &operator=(const Client &other);
     ~Client();
-    int getClientSocket() const;
-    void setClientSocket(int clientSocket);
-    void setClientLen(int clientLen);
-    void setClientAddress(struct sockaddr_in clientAddress);
-    void setIPAdd(std::string ipAdd);
+
+    int 		getClientSocket() const;
+    void 		setClientSocket(int clientSocket);
+    void 		setClientLen(int clientLen);
+    void 		setClientAddress(struct sockaddr_in clientAddress);
+    void 		setIPAdd(std::string ipAdd);
     std::string getIPAdd() const;
 
-    struct sockaddr * getClientAddr();
-    socklen_t getClientLen() const;
+    struct sockaddr * 	getClientAddr();
+    socklen_t 			getClientLen() const;
 	
-    std::string			getName() const; //Ajout Yohan
-    std::string			getNick() const; //Ajout Yohan
+    std::string			getName() const;
+    std::string			getNick() const;
 	void				setName(std::string new_name);
 	void				setNick(std::string new_nick);
 
-	void				sendMsgAllChan(std::string msg); // add yoyo
-	void				sendMsgAllChanNickInform(std::string msg); //add yoyo
+	void				sendMsgAllChan(std::string msg);
+	void				sendMsgAllChanNickInform(std::string msg);
 
-    void				addChan(Channel chan); //Ajout Yohan
-	void				delChan(Channel chan); //Ajout Yohan
+    void				addChan(Channel &chan);
+	void				delChan(Channel &chan);
 
 	bool				if_identify(int code);
 

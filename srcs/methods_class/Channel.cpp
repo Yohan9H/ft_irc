@@ -74,12 +74,12 @@ t_perm		Channel::getPerm() const
 	return _perm;
 }
 
-std::map<std::string, Client>	&Channel::getOperators()
+std::map<int, Client*>	&Channel::getOperators()
 {
 	return _operators;
 }
 
-std::map<std::string, Client>	&Channel::getMembres()
+std::map<int, Client*>	&Channel::getMembres()
 {
 	return _membres;
 }
@@ -113,22 +113,22 @@ void	Channel::setPerm(bool i, bool t, bool k, bool o, bool l)
 
 void	Channel::addOperators(Client &client)
 {
-	_operators.insert(std::make_pair(client.getName(), client));
+	_operators.insert(std::make_pair(client.getClientSocket(), &client));
 }
 
-void	Channel::delOperatores(std::string name)
+void	Channel::delOperatores(int socket_key)
 {
-	_operators.erase(name);
+	_operators.erase(socket_key);
 }
 
 void	Channel::addMembres(Client &client)
 {
-	_membres.insert(std::make_pair(client.getName(), client)); 
+	_membres.insert(std::make_pair(client.getClientSocket(), &client)); 
 }
 
-void	Channel::delMembres(std::string name)
+void	Channel::delMembres(int socket_key)
 {
-	_membres.erase(name);
+	_membres.erase(socket_key);
 }
 
 std::string	Channel::formatJoinMessage(std::string name_new_client, Channel channel)
@@ -137,14 +137,14 @@ std::string	Channel::formatJoinMessage(std::string name_new_client, Channel chan
 	return msg;
 }
 
-void	Channel::sendJoinMsgAll(Channel &channel, std::string name_new_client)
+void	Channel::sendJoinMsgAll(Channel &channel, std::string name_new_client, int socket_key)
 {
-	for (std::map<std::string, Client>::iterator it = _membres.begin(); it != _membres.end(); it++)
+	for (std::map<int, Client*>::iterator it = _membres.begin(); it != _membres.end(); it++)
 	{
-		if (it->first != name_new_client)
+		if (it->first != socket_key)
 		{
 			std::string msg = formatJoinMessage(name_new_client, channel);
-			send(it->second.getClientSocket(), msg.c_str(), msg.size(), 0);
+			send(it->second->getClientSocket(), msg.c_str(), msg.size(), 0);
 		}
 	}
 }
@@ -167,22 +167,22 @@ std::string Channel::giveAllNameMembres()
 {
 	std::string msg;
 
-	for (std::map<std::string, Client>::iterator it = this->getMembres().begin(); it != this->getMembres().end(); it++)
+	for (std::map<int, Client*>::iterator it = this->getMembres().begin(); it != this->getMembres().end(); it++)
 	{
-		std::map<std::string, Client>::iterator it_ope = this->getOperators().find(it->first);
+		std::map<int, Client*>::iterator it_ope = this->getOperators().find(it->first);
 		if (it_ope != this->getOperators().end())
-			msg += "@" + it->first + " ";
+			msg += "@" + it->second->getName() + " ";
 		else
-			msg += it->first + " ";
+			msg += it->second->getName() + " ";
 	}
 	return msg;
 }
 
 void	Channel::sendMsgMembre(std::string msg)
 {
-	for (std::map<std::string, Client>::iterator it = _membres.begin(); it != _membres.end() ;it++)
+	for (std::map<int, Client*>::iterator it = _membres.begin(); it != _membres.end() ;it++)
 	{
-		send(it->second.getClientSocket(), msg.c_str(), msg.size(), 0);
+		send(it->second->getClientSocket(), msg.c_str(), msg.size(), 0);
 	}
 }
 
@@ -229,7 +229,7 @@ bool	Channel::checkPassWord(std::string mdp)
 
 bool	Channel::checkClientIsInvited(Client client)
 {
-	std::map<std::string, Client>::iterator it = _invited.find(client.getName());
+	std::map<int, Client*>::iterator it = _invited.find(client.getClientSocket());
 	if (it != _invited.end())
 		return 1;
 	else

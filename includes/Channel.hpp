@@ -29,9 +29,9 @@ class Channel
 		std::string							_subject;
 		size_t								_limit_user;
 		t_perm								_perm;
-		std::map<std::string, Client>		_operators;
-		std::map<std::string, Client>		_membres;
-		std::map<std::string, Client>		_invited;
+		std::map<int, Client*>		_operators;
+		std::map<int, Client*>		_membres;
+		std::map<int, Client*>		_invited;
  
 	public:
 		Channel();
@@ -44,8 +44,8 @@ class Channel
 		std::string							getName() const;
 		std::string 						getSubject() const;
 		t_perm								getPerm() const;
-		std::map<std::string, Client>		&getOperators();
-		std::map<std::string, Client>		&getMembres();
+		std::map<int, Client*>		&getOperators();
+		std::map<int, Client*>		&getMembres();
 
 		void	setKey(std::string key);
 		void	setName(std::string name);
@@ -53,11 +53,11 @@ class Channel
 		void	setPerm(bool i, bool t, bool k, bool o, bool l); // idee: faire des fcts seules pour plus simple par monmment du style addModI()
 
 		void		addOperators(Client &client);
-		void		delOperatores(std::string name);
+		void		delOperatores(int socket_key);
 		void		addMembres(Client &client);
-		void		delMembres(std::string name);
+		void		delMembres(int socket_key);
 		std::string	formatJoinMessage(std::string name_new_client, Channel channel);
-		void		sendJoinMsgAll(Channel &channel, std::string name_new_client);
+		void		sendJoinMsgAll(Channel &channel, std::string name_new_client, int socket_key);
 		void		infoJoinChannel(std::string name_serv, Channel &channe, Client &client);
 		std::string giveAllNameMembres();
 		void		sendMsgMembre(std::string msg);

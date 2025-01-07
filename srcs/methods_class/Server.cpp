@@ -117,7 +117,7 @@ bool Server::createServerSocket()
       close (this->_serverSocket);
       return (false);
     }
-    
+
     //3 - Binding the server socket to a port and an address, as defined in sockaddr_in + checking the return value of bind
     if (bind(this->_serverSocket, (struct sockaddr*)&this->_serverAddress, sizeof(this->_serverAddress)) == -1)
     {
@@ -184,7 +184,7 @@ bool Server::manageEvents()
 
 bool Server::acceptClients() 
 {
-    Client newClient;
+    Client *newClient = new Client();
     
     memset(&_cliAddress, 0, sizeof(_cliAddress));
     socklen_t clientLength = sizeof(_cliAddress);
@@ -209,9 +209,11 @@ bool Server::acceptClients()
     _newClient.fd = clientSocket;
     _newClient.events = POLLIN;
     _newClient.revents = 0;
-    newClient.setClientSocket(clientSocket);
-    newClient.setClientAddress(_cliAddress);
-    newClient.setIPAdd(inet_ntoa(_cliAddress.sin_addr));
+    newClient->setClientSocket(clientSocket);
+    newClient->setClientAddress(_cliAddress);
+    newClient->setIPAdd(inet_ntoa(_cliAddress.sin_addr));
+	// addClient(*newClient);
+	_clientsArr.insert(std::make_pair(newClient->getClientSocket(), newClient));
     _clientsVec.push_back(newClient);
     _fds.push_back(_newClient); 
 
@@ -226,8 +228,8 @@ Client* Server::getClientFromFd(int fd)
     return (NULL);
   while (i < _clientsVec.size())
   {
-    if (_clientsVec[i].getClientSocket() == fd)
-      return (&_clientsVec[i]);
+    if (_clientsVec[i]->getClientSocket() == fd)
+      return (_clientsVec[i]);
     i++;
   }
   return (NULL);
@@ -243,6 +245,7 @@ bool Server::receiveData(int fd)
     if (bytesRead == 0)
     {
         std::cout << RED << "Client " << fd - 3 << " disconnected." << COL_END << std::endl;
+		this->delClientWithFd(fd);
         return (false);
     }
     else if (errno == EAGAIN || errno == EWOULDBLOCK)
@@ -300,7 +303,7 @@ void Server::clearClient(int fd)
   }
   for (size_t j = 0; j < _fds.size(); j++)
   {
-    if (_clientsVec[j].getClientSocket() == fd)
+    if (_clientsVec[j]->getClientSocket() == fd)
     {
       _clientsVec.erase(_clientsVec.begin() + j);
       return;
@@ -313,48 +316,48 @@ int Server::getServSocket() const
   return (this->_serverSocket);
 }
 
-const std::map<std::string, Client>		&Server::getClients() const
+const std::map<int, Client*>		&Server::getClients() const
 {
 	return _clientsArr;
 }
 
-const std::map<std::string, Channel>	&Server::getChannel() const
+const std::map<std::string, Channel*>	&Server::getChannel() const
 {
 	return _channelArr;
 }
 
-void	Server::addClient(Client client)
+void	Server::addClient(Client &client)
 {
-	_clientsArr.insert(std::make_pair(client.getName(), client));
+	_clientsArr.insert(std::make_pair(client.getClientSocket(), &client));
 }
 
-void	Server::delClient(Client client)
+void	Server::delClient(Client &client)
 {
-	_clientsArr.erase(client.getName());
+	_clientsArr.erase(client.getClientSocket());
 }
 
 void	Server::addChannel(Channel &channel)
 {
-	_channelArr.insert(std::make_pair(channel.getName(), channel));
+	_channelArr.insert(std::make_pair(channel.getName(), &channel));
 }
 
-void	Server::delChannel(Channel channel)
+void	Server::delChannel(Channel &channel)
 {
 	_channelArr.erase(channel.getName());
 }
 
-std::map<std::string, Channel>::iterator	Server::findChan(std::string name)
+std::map<std::string, Channel*>::iterator	Server::findChan(std::string name)
 {
-	std::map<std::string, Channel>::iterator it = _channelArr.find(name);
+	std::map<std::string, Channel*>::iterator it = _channelArr.find(name);
 	return it;
 }
 
 Channel	&Server::getOneChan(std::string name, Channel &new_chan)
 {
-	for (std::map<std::string, Channel>::iterator it = _channelArr.begin(); it != _channelArr.end(); it++)
+	for (std::map<std::string, Channel*>::iterator it = _channelArr.begin(); it != _channelArr.end(); it++)
 	{
 		if (it->first == name)
-			return it->second;
+			return *it->second;
 	}
 	return new_chan;
 }
@@ -367,7 +370,7 @@ void	Server::setTime()
 	local_time->tm_year += 1900;
 
 	std::ostringstream oss;
-	oss << local_time->tm_mday << '.' << local_time->tm_mon << local_time->tm_year;
+	oss << local_time->tm_mday << '.' << local_time->tm_mon << '.' << local_time->tm_year;
 
 	_timeBeginServ = oss.str();
 }
@@ -375,4 +378,21 @@ void	Server::setTime()
 std::string		Server::getTime()
 {
 	return _timeBeginServ;
+}
+
+void	Server::delClientWithFd(int fd)
+{
+	for (std::map<int, Client*>::iterator it = _clientsArr.begin(); it != _clientsArr.end(); it++)
+	{
+		if (it->second->getClientSocket() == fd)
+		{
+			this->delClient(*it->second);
+			break;
+		}
+	}
+}
+
+const std::vector<Client*>		&Server::getVecClient() const
+{
+	return _clientsVec;
 }

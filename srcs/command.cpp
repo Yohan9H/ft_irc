@@ -14,6 +14,7 @@ bool isValidCommand(Server &serv, Client &cli, const Command &cmd) // passer ref
     const std::string validCommands[] = {
         "NICK", "USER", "JOIN", "PRIVMSG", "PART", "QUIT", "TOPIC", "KICK", "MODE", "INVITE", "CAP", "PASS", "PING", "NOTICE"
     };
+
     if (cmd.command.empty())
         return false;
     bool found = false;
@@ -42,18 +43,16 @@ bool isValidCommand(Server &serv, Client &cli, const Command &cmd) // passer ref
          // Si jamais pas de param 1 (pas de mdp, param 1 a set a NULL)
     }
     if (cmd.command == "PRIVMSG" && cmd.params.size() != 1) return false; 
-    if (cmd.command == "PART" && cmd.params.size() != 1) return false; //Yohan
-    if (cmd.command == "QUIT" && cmd.params.size() != 0) return false; //Amelle
-    if (cmd.command == "TOPIC" && cmd.params.size() != 1) return false; //Yohan
-    if (cmd.command == "KICK" && cmd.params.size() != 2) return false; //Yohan
-    if (cmd.command == "MODE" && cmd.params.size() < 1) return false; //Yohan
-    if (cmd.command == "INVITE" && cmd.params.size() != 2) return false; //Yohan
-    if (cmd.command == "CAP" && cmd.params.size() != 1) return false; // ?
-    if (cmd.command == "PASS" && cmd.params.size() != 1) return false; //Amelle
-    if (cmd.command == "PING" && cmd.params.size() != 1) return false; //?
-    if (cmd.command == "NOTICE" && cmd.params.size() != 2) return false; //Utile ? (Bot ?)
-        return false;
-
+    if (cmd.command == "PART" && cmd.params.size() != 1) return false;
+    if (cmd.command == "QUIT" && cmd.params.size() != 0) return false;
+    if (cmd.command == "TOPIC" && cmd.params.size() != 1) return false;
+    if (cmd.command == "KICK" && cmd.params.size() != 2) return false;
+    if (cmd.command == "MODE" && cmd.params.size() < 1) return false;
+    if (cmd.command == "INVITE" && cmd.params.size() != 2) return false;
+    if (cmd.command == "CAP" && cmd.params.size() != 1) return false;
+    if (cmd.command == "PASS" && cmd.params.size() != 1) return false;
+    if (cmd.command == "PING" && cmd.params.size() != 1) return false;
+    if (cmd.command == "NOTICE" && cmd.params.size() != 2) return false;
 
     if (cmd.trailing.length() > 512 || cmd.trailing.length() < 1)
         return (false);
@@ -112,6 +111,13 @@ Command parseCommand(Server &serv, Client &cli, const std::string &input) {
         command.params.push_back(input.substr(pos, space - pos));
         pos = space + 1;
     }
+
+	// FOR TEST
+	if (command.command == "CLIENT")
+		showMapClient(serv);
+	if (command.command == "CHANNEL")
+		showMapChannel(serv);
+
     if (!isValidCommand(serv, cli, command))
         std::cerr << "not a valid command" << std::endl;
     return (command);

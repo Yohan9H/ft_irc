@@ -89,31 +89,31 @@ void		Client::setNick(std::string new_nick)
 	_nick = new_nick;
 }
 
-void	Client::addChan(Channel chan)
+void	Client::addChan(Channel &chan)
 {
-	_listChan.insert(std::make_pair(chan.getName(), chan));
+	_listChan.insert(std::make_pair(chan.getName(), &chan));
 }
 
-void	Client::delChan(Channel chan)
+void	Client::delChan(Channel &chan)
 {
 	_listChan.erase(chan.getName());
 }
 
 void	Client::sendMsgAllChanNickInform(std::string msg) 
 {
-	for (std::map<std::string, Channel>::iterator it = _listChan.end(); it != _listChan.end(); it++)
+	for (std::map<std::string, Channel*>::iterator it = _listChan.end(); it != _listChan.end(); it++)
 	{
 		std::string msg_temp = msg;
-		msg_temp += it->second.getName();
-		it->second.sendMsgMembre(msg);
+		msg_temp += it->second->getName();
+		it->second->sendMsgMembre(msg);
 	}
 }
 
 void	Client::sendMsgAllChan(std::string msg)
 {
-	for (std::map<std::string, Channel>::iterator it = _listChan.end(); it != _listChan.end(); it++)
+	for (std::map<std::string, Channel*>::iterator it = _listChan.end(); it != _listChan.end(); it++)
 	{
-		it->second.sendMsgMembre(msg);
+		it->second->sendMsgMembre(msg);
 	}
 }
 
@@ -143,7 +143,7 @@ void	Client::print_for_test()
 	std::cout << "nick = " << _nick << std::endl;
 
 	std::cout << "list channel :" << std::endl;
-	for (std::map<std::string, Channel>::iterator it = _listChan.begin(); it != _listChan.end(); it++)
+	for (std::map<std::string, Channel*>::iterator it = _listChan.begin(); it != _listChan.end(); it++)
 	{
 		std::cout << it->first;
 	}

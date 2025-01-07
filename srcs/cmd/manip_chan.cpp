@@ -18,22 +18,22 @@ class Client;
 
 Channel &createChannel(Server &server, std::string name_channel, Client &first_membre)
 {
-	std::map<std::string, Channel>::iterator it = server.findChan(name_channel);
+	std::map<std::string, Channel*>::iterator it = server.findChan(name_channel);
 	if (it != server.getChannel().end())
-		return it->second;
+		return *it->second;
 
-	Channel	new_chan;
-	new_chan.setName(name_channel);
-	new_chan.setKey("");
-	new_chan.setSubject("");
-	new_chan.setPerm(0, 0, 0, 0, 0);
-	new_chan.addOperators(first_membre);
-	new_chan.addMembres(first_membre);
+	Channel	*new_chan = new Channel();
+	new_chan->setName(name_channel);
+	new_chan->setKey("");
+	new_chan->setSubject("");
+	new_chan->setPerm(0, 0, 0, 0, 0);
+	new_chan->addOperators(first_membre);
+	new_chan->addMembres(first_membre);
 
-	first_membre.addChan(new_chan);
-	server.addChannel(new_chan);
+	first_membre.addChan(*new_chan);
+	server.addChannel(*new_chan);
 
-	return (server.getOneChan(new_chan.getName(), new_chan));
+	return (server.getOneChan(new_chan->getName(), *new_chan));
 }
 
 void removeNewline(std::string& nick)
