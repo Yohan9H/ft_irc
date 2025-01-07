@@ -33,6 +33,7 @@
 #include <exception>
 #include <cctype>
 #include <ctime>
+#include <sstream>
 #include "Channel.hpp"
 #include "proto.hpp"
 #include "Client.hpp"

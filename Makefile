@@ -10,54 +10,43 @@
 #                                                                              #
 # **************************************************************************** #
 
-#### SOURCES ####
+NAME = irc
 
+SRC_DIR = srcs
+OBJ_DIR = .obj
 
-INCLUDES	= ./includes/Server.hpp \
-			./includes/Client.hpp \
-			./includes/irc_head.hpp \
-			./includes/command.hpp \
-			./includes/Channel.hpp \
-			./includes/proto.hpp \
+INCLUDE = ./includes
 
-FILES     = ./srcs/main.cpp \
-			./srcs/Server.cpp \
-			./srcs/Client.cpp \
-			./srcs/command.cpp \
-			./srcs/Channel.cpp \
-			./srcs/manip_chan.cpp \
-			./srcs/msg.cpp \
-			./srcs/cmd_all.cpp \
-			./srcs/cmd_ope.cpp \
+SRCS = $(SRC_DIR)/main.cpp \
+	   $(SRC_DIR)/Server.cpp \
+	   $(SRC_DIR)/Client.cpp \
+	   $(SRC_DIR)/command.cpp \
+	   $(SRC_DIR)/Channel.cpp \
+	   $(SRC_DIR)/manip_chan.cpp \
+	   $(SRC_DIR)/msg.cpp \
+	   $(SRC_DIR)/cmd_all.cpp \
+	   $(SRC_DIR)/cmd_ope.cpp
 
-#### MACROS ####
+OBJS = $(addprefix $(OBJ_DIR)/, $(notdir $(SRCS:.cpp=.o)))
 
-DIRPATH 		=	$(sh pwd)
-SRCPATH			=	$(DIRPATH)
-SRC				=	$(addprefix $(SRCPATH), $(FILES))
-OBJ				= $(SRC:.cpp=.o)
-NAME			= irc
-CC				= c++
-CFLAGS 			= -Wall -Werror -Wextra --std=c++98
+CXX = c++ -g
+CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -I$(INCLUDE)
 
+$(NAME): $(OBJS)
+	$(CXX) $(CXXFLAGS) $(OBJS) -o $(NAME)
 
-#### RULES ####
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-%.o: %.cpp
-	$(CC) $(CFLAGS) -c $< -o $@
-
-all : $(NAME)
-
-$(NAME) : $(OBJ) $(INCLUDES)
-	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
-
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
 
 clean:
-	rm -f $(OBJ)
+	rm -rf $(OBJ_DIR)
 
 fclean: clean
 	rm -f $(NAME)
 
-re: fclean all
+re: fclean $(NAME)
 
-.PHONY: clean fclean re bonus
+.PHONY: all clean fclean re
