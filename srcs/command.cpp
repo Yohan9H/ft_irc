@@ -78,47 +78,47 @@ void handlePrivmsg(const Command &cmd) {
     // Logique métier (envoyer le message au destinataire)
 }
 
-void parseCommand(Server &serv, Client &cli, const std::string &input) {
+Command parseCommand(Server &serv, Client &cli, const std::string &input) {
  
     Command command;
     size_t pos = 0;
-    std::string data = input;
 
-    while ((pos = data.find("\r\n")) != std::string::npos) {
-
-        std::string line = input.substr(0, pos);
-        std::string token;
-        std::istringstream tokenStream(line);
-        Command command;
-
-        // Check if the command has a prefix
-        if (!line.empty() && data[0] == ':') {
-            std::getline(tokenStream, token, ' ');
-            command.prefix = token.substr(1);
-        }
-        // Get the command
-        if (std::getline(tokenStream, token, ' '))
-            command.command = token;
-
-        // Get the parameters and trailing
-        while (std::getline(tokenStream, token, ' ')) {
-            if (!token.empty() && token[0] == ':') {
-                command.trailing = token.substr(1);
-                break;
-            } else {
-                command.params.push_back(token);
-            }
-        }
-
-        // FOR TEST
-	    if (command.command == "CLIENT")
-		    showMapClient(serv);
-	    if (command.command == "CHANNEL")
-		    showMapChannel(serv);
-        // Check if the command is valid
-        if (!isValidCommand(serv, cli, command))
-            std::cerr << "not a valid command" << std::endl;
-    // return (command);
-        data.erase(0, pos + 2);
+    if (input[0] == ':')
+    {
+        size_t space = input.find(' ');
+        command.prefix = input.substr(1, space);
+        pos = space + 1;
     }
+    size_t space = input.find(' ', pos);
+    if (space != std::string::npos) {
+        command.command = input.substr(pos, space);
+        pos = space + 1;
+    } else {
+        command.command = input.substr(pos);
+        std::cerr << "not a valid command" << std::endl;
+        return command;
+    }
+    while (pos < input.size()) {
+        if (input[pos] == ':') {
+            command.trailing = input.substr(pos + 1);
+            break;
+        }
+        space = input.find(' ', pos);
+        if (space == std::string::npos) { 
+            command.params.push_back(input.substr(pos));
+            break;
+        }
+        command.params.push_back(input.substr(pos, space - pos));
+        pos = space + 1;
+    }
+
+	// FOR TEST
+	if (command.command == "CLIENT")
+		showMapClient(serv);
+	if (command.command == "CHANNEL")
+		showMapChannel(serv);
+
+    if (!isValidCommand(serv, cli, command))
+        std::cerr << "not a valid command" << std::endl;
+    return (command);
 }

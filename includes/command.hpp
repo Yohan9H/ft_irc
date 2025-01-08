@@ -20,7 +20,7 @@ typedef struct s_timeServ
 } t_timeServ;
 
 void 	handlePrivmsg(const Command &cmd);
-void    parseCommand(Server &serv, Client &cli, const std::string &input);
+Command parseCommand(Server &serv, Client &cli, const std::string &input);
 bool 	isValidCommand(Server &serv, Client &cli, const Command &cmd);
 void 	parseline(const std::string &line);
 
