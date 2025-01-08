@@ -26,7 +26,7 @@ typedef struct s_perm
 	bool	l; // LIMIT USER
 } t_perm;
 
-Channel 	&createChannel(Server &server, std::string name_channel, Client &first_membre);
+Channel 	*createChannel(Server &server, std::string name_channel, Client &first_membre);
 
 void 		removeNewline(std::string& nick);
 

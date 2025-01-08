@@ -20,7 +20,7 @@ bool	join(Server &serv, Client &client, std::string name_chan, std::string mdp)
 		return false;
 
 	// Recup de la chaine
-	Channel channel = createChannel(serv, name_chan, client);
+	Channel *channel = createChannel(serv, name_chan, client);
 	std::string msg;
 
 	// Verif client is identify
@@ -32,21 +32,21 @@ bool	join(Server &serv, Client &client, std::string name_chan, std::string mdp)
 	}
 	
 	// Permissions
-	if (channel.ifProtectedByPassWord() && !channel.checkPassWord(mdp))
+	if (channel->ifProtectedByPassWord() && !channel->checkPassWord(mdp))
 	{
 		msg = mdp_false(NAME_SERV, name_chan);
 		send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
 		return false;
 	}
 
-	if (channel.ifInvite() && !channel.checkClientIsInvited(client))
+	if (channel->ifInvite() && !channel->checkClientIsInvited(client))
 	{
 		msg = invite_false(NAME_SERV, "JOIN", name_chan);
 		send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
 		return false;
 	}
 
-	if (channel.ifLimitUser() && !channel.checkLimitUser())
+	if (channel->ifLimitUser() && !channel->checkLimitUser())
 	{
 		msg = limit_user_false(NAME_SERV, client.getName());
 		send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
@@ -54,13 +54,13 @@ bool	join(Server &serv, Client &client, std::string name_chan, std::string mdp)
 	}
 
 	// Ajouter le membre
-	channel.addMembres(client);
+	channel->addMembres(client);
 
 	// Notifier les autres membres et le nouveau
-	channel.sendJoinMsgAll(channel, client.getName(), client.getClientSocket());
+	channel->sendJoinMsgAll(*channel, client.getName(), client.getClientSocket());
 
 	// Envoyer les infos du channel au client
-	channel.infoJoinChannel(NAME_SERV, channel, client);
+	channel->infoJoinChannel(NAME_SERV, *channel, client);
 
 	return true;
 }

@@ -352,15 +352,15 @@ std::map<std::string, Channel*>::iterator	Server::findChan(std::string name)
 	return it;
 }
 
-Channel	&Server::getOneChan(std::string name, Channel &new_chan)
-{
-	for (std::map<std::string, Channel*>::iterator it = _channelArr.begin(); it != _channelArr.end(); it++)
-	{
-		if (it->first == name)
-			return *it->second;
-	}
-	return new_chan;
-}
+// Channel	*Server::getOneChan(std::string name, Channel &new_chan)
+// {
+// 	for (std::map<std::string, Channel*>::iterator it = _channelArr.begin(); it != _channelArr.end(); it++)
+// 	{
+// 		if (it->first == name)
+// 			return it->second;
+// 	}
+// 	return &new_chan;
+// }
 
 void	Server::setTime()
 {

@@ -24,11 +24,11 @@ typedef struct	s_perm t_perm;
 class Channel
 {
 	private:
-		std::string							_name;
-		std::string							_key;
-		std::string							_subject;
-		size_t								_limit_user;
-		t_perm								_perm;
+		std::string					_name;
+		std::string					_key;
+		std::string					_subject;
+		size_t						_limit_user;
+		t_perm						_perm;
 		std::map<int, Client*>		_operators;
 		std::map<int, Client*>		_membres;
 		std::map<int, Client*>		_invited;
