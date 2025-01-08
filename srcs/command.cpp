@@ -54,7 +54,7 @@ bool isValidCommand(Server &serv, Client &cli, const Command &cmd) // passer ref
     if (cmd.command == "PING" && cmd.params.size() != 1) return false;
     if (cmd.command == "NOTICE" && cmd.params.size() != 2) return false;
 
-    if (cmd.trailing.length() > 512 || cmd.trailing.length() < 1)
+    if (cmd.trailing.length() > 512)
         return (false);
     return (true);
 }
@@ -78,12 +78,28 @@ void handlePrivmsg(const Command &cmd) {
     // Logique métier (envoyer le message au destinataire)
 }
 
+void normalizeCRLF(std::string& input) {
+    size_t pos = 0;
+
+    while (pos < input.size()) {
+        pos = input.find("\n", pos);
+        if (pos == std::string::npos) {
+            break;
+        }
+        if (pos == 0 || input[pos - 1] != '\r') {
+            input.insert(pos, "\r");
+            pos += 2;
+        } else {
+            pos += 1;
+        }
+    }
+}
+
 void parseCommand(Server &serv, Client &cli, const std::string &input) {
- 
-    Command command;
+
     size_t pos = 0;
     std::string data = input;
-
+    normalizeCRLF(data);
     while ((pos = data.find("\r\n")) != std::string::npos) {
 
         std::string line = input.substr(0, pos);

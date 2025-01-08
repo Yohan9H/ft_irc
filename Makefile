@@ -1,59 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: avandeve <avandeve@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/07/04 14:27:02 by avandeve          #+#    #+#              #
-#    Updated: 2024/10/26 14:37:34 by avandeve         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
-#### SOURCES ####
-
-
-INCLUDES	= ./includes/Server.hpp \
-			./includes/Client.hpp \
-			./includes/irc_head.hpp \
-			./includes/command.hpp \
-			./includes/Channel.hpp \
-			./includes/proto.hpp \
-
-FILES     = ./srcs/main.cpp \
-			./srcs/Server.cpp \
-			./srcs/Client.cpp \
-			./srcs/command.cpp \
-			./srcs/Channel.cpp \
-			./srcs/manip_chan.cpp \
-			./srcs/msg.cpp \
-			./srcs/cmd_all.cpp \
-			./srcs/cmd_ope.cpp \
-
-
-
-
-#### MACROS ####
-
-DIRPATH 		=	$(sh pwd)
-SRCPATH			=	$(DIRPATH)
-SRC				=	$(addprefix $(SRCPATH), $(FILES))
-OBJ				= $(SRC:.cpp=.o)
-NAME			= ircserv
-CC				= c++ -g
-CFLAGS 			= -Wall -Werror -Wextra --std=c++98
-
-
-#### RULES ####
-
-%.o: %.cpp
-	$(CC) $(CFLAGS) -c $< -o $@
-
-all : $(NAME)
-
-$(NAME) : $(OBJ) $(INCLUDES)
-	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
-
 NAME = irc
 
 SRC_DIR = srcs
@@ -76,7 +20,7 @@ SRCS = $(SRC_DIR)/main.cpp \
 
 OBJS = $(addprefix $(OBJ_DIR)/, $(notdir $(SRCS:.cpp=.o)))
 
-CXX = c++ -g
+CXX = g++ -g
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -I$(INCLUDE)
 
 $(NAME): $(OBJS)
