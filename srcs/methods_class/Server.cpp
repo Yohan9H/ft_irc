@@ -264,7 +264,7 @@ bool Server::receiveData(int fd)
         bufferToParse = std::string(buffer);
         parseCommand(*this, *(this->getClientFromFd(fd)),  bufferToParse);
         // std::cout << "Prefix: "<< (command.prefix.empty() ? "empty" : command.prefix) << std::endl;
-        // std::cout << "Command: " << command.command << std::endl;
+        // std::cout << "cmd: " << command.command << std::endl;
         // if (command.params.size() == 0)
         //   std::cout << "Params: empty" << std::endl;
         // for (size_t i = 0; i < command.params.size(); i++)

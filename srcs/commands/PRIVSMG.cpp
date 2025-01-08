@@ -1,0 +1,9 @@
+#include "PRIVMSG.hpp"
+
+PRIVMSG::PRIVMSG() : Command("PRIVMSG", 1, false) {};
+PRIVMSG::~PRIVMSG() {};
+
+void PRIVMSG::execCommand(Server &serv, Client &cli, const cmd &cmd)
+{
+    
+}
