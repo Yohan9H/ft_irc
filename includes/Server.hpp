@@ -55,9 +55,8 @@ private:
 	int									_port;
 	std::string							_password;
 	static bool							_signal;
-	std::vector<Client*>				_clientsVec;
-	std::map<std::string, Channel*>		_channelArr;
-	std::map<int, Client*>				_clientsArr;
+	std::map<std::string, Channel*>		_listChannels;
+	std::map<int, Client*>				_listClients;
 
 	std::vector<struct pollfd>			_fds;
 	struct sockaddr_in					_serverAddress;
@@ -81,17 +80,16 @@ public:
 	int 			getServSocket() const;
 	// int 			getPort() const;
 	bool 			acceptClients();
-	Client* 		getClientFromFd(int fd);
 	bool 			receiveData(int fd);
 	void 			clearClient(int fd);
 	void 			closeAndClear();
 
-	const std::map<std::string, Channel*>				&getChannel() const;
-	const std::map<int, Client*>						&getClients() const;
-	const std::vector<Client*>							&getVecClient() const;
-	std::map<std::string, Channel*>::iterator			findChan(std::string name);
+	std::map<std::string, Channel*>				&getChannel();
+	std::map<int, Client*>						&getClients();
+	Client										*getClientbyFd(int clientFd);
+	Channel										*getChannelbyName(std::string name);
+	std::map<std::string, Channel*>::iterator	findChan(std::string name);
 
-	Channel					*getOneChan(std::string name, Channel &new_chan);
 	void					addClient(Client &client);
 	void					delClient(Client &client);
 	void					addChannel(Channel &chan);

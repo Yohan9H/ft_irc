@@ -23,8 +23,7 @@ Server::Server(const Server &other)
   this->_port = other._port;
   this->_password = other._password;
   this->_signal = other._signal;
-  this->_clientsVec = other._clientsVec;
-  this->_clientsArr = other._clientsArr; //attention deep copy
+  this->_listClients = other._listClients;
   this->_serverAddress = other._serverAddress; 
 }
 
@@ -36,8 +35,7 @@ Server &Server::operator=(const Server &other)
       this->_port = other._port;
       this->_password = other._password;
       this->_signal = other._signal;
-      this->_clientsArr = other._clientsArr;
-      this->_clientsVec = other._clientsVec;
+      this->_listClients = other._listClients;
       this->_serverAddress = other._serverAddress; 
     }
     return (*this);
@@ -53,7 +51,7 @@ void Server::closeAndClear()
         close(_fds[i].fd);
     }
     _fds.clear();
-    _clientsVec.clear();
+    _listClients.clear();
 
     // Close the server socket
     if (_serverSocket >= 0)
@@ -184,7 +182,7 @@ bool Server::manageEvents()
 
 bool Server::acceptClients() 
 {
-    Client *newClient = new Client();
+    Client newClient;
     
     memset(&_cliAddress, 0, sizeof(_cliAddress));
     socklen_t clientLength = sizeof(_cliAddress);
@@ -209,30 +207,15 @@ bool Server::acceptClients()
     _newClient.fd = clientSocket;
     _newClient.events = POLLIN;
     _newClient.revents = 0;
-    newClient->setClientSocket(clientSocket);
-    newClient->setClientAddress(_cliAddress);
-    newClient->setIPAdd(inet_ntoa(_cliAddress.sin_addr));
+    // newClient->setClientSocket(clientSocket);
+    // newClient->setClientAddress(_cliAddress);
+    // newClient->setIPAdd(inet_ntoa(_cliAddress.sin_addr));
 	// addClient(*newClient);
-	_clientsArr.insert(std::make_pair(newClient->getClientSocket(), newClient));
-    _clientsVec.push_back(newClient);
+	_listClients.insert(std::make_pair(newClient.getClientSocket(), &newClient));
     _fds.push_back(_newClient); 
 
     std::cout << GREEN << "New client connected! Socket FD: " << clientSocket << COL_END << std::endl;
     return true;
-}
-
-Client* Server::getClientFromFd(int fd)
-{
-  unsigned int i = 0;
-  if (fd < 0)
-    return (NULL);
-  while (i < _clientsVec.size())
-  {
-    if (_clientsVec[i]->getClientSocket() == fd)
-      return (_clientsVec[i]);
-    i++;
-  }
-  return (NULL);
 }
 
 bool Server::receiveData(int fd)
@@ -262,7 +245,7 @@ bool Server::receiveData(int fd)
         // //Merge partie Arthur 
         std::string bufferToParse;
         bufferToParse = std::string(buffer);
-        Command command = parseCommand(*this, *(this->getClientFromFd(fd)),  bufferToParse);
+        Command command = parseCommand(*this, *(this->getClientbyFd(fd)),  bufferToParse);
         std::cout << "Prefix: "<< (command.prefix.empty() ? "empty" : command.prefix) << std::endl;
         std::cout << "Command: " << command.command << std::endl;
         if (command.params.size() == 0)
@@ -292,23 +275,19 @@ bool Server::receiveData(int fd)
 
 void Server::clearClient(int fd)
 {
-  for (size_t i = 0; i < _fds.size(); i++)
-  {
-    if (_fds[i].fd == fd)
-    {
-      close(_fds[i].fd);
-      _fds.erase(_fds.begin() + i);
-      break;
-    }
-  }
-  for (size_t j = 0; j < _fds.size(); j++)
-  {
-    if (_clientsVec[j]->getClientSocket() == fd)
-    {
-      _clientsVec.erase(_clientsVec.begin() + j);
-      return;
-    }
-  }
+	for (size_t i = 0; i < _fds.size(); i++)
+	{
+		if (_fds[i].fd == fd)
+		{
+			close(_fds[i].fd);
+			_fds.erase(_fds.begin() + i);
+			break;
+		}
+	}
+
+	std::map<int, Client*>::iterator it = _listClients.find(fd);
+	if (it != _listClients.end())
+		_listClients.erase(it);
 }
 
 int Server::getServSocket() const
@@ -316,51 +295,59 @@ int Server::getServSocket() const
   return (this->_serverSocket);
 }
 
-const std::map<int, Client*>		&Server::getClients() const
+std::map<int, Client*>		&Server::getClients()
 {
-	return _clientsArr;
+	return _listClients;
 }
 
-const std::map<std::string, Channel*>	&Server::getChannel() const
+std::map<std::string, Channel*>	&Server::getChannel()
 {
-	return _channelArr;
+	return _listChannels;
+}
+
+Client	*Server::getClientbyFd(int clientFd)
+{
+	std::map<int, Client*>::iterator it = _listClients.find(clientFd);
+	if (it != _listClients.end())
+		return it->second;
+	else
+		return NULL;
+}
+
+Channel	*Server::getChannelbyName(std::string name)
+{
+	std::map<std::string, Channel*>::iterator it = _listChannels.find(name);
+	if (it != _listChannels.end())
+		return it->second;
+	else
+		return NULL;
 }
 
 void	Server::addClient(Client &client)
 {
-	_clientsArr.insert(std::make_pair(client.getClientSocket(), &client));
+	_listClients.insert(std::make_pair(client.getClientSocket(), &client));
 }
 
 void	Server::delClient(Client &client)
 {
-	_clientsArr.erase(client.getClientSocket());
+	_listClients.erase(client.getClientSocket());
 }
 
 void	Server::addChannel(Channel &channel)
 {
-	_channelArr.insert(std::make_pair(channel.getName(), &channel));
+	_listChannels.insert(std::make_pair(channel.getName(), &channel));
 }
 
 void	Server::delChannel(Channel &channel)
 {
-	_channelArr.erase(channel.getName());
+	_listChannels.erase(channel.getName());
 }
 
 std::map<std::string, Channel*>::iterator	Server::findChan(std::string name)
 {
-	std::map<std::string, Channel*>::iterator it = _channelArr.find(name);
+	std::map<std::string, Channel*>::iterator it = _listChannels.find(name);
 	return it;
 }
-
-// Channel	*Server::getOneChan(std::string name, Channel &new_chan)
-// {
-// 	for (std::map<std::string, Channel*>::iterator it = _channelArr.begin(); it != _channelArr.end(); it++)
-// 	{
-// 		if (it->first == name)
-// 			return it->second;
-// 	}
-// 	return &new_chan;
-// }
 
 void	Server::setTime()
 {
@@ -382,17 +369,12 @@ std::string		Server::getTime()
 
 void	Server::delClientWithFd(int fd)
 {
-	for (std::map<int, Client*>::iterator it = _clientsArr.begin(); it != _clientsArr.end(); it++)
+	for (std::map<int, Client*>::iterator it = _listClients.begin(); it != _listClients.end(); it++)
 	{
-		if (it->second->getClientSocket() == fd)
+		if (it->first == fd)
 		{
 			this->delClient(*it->second);
 			break;
 		}
 	}
-}
-
-const std::vector<Client*>		&Server::getVecClient() const
-{
-	return _clientsVec;
 }

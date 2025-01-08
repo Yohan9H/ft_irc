@@ -30,7 +30,7 @@ bool	join(Server &serv, Client &client, std::string name_chan, std::string mdp)
 		send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
 		return false;
 	}
-	
+
 	// Permissions
 	if (channel->ifProtectedByPassWord() && !channel->checkPassWord(mdp))
 	{
@@ -39,7 +39,7 @@ bool	join(Server &serv, Client &client, std::string name_chan, std::string mdp)
 		return false;
 	}
 
-	if (channel->ifInvite() && !channel->checkClientIsInvited(client))
+	if (channel->ifInvite() && !channel->checkClientIsInvited(client.getClientSocket()))
 	{
 		msg = invite_false(NAME_SERV, "JOIN", name_chan);
 		send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
@@ -48,19 +48,19 @@ bool	join(Server &serv, Client &client, std::string name_chan, std::string mdp)
 
 	if (channel->ifLimitUser() && !channel->checkLimitUser())
 	{
-		msg = limit_user_false(NAME_SERV, client.getName());
+		msg = limit_user_false(NAME_SERV, client.getUsername());
 		send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
 		return false;
 	}
 
 	// Ajouter le membre
-	channel->addMembres(client);
+	channel->addMembres(client.getClientSocket());
 
 	// Notifier les autres membres et le nouveau
-	channel->sendJoinMsgAll(*channel, client.getName(), client.getClientSocket());
+	channel->sendJoinMsgAll(*channel, client.getUsername(), client.getClientSocket());
 
 	// Envoyer les infos du channel au client
-	channel->infoJoinChannel(NAME_SERV, *channel, client);
+	channel->infoJoinChannel(serv, NAME_SERV, *channel, client);
 
 	return true;
 }
@@ -112,7 +112,7 @@ bool	Nick(Server &serv, Client &client, std::string nick)
 	// Verif if already use
 	for (std::map<int, Client*>::const_iterator it = serv.getClients().begin(); it != serv.getClients().end(); it++)
 	{
-		if (it->second->getNick() == nick)
+		if (it->second->getNickname() == nick)
 		{
 			msg = msg_err(NAME_SERV, "433", nick, ":Nickname is already in use");
 			send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
@@ -123,18 +123,18 @@ bool	Nick(Server &serv, Client &client, std::string nick)
 	removeNewline(nick);
 	client.setNick(nick);
 
-	// Voir si besoin d'envoye un msg a client qui met ou change son nom
+	// -- Voir si besoin d'envoye un msg a client qui met ou change son nom ?? --
 
 	// Informe tous les channels dont il fait partie de son changement
-	if (client.getName().empty())
+	if (client.getUsername().empty())
 	{
 		msg = ":_NoName_!user@" + std::string(NAME_SERV) + "NICK :";
-		client.sendMsgAllChanNickInform(msg); 
+		client.sendMsgAllChan(serv, msg); 
 	}
 	else
 	{
-		msg = ":" + client.getName() + "!user@" + std::string(NAME_SERV) + "NICK :";
-		client.sendMsgAllChanNickInform(msg); 
+		msg = ":" + client.getUsername() + "!user@" + std::string(NAME_SERV) + "NICK :";
+		client.sendMsgAllChan(serv, msg); 
 	}
 
 	client.print_for_test();
@@ -145,7 +145,7 @@ bool	User(Server &serv, Client &client, std::string username)
 {
 	std::string msg;
 
-	// Verif client is identify
+	// Verif client if identify
 	if (client.if_identify(1) == false)
 	{
 		msg = ":" + std::string(NAME_SERV) + " 431 No nickname given\n";
@@ -186,7 +186,7 @@ bool	User(Server &serv, Client &client, std::string username)
 	// Verif if already use
 	for (std::map<int, Client*>::const_iterator it = serv.getClients().begin(); it != serv.getClients().end(); it++)
 	{
-		if (it->second->getName() == username)
+		if (it->second->getUsername() == username)
 		{
 			msg = msg_err(NAME_SERV, "433", username, ":Username is already in use");
 			send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
@@ -196,9 +196,9 @@ bool	User(Server &serv, Client &client, std::string username)
 
 	client.setName(username);
 
-	msg = ":" + std::string(NAME_SERV) + " 001 " + client.getNick() + " :Welcome to the ft_irc " + client.getNick() + "! " + client.getName() + "@" + "localhost\n";
-	msg += ":" + std::string(NAME_SERV) + " 002 " + client.getNick() + " :Your host is ft_irc 1.0\n";
-	msg += ":" + std::string(NAME_SERV) + " 003 " + client.getNick() + " :Created at [" + serv.getTime() + "]\n";
+	msg = ":" + std::string(NAME_SERV) + " 001 " + client.getNickname() + " :Welcome to the ft_irc " + client.getNickname() + "! " + client.getUsername() + "@" + "localhost\n";
+	msg += ":" + std::string(NAME_SERV) + " 002 " + client.getNickname() + " :Your host is ft_irc 1.0\n";
+	msg += ":" + std::string(NAME_SERV) + " 003 " + client.getNickname() + " :Created at [" + serv.getTime() + "]\n";
 	send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
 	
 	client.print_for_test();
@@ -210,15 +210,10 @@ bool	User(Server &serv, Client &client, std::string username)
 
 void	showMapClient(Server &serv)
 {
-	std::cout << "|Vector Client|" << std::endl;
-	for (std::vector<Client*>::const_iterator it = serv.getVecClient().begin(); it != serv.getVecClient().end(); it++)
-	{
-		std::cout << "name client : " << (*it)->getName() << std::endl;	
-	}
 	std::cout << "|Map Client|" << std::endl;
 	for (std::map<int, Client*>::const_iterator it = serv.getClients().begin(); it != serv.getClients().end(); it++)
 	{
-		std::cout << "name client : " << it->second->getName() << std::endl;	
+		std::cout << "name client : " << it->second->getUsername() << std::endl;	
 	}
 }
 

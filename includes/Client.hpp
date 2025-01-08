@@ -20,50 +20,38 @@
 #define NOT_OP 8
 
 class Channel;
+class Server;
 
 class Client
 {
 private:
-    int 							_clientSocket;
-    struct sockaddr_in 				_clientAddress;
-    std::string 					_clientIPAdd;
-    socklen_t 						_clientLen;
-
-    std::string        				 _username;
-	std::string						 _nick;
-	std::map<std::string, Channel*>	 _listChan;
+    int								_clientSocket;
+	std::string						_nick;
+    std::string						_username;
+	std::vector<std::string>		_listChan;
 
 public:
     Client();
-    Client(int clientSocket, sockaddr_in clientAddress);
+    Client(int clientSocket);
     Client (const Client& other);
     Client &operator=(const Client &other);
     ~Client();
 
-    int 		getClientSocket() const;
-    void 		setClientSocket(int clientSocket);
-    void 		setClientLen(int clientLen);
-    void 		setClientAddress(struct sockaddr_in clientAddress);
-    void 		setIPAdd(std::string ipAdd);
-    std::string getIPAdd() const;
+	// getters
+    int 						&getClientSocket();
+    std::string					&getNickname();
+    std::string					&getUsername();
+	std::vector<std::string>	&getListChanJoined();
 
-    struct sockaddr * 	getClientAddr();
-    socklen_t 			getClientLen() const;
-	
-    std::string			getName() const;
-    std::string			getNick() const;
-	void				setName(std::string new_name);
-	void				setNick(std::string new_nick);
+	// setters
+	void			setName(std::string new_name);
+	void			setNick(std::string new_nick);
 
-	void				sendMsgAllChan(std::string msg);
-	void				sendMsgAllChanNickInform(std::string msg);
+	// methods
+	void			sendMsgAllChan(Server &serv, std::string msg);
+	bool			if_identify(int code);
 
-    void				addChan(Channel &chan);
-	void				delChan(Channel &chan);
-
-	bool				if_identify(int code);
-
-	void				print_for_test();
+	void			print_for_test();
 };
 
 #endif

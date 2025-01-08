@@ -24,14 +24,14 @@ typedef struct	s_perm t_perm;
 class Channel
 {
 	private:
-		std::string					_name;
-		std::string					_key;
-		std::string					_subject;
-		size_t						_limit_user;
-		t_perm						_perm;
-		std::map<int, Client*>		_operators;
-		std::map<int, Client*>		_membres;
-		std::map<int, Client*>		_invited;
+		std::string			_name;
+		std::string			_key;
+		std::string			_subject;
+		size_t				_limit_user;
+		t_perm				_perm;
+		std::vector<int>	_operatorsFd;
+		std::vector<int>	_membresFd;
+		std::vector<int>	_invitedFd;
  
 	public:
 		Channel();
@@ -40,27 +40,28 @@ class Channel
 
 		Channel &operator=(const Channel &src);
 
-		std::string							getKey() const;
-		std::string							getName() const;
-		std::string 						getSubject() const;
-		t_perm								getPerm() const;
-		std::map<int, Client*>		&getOperators();
-		std::map<int, Client*>		&getMembres();
+		std::string			getKey() const;
+		std::string			getName() const;
+		std::string 		getSubject() const;
+		t_perm				getPerm() const;
+		std::vector<int>	&getOperatorsFd();
+		std::vector<int>	&getMembresFd();
+		std::vector<int>	&getInvitedFd();
 
-		void	setKey(std::string key);
-		void	setName(std::string name);
-		void	setSubject(std::string subject);
-		void	setPerm(bool i, bool t, bool k, bool o, bool l); // idee: faire des fcts seules pour plus simple par monmment du style addModI()
+		void				setKey(std::string key);
+		void				setName(std::string name);
+		void				setSubject(std::string subject);
+		void				setPerm(bool i, bool t, bool k, bool o, bool l); // idee: faire des fcts seules pour plus simple par monmment du style addModI()
 
-		void		addOperators(Client &client);
-		void		delOperatores(int socket_key);
-		void		addMembres(Client &client);
-		void		delMembres(int socket_key);
+		void		addOperators(int clientFd);
+		void		addMembres(int clientFd);
+		void		delOperatores(int clientFd);
+		void		delMembres(int clientFd);
 		std::string	formatJoinMessage(std::string name_new_client, Channel channel);
 		void		sendJoinMsgAll(Channel &channel, std::string name_new_client, int socket_key);
-		void		infoJoinChannel(std::string name_serv, Channel &channe, Client &client);
-		std::string giveAllNameMembres();
-		void		sendMsgMembre(std::string msg);
+		void		infoJoinChannel(Server &serv, std::string name_serv, Channel &channe, Client &client);
+		std::string giveAllNameMembres(Server &serv);
+		void		sendMsgMembres(std::string msg);
 
 		bool	ifInvite();
 		bool	ifTopic();
@@ -68,7 +69,7 @@ class Channel
 		bool	ifLimitUser();
 
 		bool	checkPassWord(std::string mdp);
-		bool	checkClientIsInvited(Client client);
+		bool	checkClientIsInvited(int clientFd);
 		bool	checkLimitUser();
 };
 
