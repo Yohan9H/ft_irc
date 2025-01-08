@@ -44,6 +44,7 @@ public:
 	std::vector<std::string>	&getListChanJoined();
 
 	// setters
+	void			setClientSocket(int clientFd);
 	void			setName(std::string new_name);
 	void			setNick(std::string new_nick);
 

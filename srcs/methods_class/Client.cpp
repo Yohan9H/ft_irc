@@ -44,6 +44,11 @@ std::vector<std::string>	&Client::getListChanJoined()
 	return this->_listChan;
 }
 
+void		Client::setClientSocket(int clientFd)
+{
+	_clientSocket = clientFd;
+}
+
 void		Client::setName(std::string new_name)
 {
 	_username = new_name;

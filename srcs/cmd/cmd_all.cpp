@@ -110,7 +110,7 @@ bool	Nick(Server &serv, Client &client, std::string nick)
 	}
 	
 	// Verif if already use
-	for (std::map<int, Client*>::const_iterator it = serv.getClients().begin(); it != serv.getClients().end(); it++)
+	for (std::map<int, Client*>::iterator it = serv.getClients().begin(); it != serv.getClients().end(); it++)
 	{
 		if (it->second->getNickname() == nick)
 		{
@@ -122,7 +122,7 @@ bool	Nick(Server &serv, Client &client, std::string nick)
 
 	removeNewline(nick);
 	client.setNick(nick);
-
+	
 	// -- Voir si besoin d'envoye un msg a client qui met ou change son nom ?? --
 
 	// Informe tous les channels dont il fait partie de son changement

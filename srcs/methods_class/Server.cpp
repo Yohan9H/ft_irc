@@ -182,7 +182,7 @@ bool Server::manageEvents()
 
 bool Server::acceptClients() 
 {
-    Client newClient;
+    Client *newClient = new Client();
     
     memset(&_cliAddress, 0, sizeof(_cliAddress));
     socklen_t clientLength = sizeof(_cliAddress);
@@ -207,11 +207,10 @@ bool Server::acceptClients()
     _newClient.fd = clientSocket;
     _newClient.events = POLLIN;
     _newClient.revents = 0;
-    // newClient->setClientSocket(clientSocket);
+    newClient->setClientSocket(clientSocket);
     // newClient->setClientAddress(_cliAddress);
     // newClient->setIPAdd(inet_ntoa(_cliAddress.sin_addr));
-	// addClient(*newClient);
-	_listClients.insert(std::make_pair(newClient.getClientSocket(), &newClient));
+	_listClients.insert(std::make_pair(newClient->getClientSocket(), newClient));
     _fds.push_back(_newClient); 
 
     std::cout << GREEN << "New client connected! Socket FD: " << clientSocket << COL_END << std::endl;
@@ -307,6 +306,8 @@ std::map<std::string, Channel*>	&Server::getChannel()
 
 Client	*Server::getClientbyFd(int clientFd)
 {
+	if (clientFd < 0)
+		return NULL;
 	std::map<int, Client*>::iterator it = _listClients.find(clientFd);
 	if (it != _listClients.end())
 		return it->second;
@@ -374,6 +375,7 @@ void	Server::delClientWithFd(int fd)
 		if (it->first == fd)
 		{
 			this->delClient(*it->second);
+			// arret : del le client dans la liste des channels du serv et faire une verif si le channel est empty le supprimer aussi
 			break;
 		}
 	}
