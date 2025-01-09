@@ -375,7 +375,8 @@ void	Server::delClientWithFd(int fd)
 		if (it->first == fd)
 		{
 			this->delClientChannelAssociate(*it->second);
-			this->delClient(*it->second);
+			delete it->second;
+			_listClients.erase(it->first);
 			break;
 		}
 	}
@@ -395,9 +396,15 @@ void	Server::delClientChannelAssociate(Client &client)
 
 			// Supprimer le channel si vide
 			if (it_lst->second->getMembresFd().size() == 0)
-				_listChannels.erase(it_lst->first);
-
-			// send msg all membres if exist always
+			{
+				delete it_lst->second;
+				_listChannels.erase(it_lst);
+			}
+			else
+			{
+				std::string msg = ":" + client.getUsername() + " disconnected.\n";
+				it_lst->second->sendMsgMembres(msg);
+			}
 		}
 	}
 }

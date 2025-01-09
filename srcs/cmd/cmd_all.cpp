@@ -56,6 +56,10 @@ bool	join(Server &serv, Client &client, std::string name_chan, std::string mdp)
 	// Ajouter le membre
 	channel->addMembres(client.getClientSocket());
 
+	// Ajouter le chan au listchan du client
+	std::vector<std::string> &listChan = client.getListChanJoined();
+	listChan.push_back(name_chan);
+
 	// Notifier les autres membres et le nouveau
 	channel->sendJoinMsgAll(*channel, client.getUsername(), client.getClientSocket());
 

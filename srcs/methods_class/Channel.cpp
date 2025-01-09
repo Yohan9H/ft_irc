@@ -136,7 +136,9 @@ void	Channel::delMembres(int clientFd)
 {
 	std::vector<int>::iterator it = std::find(_membresFd.begin(), _membresFd.end(), clientFd);
 	if (it != _membresFd.end())
+	{
 		_membresFd.erase(it);
+	}
 }
 
 std::string	Channel::formatJoinMessage(std::string name_new_client, Channel channel)

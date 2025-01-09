@@ -29,10 +29,6 @@ Channel *createChannel(Server &server, std::string name_channel, Client &first_m
 	new_chan->setPerm(0, 0, 0, 0, 0);
 	new_chan->addOperators(first_membre.getClientSocket());
 
-	// Add channel for first_membre
-	std::vector<std::string> &listChan = first_membre.getListChanJoined();
-	listChan.push_back(name_channel);
-
 	server.addChannel(*new_chan);
 
 	return (new_chan);
