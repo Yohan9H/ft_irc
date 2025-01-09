@@ -1,4 +1,4 @@
-#include "PART.hpp"
+#include "../includes/commands/PART.hpp"
 
 PART::PART() : Command("PART", 1, false) {};
 PART::~PART() {};

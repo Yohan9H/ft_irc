@@ -39,7 +39,8 @@
 #include "proto.hpp"
 #include "Client.hpp"
 #include "irc_head.hpp"
-#include "command.hpp"
+#include "Command.hpp"
+
 
 
 #define MAX_CONNEXIONS 5
@@ -66,6 +67,8 @@ private:
 	struct sockaddr_in					_cliAddress;
 	struct pollfd						_newClient;
 	std::string							_timeBeginServ;
+	
+	std::map<std::string, Command*>		_commands; 
 
 	Server(const Server& other);
 
@@ -92,6 +95,11 @@ public:
 	const std::map<int, Client*>				&getClients() const;
 	const std::vector<Client*>							&getVecClient() const;
 	std::map<std::string, Channel*>::iterator			findChan(std::string name);
+
+	Command* getCommandByName(std::string cmdName);
+
+	//SETTER
+	void		setCommands();
 
 	Channel					&getOneChan(std::string name, Channel &new_chan);
 	void					addClient(Client &client);

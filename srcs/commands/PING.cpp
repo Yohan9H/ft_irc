@@ -1,4 +1,4 @@
-#include "PING.hpp"
+#include "../includes/commands/PING.hpp"
 
 PING::PING() : Command("PING", 1, false) {};
 PING::~PING() {};

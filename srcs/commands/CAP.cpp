@@ -1,4 +1,5 @@
-#include "CAP.hpp"
+#include "Command.hpp"
+#include "../includes/commands/CAP.hpp"
 
 CAP::CAP() : Command("CAP", 1, false) {};
 CAP::~CAP() {};

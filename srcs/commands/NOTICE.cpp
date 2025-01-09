@@ -1,4 +1,4 @@
-#include "NOTICE.hpp"
+#include "../includes/commands/NOTICE.hpp"
 
 NOTICE::NOTICE() : Command("NOTICE", 1, false) {};
 NOTICE::~NOTICE() {};

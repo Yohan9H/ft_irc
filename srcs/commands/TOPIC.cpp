@@ -1,4 +1,4 @@
-#include "TOPIC.hpp"
+#include "../includes/commands/TOPIC.hpp"
 
 TOPIC::TOPIC() : Command("TOPIC", 1, false) {};
 TOPIC::~TOPIC() {};

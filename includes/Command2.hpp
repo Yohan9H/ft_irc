@@ -5,15 +5,12 @@
 # include <string>
 # include <vector>
 
+#include "Server.hpp"
+
 class Server; 
 class Client;
 
-struct cmd {
-    std::string prefix;
-    std::string command;
-    std::vector<std::string> params;
-    std::string trailing; 
-};
+struct cmd;
 
 typedef struct s_timeServ
 {
@@ -25,7 +22,7 @@ typedef struct s_timeServ
 
 void 	handlePrivmsg(const cmd &cmd);
 void    parseCommand(Server &serv, Client &cli, const std::string &input);
-void 	execCommand(Server &serv, Client &cli, const cmd &cmd);
+void 	executeCommand(Server &serv, Client &cli, const cmd &cmd);
 void 	parseline(const std::string &line);
 
 // CMD

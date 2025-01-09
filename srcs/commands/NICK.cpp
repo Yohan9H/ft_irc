@@ -1,4 +1,4 @@
-#include "NICK.hpp"
+#include "../includes/commands/NICK.hpp"
 
 NICK::NICK() : Command("NICK", 1, false) {};
 NICK::~NICK() {};

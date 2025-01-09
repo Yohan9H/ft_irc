@@ -1,4 +1,4 @@
-#include "JOIN.hpp"
+#include "../includes/commands/JOIN.hpp"
 
 JOIN::JOIN() : Command("JOIN", 1, false) {};
 JOIN::~JOIN() {};

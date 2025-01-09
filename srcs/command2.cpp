@@ -2,6 +2,7 @@
 #include "../includes/Client.hpp"
 #include "../includes/Server.hpp"
 #include "../includes/Command2.hpp"
+#include "../includes/Command.hpp"
 
 void parseline(const std::string &line)
 {
@@ -9,7 +10,7 @@ void parseline(const std::string &line)
     //split when you find /r/n
 }
 
-void execCommand(Server &serv, Client &cli, const cmd &cmd) // passer ref a mon avis
+void executeCommand(Server &serv, Client &cli, const cmd &cmd)
 {
     const std::string validCommands[] = {
         "NICK", "USER", "JOIN", "PRIVMSG", "PART", "QUIT", "TOPIC", "KICK", "MODE", "INVITE", "CAP", "PASS", "PING", "NOTICE"
@@ -26,11 +27,19 @@ void execCommand(Server &serv, Client &cli, const cmd &cmd) // passer ref a mon 
     }
     if (!found)
         throw std::logic_error("Invalid command");
-    if (cmd.command == "NICK" && cmd.params.size() == 1)
+    if (cmd.trailing.length() > 512)
+        throw std::logic_error("traling too long");
+
+    Command *myCommand = serv.getCommandByName(cmd.command);
+
+    if (cmd.params.size() < myCommand->getNbParam())
+        throw std::logic_error("Wrong params");
+    
+    if (cmd.command == "NICK")
     {
 		Nick(serv, cli, cmd.params[0]);
     }
-    else if (cmd.command == "USER" && cmd.params.size() < 3)
+    else if (cmd.command == "USER")
 	{
 		User(serv, cli, cmd.params[0]);
 	}
@@ -42,21 +51,6 @@ void execCommand(Server &serv, Client &cli, const cmd &cmd) // passer ref a mon 
             join(serv, cli, cmd.params[0], cmd.params[1]);
          // Si jamais pas de param 1 (pas de mdp, param 1 a set a NULL)
     }
-    if (cmd.command == "PRIVMSG" && cmd.params.size() != 1) return false; 
-    if (cmd.command == "PART" && cmd.params.size() != 1) return false;
-    if (cmd.command == "QUIT" && cmd.params.size() != 0) return false;
-    if (cmd.command == "TOPIC" && cmd.params.size() != 1) return false;
-    if (cmd.command == "KICK" && cmd.params.size() != 2) return false;
-    if (cmd.command == "MODE" && cmd.params.size() < 1) return false;
-    if (cmd.command == "INVITE" && cmd.params.size() != 2) return false;
-    if (cmd.command == "CAP" && cmd.params.size() != 1) return false;
-    if (cmd.command == "PASS" && cmd.params.size() != 1) return false;
-    if (cmd.command == "PING" && cmd.params.size() != 1) return false;
-    if (cmd.command == "NOTICE" && cmd.params.size() != 2) return false;
-
-    if (cmd.trailing.length() > 512)
-        return (false);
-    return (true);
 }
 
 void handlePrivmsg(const cmd &cmd) {
@@ -101,7 +95,6 @@ void parseCommand(Server &serv, Client &cli, const std::string &input) {
     std::string data = input;
     normalizeCRLF(data);
     while ((pos = data.find("\r\n")) != std::string::npos) {
-
         std::string line = input.substr(0, pos);
         std::string token;
         std::istringstream tokenStream(line);
@@ -134,13 +127,12 @@ void parseCommand(Server &serv, Client &cli, const std::string &input) {
         
         try
         {
-           execCommand(serv, cli, command);
+           executeCommand(serv, cli, command);
         }
         catch(const std::exception& e)
         {
             std::cerr << e.what() << '\n';
         }
-
     // return (command);
         data.erase(0, pos + 2);
     }

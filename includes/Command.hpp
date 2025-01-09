@@ -4,10 +4,12 @@
 
 # include <string>
 # include <vector>
-#include "Command2.hpp"
+
 
 class Server; 
 class Client;
+
+struct cmd;
 
 class Command
 {

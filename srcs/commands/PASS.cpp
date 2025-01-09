@@ -1,4 +1,4 @@
-#include "PASS.hpp"
+#include "../includes/commands/PASS.hpp"
 
 PASS::PASS() : Command("PASS", 1, false) {};
 PASS::~PASS() {};
