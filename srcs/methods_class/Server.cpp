@@ -374,9 +374,30 @@ void	Server::delClientWithFd(int fd)
 	{
 		if (it->first == fd)
 		{
+			this->delClientChannelAssociate(*it->second);
 			this->delClient(*it->second);
-			// arret : del le client dans la liste des channels du serv et faire une verif si le channel est empty le supprimer aussi
 			break;
+		}
+	}
+}
+
+void	Server::delClientChannelAssociate(Client &client)
+{
+	std::vector<std::string> listChanJoined = client.getListChanJoined();
+
+	for (std::vector<std::string>::iterator it = listChanJoined.begin(); it != listChanJoined.end(); it++)
+	{
+		std::map<std::string, Channel*>::iterator it_lst = _listChannels.find(*it);
+		if (it_lst != _listChannels.end())
+		{
+			it_lst->second->delOperatores(client.getClientSocket());
+			it_lst->second->delMembres(client.getClientSocket());
+
+			// Supprimer le channel si vide
+			if (it_lst->second->getMembresFd().size() == 0)
+				_listChannels.erase(it_lst->first);
+
+			// send msg all membres if exist always
 		}
 	}
 }

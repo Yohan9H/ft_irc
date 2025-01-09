@@ -94,6 +94,7 @@ public:
 	void					delClient(Client &client);
 	void					addChannel(Channel &chan);
 	void					delChannel(Channel &channel);
+	void					delClientChannelAssociate(Client &client);
 	void					setTime();
 	std::string				getTime();
 	void					delClientWithFd(int fd);	
