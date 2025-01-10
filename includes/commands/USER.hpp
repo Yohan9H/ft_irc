@@ -9,7 +9,7 @@ class USER : public Command {
         USER();
         virtual ~USER();
 
-        virtual void execCommand(Server &serv, Client &cli, const cmd &cmd);
+        virtual void execCommand(Server &serv, Client &cli, const com &cmd);
 };
 
 #endif

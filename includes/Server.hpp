@@ -48,7 +48,7 @@
 
 class Client;
 
-struct cmd;
+struct com;
 
 class Server
 {

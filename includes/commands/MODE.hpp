@@ -9,7 +9,7 @@ class MODE : public Command {
         MODE();
         virtual ~MODE();
 
-        virtual void execCommand(Server &serv, Client &cli, const cmd &cmd);
+        virtual void execCommand(Server &serv, Client &cli, const com &cmd);
 };
 
 #endif

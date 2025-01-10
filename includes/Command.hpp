@@ -5,11 +5,15 @@
 # include <string>
 # include <vector>
 
+# include "Server.hpp"
+# include "Client.hpp"
+# include "proto.hpp"
+#include "Utils.hpp"
 
 class Server; 
 class Client;
 
-struct cmd;
+struct com;
 
 class Command
 {
@@ -27,7 +31,7 @@ class Command
         int const& getNbParam();
         bool const& getMustbeAuth();
     
-        virtual void execCommand(Server &serv, Client &cli, const cmd &cmd) = 0;
+        virtual void execCommand(Server &serv, Client &cli, const com &cmd) = 0;
 };
 
 

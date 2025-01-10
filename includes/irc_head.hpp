@@ -27,7 +27,7 @@
 # include "../includes/commands/TOPIC.hpp"
 # include "../includes/commands/USER.hpp"
 
-struct cmd {
+struct com {
     std::string prefix;
     std::string command;
     std::vector<std::string> params;

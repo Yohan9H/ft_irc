@@ -6,7 +6,7 @@
 /*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 14:26:36 by yohurteb          #+#    #+#             */
-/*   Updated: 2025/01/09 15:13:12 by apernot          ###   ########.fr       */
+/*   Updated: 2025/01/10 14:35:11 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,16 +71,7 @@ bool	join(Server &serv, Client &client, std::string name_chan, std::string mdp)
 	return true;
 }
 
-bool	is_good(char c)
-{
-	std::string valide_char = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-#&+!.^,`|~$%*:<>\n";
-	std::size_t pos = valide_char.find(c);
 
-	if (pos != std::string::npos)
-		return true;
-	else
-		return false;
-}
 
 bool	Nick(Server &serv, Client &client, std::string nick)
 {

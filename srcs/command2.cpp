@@ -10,7 +10,7 @@ void parseline(const std::string &line)
     //split when you find /r/n
 }
 
-void executeCommand(Server &serv, Client &cli, const cmd &cmd)
+void executeCommand(Server &serv, Client &cli, const com &cmd)
 {
     const std::string validCommands[] = {
         "NICK", "USER", "JOIN", "PRIVMSG", "PART", "QUIT", "TOPIC", "KICK", "MODE", "INVITE", "CAP", "PASS", "PING", "NOTICE"
@@ -35,9 +35,12 @@ void executeCommand(Server &serv, Client &cli, const cmd &cmd)
     if (cmd.params.size() < myCommand->getNbParam())
         throw std::logic_error("Wrong params");
     
+    if (!cli.getIsAuth() && myCommand->getMustbeAuth())
+        throw std::logic_error("User not authentified");
+
     myCommand->execCommand(serv, cli, cmd);
 
-    
+   
 
     if (cmd.command == "NICK")
     {
@@ -57,7 +60,7 @@ void executeCommand(Server &serv, Client &cli, const cmd &cmd)
     }
 }
 
-void handlePrivmsg(const cmd &cmd) {
+void handlePrivmsg(const com &cmd) {
     if (cmd.params.size() < 2) {
         std::string errorCode = "461";
         std::string errorMessage = "PRIVMSG :Not enough parameters";
@@ -102,7 +105,7 @@ void parseCommand(Server &serv, Client &cli, const std::string &input) {
         std::string line = input.substr(0, pos);
         std::string token;
         std::istringstream tokenStream(line);
-        cmd command;
+        com command;
 
         // Check if the command has a prefix
         if (!line.empty() && data[0] == ':') {
