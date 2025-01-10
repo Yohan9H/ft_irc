@@ -1,7 +1,4 @@
 #pragma once 
-#ifndef PING_HPP
-# define PING_HPP
-
 #include "Command.hpp"
 
 class PING : public Command {
@@ -11,5 +8,3 @@ class PING : public Command {
 
         virtual void execCommand(Server &serv, Client &cli, const com &cmd);
 };
-
-#endif

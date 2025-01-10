@@ -1,17 +1,10 @@
-#ifndef COMMAND_HPP
+#pragma once
 
-#define COMMAND_HPP
+#include <string>
+#include <vector>
 
-# include <string>
-# include <vector>
-
-# include "Server.hpp"
-# include "Client.hpp"
-# include "proto.hpp"
-# include "Utils.hpp"
-
-class Server; 
 class Client;
+class Server;
 
 struct com;
 
@@ -33,6 +26,3 @@ class Command
     
         virtual void execCommand(Server &serv, Client &cli, const com &cmd) = 0;
 };
-
-
-#endif

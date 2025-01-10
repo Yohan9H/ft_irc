@@ -10,9 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
-#ifndef CLIENT_HPP
-# define CLIENT_HPP
+#pragma once
 #include "Server.hpp"
 #include "Channel.hpp"
 #include "irc_head.hpp"
@@ -60,12 +58,6 @@ public:
 	void			print_for_test();
 
     void 	handlePrivmsg(const com &cmd);
-    void    parseCommand(Server &serv, const std::string &input);
     void 	executeCommand(Server &serv, const com &cmd);
     void 	parseline(const std::string &line);
 };
-
-#endif
-
-
-

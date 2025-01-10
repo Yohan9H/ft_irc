@@ -1,6 +1,4 @@
-#ifndef IRC_HEAD_HPP
-
-# define IRC_HEAD_HPP
+#pragma once
 
 # define RED "\033[0;31m"
 # define GREEN "\033[0;32m"
@@ -33,5 +31,3 @@ struct com {
     std::vector<std::string> params;
     std::string trailing; 
 };
-
-#endif

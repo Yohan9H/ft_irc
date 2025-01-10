@@ -275,7 +275,7 @@ bool Server::receiveData(int fd)
         // //Merge partie Arthur 
         std::string bufferToParse;
         bufferToParse = std::string(buffer);
-        parseCommand(*this, *(this->getClientbyFd(fd)),  bufferToParse);
+        parseCommand(*(this->getClientbyFd(fd)), bufferToParse);
         // std::cout << "Prefix: "<< (command.prefix.empty() ? "empty" : command.prefix) << std::endl;
         // std::cout << "cmd: " << command.command << std::endl;
         // if (command.params.size() == 0)
@@ -300,6 +300,55 @@ bool Server::receiveData(int fd)
     {
         std::cerr << RED << "recv: " << strerror(errno) << COL_END << std::endl;
         return false;
+    }
+}
+
+void Server::parseCommand(Client &client, const std::string &input) {
+
+    size_t pos = 0;
+    std::string data = input;
+    normalizeCRLF(data);
+    while ((pos = data.find("\r\n")) != std::string::npos) {
+        std::string line = input.substr(0, pos);
+        std::string token;
+        std::istringstream tokenStream(line);
+        com command;
+
+        // Check if the command has a prefix
+        if (!line.empty() && data[0] == ':') {
+            std::getline(tokenStream, token, ' ');
+            command.prefix = token.substr(1);
+        }
+        // Get the command
+        if (std::getline(tokenStream, token, ' '))
+            command.command = token;
+
+        // Get the parameters and trailing
+        while (std::getline(tokenStream, token, ' ')) {
+            if (!token.empty() && token[0] == ':') {
+                command.trailing = token.substr(1);
+                break;
+            } else {
+                command.params.push_back(token);
+            }
+        }
+
+        // FOR TEST
+	    if (command.command == "CLIENT")
+		    showMapClient(*this);
+	    if (command.command == "CHANNEL")
+		    showMapChannel(*this);
+        
+        try
+        {
+           client.executeCommand(*this, command);
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << e.what() << '\n';
+        }
+    // return (command);
+        data.erase(0, pos + 2);
     }
 }
 

@@ -1,7 +1,4 @@
 #pragma once 
-#ifndef PART_HPP
-# define PART_HPP
-
 #include "Command.hpp"
 
 class PART : public Command {
@@ -11,5 +8,3 @@ class PART : public Command {
 
         virtual void execCommand(Server &serv, Client &cli, const com &cmd);
 };
-
-#endif

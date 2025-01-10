@@ -1,7 +1,4 @@
 #pragma once 
-#ifndef KICK_HPP
-# define KICK_HPP
-
 #include "Command.hpp"
 
 class KICK : public Command {
@@ -11,5 +8,3 @@ class KICK : public Command {
 
         virtual void execCommand(Server &serv, Client &cli, const com &cmd);
 };
-
-#endif

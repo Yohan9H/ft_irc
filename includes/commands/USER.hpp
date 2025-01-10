@@ -1,6 +1,4 @@
 #pragma once 
-#ifndef USER_HPP
-# define USER_HPP
 
 #include "Command.hpp"
 
@@ -11,5 +9,3 @@ class USER : public Command {
 
         virtual void execCommand(Server &serv, Client &cli, const com &cmd);
 };
-
-#endif

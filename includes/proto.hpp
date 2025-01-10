@@ -39,3 +39,5 @@ std::string invite_false(std::string serv, std::string request, std::string chan
 std::string limit_user_false(std::string name_serv, std::string name_client);
 
 std::string msg_err(std::string name_serv, std::string code, std::string name_input, std::string motif);
+
+void    parseCommand(Server &serv, Client &client, const std::string &input);

@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SERVER_HPP
-# define SERVER_HPP
+#pragma once
 #include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h> //socket functions 
@@ -39,8 +38,7 @@
 #include "Client.hpp"
 #include "irc_head.hpp"
 #include "Command.hpp"
-
-
+#include "Utils.hpp"
 
 #define MAX_CONNEXIONS 5
 #define BUFFER_MAX 1024
@@ -108,6 +106,6 @@ public:
 	void					setTime();
 	std::string				getTime();
 	void					delClientWithFd(int fd);	
-};
 
-#endif
+	void					parseCommand(Client &client, const std::string &input);
+};

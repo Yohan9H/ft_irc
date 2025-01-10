@@ -1,7 +1,4 @@
 #pragma once 
-#ifndef NOTICE_HPP
-# define NOTICE_HPP
-
 #include "Command.hpp"
 
 class NOTICE : public Command {
@@ -11,5 +8,3 @@ class NOTICE : public Command {
 
         virtual void execCommand(Server &serv, Client &cli, const com &cmd);
 };
-
-#endif
