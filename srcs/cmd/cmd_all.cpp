@@ -6,7 +6,7 @@
 /*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 14:26:36 by yohurteb          #+#    #+#             */
-/*   Updated: 2025/01/10 14:35:11 by apernot          ###   ########.fr       */
+/*   Updated: 2025/01/10 15:23:43 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,19 +208,3 @@ bool	User(Server &serv, Client &client, std::string username)
 
 // FOR TEST
 
-void	showMapClient(Server &serv)
-{
-	std::cout << "|Map Client|" << std::endl;
-	for (std::map<int, Client*>::const_iterator it = serv.getClients().begin(); it != serv.getClients().end(); it++)
-	{
-		std::cout << "name client : " << it->second->getUsername() << std::endl;	
-	}
-}
-
-void	showMapChannel(Server &serv)
-{
-	for (std::map<std::string, Channel*>::const_iterator it = serv.getChannel().begin(); it != serv.getChannel().end(); it++)
-	{
-		std::cout << "name channel : " << it->first << std::endl;
-	}
-}

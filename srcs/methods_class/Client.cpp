@@ -110,3 +110,111 @@ void	Client::print_for_test()
 	}
 	std::cout << "----- END TEST -----" << std::endl;
 }
+
+void Client::parseline(const std::string &line)
+{
+   (void)line;
+    //split when you find /r/n
+}
+
+void Client::executeCommand(Server &serv, const com &cmd)
+{
+    const std::string validCommands[] = {
+        "NICK", "USER", "JOIN", "PRIVMSG", "PART", "QUIT", "TOPIC", "KICK", "MODE", "INVITE", "CAP", "PASS", "PING", "NOTICE"
+    };
+
+    if (cmd.command.empty())
+        throw std::logic_error("Empty command");
+    bool found = false;
+    for (size_t i = 0; i < (sizeof(validCommands) / sizeof(validCommands[0])); i++) {
+        if (cmd.command == validCommands[i]) {
+            found = true;
+            break;
+        }
+    }
+    if (!found)
+        throw std::logic_error("Invalid command");
+    if (cmd.trailing.length() > 512)
+        throw std::logic_error("traling too long");
+
+    Command *myCommand = serv.getCommandByName(cmd.command);
+
+    if (cmd.params.size() < myCommand->getNbParam())
+        throw std::logic_error("Wrong params");
+    
+    if (!this->getIsAuth() && myCommand->getMustbeAuth())
+        throw std::logic_error("User not authentified");
+
+    myCommand->execCommand(serv, *this, cmd);
+
+}
+
+void Client::handlePrivmsg(const com &cmd) {
+    if (cmd.params.size() < 2) {
+        std::string errorCode = "461";
+        std::string errorMessage = "PRIVMSG :Not enough parameters";
+        throw std::logic_error(errorCode + " " + errorMessage);
+    }
+
+    const std::string &target = cmd.params[0];
+    const std::string &message = cmd.trailing;
+
+    if (target.empty() || message.empty()) {
+        std::string errorCode = "412";
+        std::string errorMessage = "No text to send";
+        throw std::logic_error(errorCode + " " + errorMessage);
+    }
+
+    // Logique métier (envoyer le message au destinataire)
+}
+
+
+
+void Client::parseCommand(Server &serv, const std::string &input) {
+
+    size_t pos = 0;
+    std::string data = input;
+    normalizeCRLF(data);
+    while ((pos = data.find("\r\n")) != std::string::npos) {
+        std::string line = input.substr(0, pos);
+        std::string token;
+        std::istringstream tokenStream(line);
+        com command;
+
+        // Check if the command has a prefix
+        if (!line.empty() && data[0] == ':') {
+            std::getline(tokenStream, token, ' ');
+            command.prefix = token.substr(1);
+        }
+        // Get the command
+        if (std::getline(tokenStream, token, ' '))
+            command.command = token;
+
+        // Get the parameters and trailing
+        while (std::getline(tokenStream, token, ' ')) {
+            if (!token.empty() && token[0] == ':') {
+                command.trailing = token.substr(1);
+                break;
+            } else {
+                command.params.push_back(token);
+            }
+        }
+
+        // FOR TEST
+	    if (command.command == "CLIENT")
+		    showMapClient(serv);
+	    if (command.command == "CHANNEL")
+		    showMapChannel(serv);
+        
+        try
+        {
+           executeCommand(serv, command);
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << e.what() << '\n';
+        }
+    // return (command);
+        data.erase(0, pos + 2);
+    }
+}

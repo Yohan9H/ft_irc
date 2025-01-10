@@ -6,7 +6,7 @@
 /*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 13:13:34 by avandeve          #+#    #+#             */
-/*   Updated: 2025/01/10 11:05:14 by apernot          ###   ########.fr       */
+/*   Updated: 2025/01/10 15:37:34 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,11 @@ public:
 	void			AuthIsGood();
 
 	void			print_for_test();
+
+    void 	handlePrivmsg(const com &cmd);
+    void    parseCommand(Server &serv, const std::string &input);
+    void 	executeCommand(Server &serv, const com &cmd);
+    void 	parseline(const std::string &line);
 };
 
 #endif
