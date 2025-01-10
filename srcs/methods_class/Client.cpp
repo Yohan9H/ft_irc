@@ -1,15 +1,15 @@
 #include "../includes/Client.hpp"
 
-Client::Client()
+Client::Client() : _clientSocket(-1), _isAuth(false)
 {
 }
 
-Client::Client(int clientSocket)  : _clientSocket(clientSocket)
+Client::Client(int clientSocket)  : _clientSocket(clientSocket), _isAuth(false)
 {
 
 }
 
-Client::Client(const Client &other)  : _clientSocket(other._clientSocket)
+Client::Client(const Client &other)  : _clientSocket(other._clientSocket), _isAuth(other._isAuth)
 {
 
 }
@@ -27,6 +27,11 @@ Client::~Client()
 int &Client::getClientSocket()
 {
     return (this->_clientSocket);
+}
+
+bool	Client::getIsAuth()
+{
+	return _isAuth;
 }
 
 std::string	&Client::getUsername()
@@ -73,7 +78,7 @@ bool	Client::if_identify(int code)
 	print_for_test();
 	if (code == 2)
 	{
-		if (_nick.empty() || _username.empty())
+		if (_isAuth == false)
 			return false;
 		else
 			return true;
@@ -85,6 +90,11 @@ bool	Client::if_identify(int code)
 		else
 			return true;
 	}
+}
+
+void	Client::AuthIsGood()
+{
+	_isAuth = true;
 }
 
 void	Client::print_for_test()

@@ -26,6 +26,7 @@ class Client
 {
 private:
     int								_clientSocket;
+	bool							_isAuth;
 	std::string						_nick;
     std::string						_username;
 	std::vector<std::string>		_listChan;
@@ -39,6 +40,7 @@ public:
 
 	// getters
     int 						&getClientSocket();
+	bool						getIsAuth();
     std::string					&getNickname();
     std::string					&getUsername();
 	std::vector<std::string>	&getListChanJoined();
@@ -51,6 +53,7 @@ public:
 	// methods
 	void			sendMsgAllChan(Server &serv, std::string msg);
 	bool			if_identify(int code);
+	void			AuthIsGood();
 
 	void			print_for_test();
 };

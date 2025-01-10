@@ -15,21 +15,22 @@
 
 bool	join(Server &serv, Client &client, std::string name_chan, std::string mdp)
 {
+	std::string msg;
+
 	// Verif if '#'
 	if (name_chan[0] && name_chan[0] != '#')
 		return false;
 
-	// Recup de la chaine
-	Channel *channel = createChannel(serv, name_chan, client);
-	std::string msg;
-
 	// Verif client is identify
-	if (client.if_identify(2) == false)
+	if (client.getIsAuth() == false)
 	{
 		msg = ":" + std::string(NAME_SERV) + " 451 You have not registered\n";
 		send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
 		return false;
 	}
+
+	// Recup de la chaine
+	Channel *channel = createChannel(serv, name_chan, client);
 
 	// Permissions
 	if (channel->ifProtectedByPassWord() && !channel->checkPassWord(mdp))
@@ -113,20 +114,22 @@ bool	Nick(Server &serv, Client &client, std::string nick)
 		return false;
 	}
 	
+	removeNewline(nick);
+
 	// Verif if already use
 	for (std::map<int, Client*>::iterator it = serv.getClients().begin(); it != serv.getClients().end(); it++)
 	{
 		if (it->second->getNickname() == nick)
 		{
+			std::cout << "in if" << std::endl;
 			msg = msg_err(NAME_SERV, "433", nick, ":Nickname is already in use");
 			send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
 			return false;
 		}
 	}
 
-	removeNewline(nick);
 	client.setNick(nick);
-	
+
 	// -- Voir si besoin d'envoye un msg a client qui met ou change son nom ?? --
 
 	// Informe tous les channels dont il fait partie de son changement
@@ -137,8 +140,8 @@ bool	Nick(Server &serv, Client &client, std::string nick)
 	}
 	else
 	{
-		msg = ":" + client.getUsername() + "!user@" + std::string(NAME_SERV) + "NICK :";
-		client.sendMsgAllChan(serv, msg); 
+		msg = ":" + client.getUsername() + " !user@" + std::string(NAME_SERV) + "NICK :";
+		client.sendMsgAllChan(serv, msg);
 	}
 
 	client.print_for_test();
@@ -199,6 +202,7 @@ bool	User(Server &serv, Client &client, std::string username)
 	}
 
 	client.setName(username);
+	client.AuthIsGood();
 
 	msg = ":" + std::string(NAME_SERV) + " 001 " + client.getNickname() + " :Welcome to the ft_irc " + client.getNickname() + "! " + client.getUsername() + "@" + "localhost\n";
 	msg += ":" + std::string(NAME_SERV) + " 002 " + client.getNickname() + " :Your host is ft_irc 1.0\n";
