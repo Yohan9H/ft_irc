@@ -66,30 +66,21 @@ void		Client::setNick(std::string new_nick)
 
 void	Client::sendMsgAllChan(Server &serv, std::string msg)
 {
-	for (std::vector<std::string>::iterator it = _listChan.end(); it != _listChan.end(); it++)
+	std::cout << "test" << std::endl;
+	for (std::vector<std::string>::iterator it = _listChan.begin(); it != _listChan.end(); it++)
 	{
+		std::cout << "in for" << std::endl;
 		Channel *channel = serv.getChannelbyName(*it);
 		channel->sendMsgMembres(msg);
 	}
 }
 
-bool	Client::if_identify(int code)
+bool	Client::if_NickIsCreate()
 {
-	print_for_test();
-	if (code == 2)
-	{
-		if (_isAuth == false)
-			return false;
-		else
-			return true;
-	}
-	else 
-	{
-		if (_nick.empty())
-			return false;
-		else
-			return true;
-	}
+	if (_nick.empty())
+		return false;
+	else
+		return true;
 }
 
 void	Client::AuthIsGood()

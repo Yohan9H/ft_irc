@@ -25,7 +25,7 @@ bool	join(Server &serv, Client &client, std::string name_chan, std::string mdp)
 	// Verif client is identify
 	if (client.getIsAuth() == false)
 	{
-		msg = ":" + std::string(NAME_SERV) + " 451 You have not registered\n";
+		msg = ":" + std::string(NAME_SERV) + " 451 You have not registered" ENDLINE_MSG;
 		send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
 		return false;
 	}
@@ -129,23 +129,20 @@ bool	Nick(Server &serv, Client &client, std::string nick)
 		}
 	}
 
-	client.setNick(nick);
-
-	// -- Voir si besoin d'envoye un msg a client qui met ou change son nom ?? --
-
 	// Informe tous les channels dont il fait partie de son changement
-	if (client.getUsername().empty())
+	if (client.getIsAuth() == false)
 	{
-		msg = ":_NoName_!user@" + std::string(NAME_SERV) + "NICK :";
-		client.sendMsgAllChan(serv, msg); 
+		msg = ":" + nick + " NICK :" + nick ENDLINE_MSG;
+		send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
 	}
 	else
 	{
-		msg = ":" + client.getUsername() + " !user@" + std::string(NAME_SERV) + "NICK :";
+		msg = ":" + client.getNickname() + " NICK :" + nick ENDLINE_MSG;
 		client.sendMsgAllChan(serv, msg);
 	}
 
-	client.print_for_test();
+	client.setNick(nick);
+
 	return true;
 }
 
@@ -154,7 +151,7 @@ bool	User(Server &serv, Client &client, std::string username)
 	std::string msg;
 
 	// Verif client if identify
-	if (client.if_identify(1) == false)
+	if (client.if_NickIsCreate() == false)
 	{
 		msg = ":" + std::string(NAME_SERV) + " 431 No nickname given\n";
 		send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
@@ -163,6 +160,7 @@ bool	User(Server &serv, Client &client, std::string username)
 
 	// Verif valide name
 	removeNewline(username);
+
 	if (username.length() > 9)
 	{
 		msg = msg_err(NAME_SERV, "432", username, ":Erroneous nickname");
@@ -210,8 +208,6 @@ bool	User(Server &serv, Client &client, std::string username)
 	msg += ":" + std::string(NAME_SERV) + " 003 " + client.getNickname() + " :Created at [" + serv.getTime() + "]\n";
 	send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
 	
-	client.print_for_test();
-
 	return true;
 }
 

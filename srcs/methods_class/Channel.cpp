@@ -196,8 +196,10 @@ std::string Channel::giveAllNameMembres(Server &serv)
 
 void	Channel::sendMsgMembres(std::string msg)
 {
+	std::cout << "in sendMsgMembres" << std::endl;
 	for (std::vector<int>::iterator it = _membresFd.begin(); it != _membresFd.end() ;it++)
 	{
+		std::cout << "in send" << std::endl;
 		send(*it, msg.c_str(), msg.size(), 0);
 	}
 }

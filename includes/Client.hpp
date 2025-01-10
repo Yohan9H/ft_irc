@@ -54,7 +54,7 @@ public:
 
 	// methods
 	void			sendMsgAllChan(Server &serv, std::string msg);
-	bool			if_identify(int code);
+	bool			if_NickIsCreate();
 	void			AuthIsGood();
 
 	void			print_for_test();
