@@ -12,7 +12,6 @@
 
 #include "../includes/Server.hpp"
 #include "../includes/Command.hpp"
-#include "../includes/Command2.hpp"
 
 bool	join(Server &serv, Client &client, std::string name_chan, std::string mdp)
 {

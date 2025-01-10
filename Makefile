@@ -11,7 +11,6 @@ INCLUDE = ./includes
 
 SRCS = $(SRC_DIR)/main.cpp \
 	   $(SRC_DIR)/command.cpp \
-	   $(SRC_DIR)/command2.cpp \
 	   $(MTH_DIR)/Server.cpp \
 	   $(MTH_DIR)/Client.cpp \
 	   $(MTH_DIR)/Channel.cpp \

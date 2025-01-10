@@ -2,7 +2,6 @@
 #include "../includes/Channel.hpp"
 #include "../includes/irc_head.hpp"
 #include "../includes/Command.hpp"
-#include "../includes/Command2.hpp"
 
 class Channel;
 
