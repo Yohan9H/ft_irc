@@ -1,6 +1,8 @@
 #include "../includes/Server.hpp"
 #include "../includes/Channel.hpp"
 #include "../includes/irc_head.hpp"
+#include "../includes/Command.hpp"
+#include "../includes/Command2.hpp"
 
 class Channel;
 
@@ -89,12 +91,42 @@ bool Server::initServer()
   return (true);
 }
 
+void	Server::setCommands() {
+  _commands.insert(std::pair<std::string, Command*>("CAP", new CAP));
+  _commands.insert(std::pair<std::string, Command*>("JOIN", new JOIN));
+  _commands.insert(std::pair<std::string, Command*>("KICK", new KICK));
+  _commands.insert(std::pair<std::string, Command*>("MODE", new MODE));
+  _commands.insert(std::pair<std::string, Command*>("NICK", new NICK));
+  _commands.insert(std::pair<std::string, Command*>("NOTICE", new NOTICE));
+  _commands.insert(std::pair<std::string, Command*>("PART", new PART));
+  _commands.insert(std::pair<std::string, Command*>("PASS", new PASS));
+  _commands.insert(std::pair<std::string, Command*>("PING", new PING));
+  _commands.insert(std::pair<std::string, Command*>("PRIVMSG", new PRIVMSG));
+  _commands.insert(std::pair<std::string, Command*>("QUIT", new QUIT));
+  _commands.insert(std::pair<std::string, Command*>("TOPIC", new TOPIC));
+  _commands.insert(std::pair<std::string, Command*>("USER", new USER));
+}
+
+Command* Server::getCommandByName(std::string cmdName) {
+  for (std::map<std::string, Command*>::iterator it = _commands.begin(); it != _commands.end(); it++) {
+    if (it->first == cmdName) {
+        return (it->second);
+        break ;
+    }  
+  }
+  return NULL;
+}
+
+
+
 bool Server::createServerSocket()
 {
     this->_serverAddress.sin_family = AF_INET;
     this->_serverAddress.sin_port = htons(this->_port);
     this->_serverAddress.sin_addr.s_addr = INADDR_ANY;
     this->_serverSocket = socket(AF_INET, SOCK_STREAM, 0);
+    //verifier le bon emplacement de setcommands
+    this->setCommands();
     //Checking if the socket has been successfully created
     if (this->_serverSocket == -1)
     {
@@ -244,14 +276,14 @@ bool Server::receiveData(int fd)
         // //Merge partie Arthur 
         std::string bufferToParse;
         bufferToParse = std::string(buffer);
-        Command command = parseCommand(*this, *(this->getClientbyFd(fd)),  bufferToParse);
-        std::cout << "Prefix: "<< (command.prefix.empty() ? "empty" : command.prefix) << std::endl;
-        std::cout << "Command: " << command.command << std::endl;
-        if (command.params.size() == 0)
-          std::cout << "Params: empty" << std::endl;
-        for (size_t i = 0; i < command.params.size(); i++)
-          std::cout << "Params " << i << ": " << command.params[i] << std::endl;
-        std::cout << "Trailing: "<< (command.trailing.empty() ? "empty" : command.trailing) << std::endl;
+        parseCommand(*this, *(this->getClientbyFd(fd)),  bufferToParse);
+        // std::cout << "Prefix: "<< (command.prefix.empty() ? "empty" : command.prefix) << std::endl;
+        // std::cout << "cmd: " << command.command << std::endl;
+        // if (command.params.size() == 0)
+        //   std::cout << "Params: empty" << std::endl;
+        // for (size_t i = 0; i < command.params.size(); i++)
+        //   std::cout << "Params " << i << ": " << command.params[i] << std::endl;
+        // std::cout << "Trailing: "<< (command.trailing.empty() ? "empty" : command.trailing) << std::endl;
 
     //Just some tests 
       std::string ar = (std::string)"You sent";

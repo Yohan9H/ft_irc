@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   proto.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yohurteb <yohurteb@student.42.fr>          +#+  +:+       +#+        */
+/*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 09:55:06 by yohurteb          #+#    #+#             */
-/*   Updated: 2024/12/21 15:15:50 by yohurteb         ###   ########.fr       */
+/*   Updated: 2025/01/09 17:12:31 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 class Server;
 class Channel;
 class Client;
+
+#include "irc_head.hpp"
 
 typedef struct s_perm
 {

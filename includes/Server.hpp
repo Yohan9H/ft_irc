@@ -38,7 +38,9 @@
 #include "proto.hpp"
 #include "Client.hpp"
 #include "irc_head.hpp"
-#include "command.hpp"
+#include "Command.hpp"
+
+
 
 #define MAX_CONNEXIONS 5
 #define BUFFER_MAX 1024
@@ -46,7 +48,7 @@
 
 class Client;
 
-struct Command;
+struct cmd;
 
 class Server
 {
@@ -63,6 +65,8 @@ private:
 	struct sockaddr_in					_cliAddress;
 	struct pollfd						_newClient;
 	std::string							_timeBeginServ;
+	
+	std::map<std::string, Command*>		_commands; 
 
 	Server(const Server& other);
 
@@ -89,6 +93,11 @@ public:
 	Client										*getClientbyFd(int clientFd);
 	Channel										*getChannelbyName(std::string name);
 	std::map<std::string, Channel*>::iterator	findChan(std::string name);
+
+	Command* getCommandByName(std::string cmdName);
+
+	//SETTER
+	void		setCommands();
 
 	void					addClient(Client &client);
 	void					delClient(Client &client);

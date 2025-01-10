@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yohurteb <yohurteb@student.42.fr>          +#+  +:+       +#+        */
+/*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 13:13:34 by avandeve          #+#    #+#             */
-/*   Updated: 2024/12/21 14:34:08 by yohurteb         ###   ########.fr       */
+/*   Updated: 2025/01/10 11:05:14 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 # define CLIENT_HPP
 #include "Server.hpp"
 #include "Channel.hpp"
+#include "irc_head.hpp"
+
 
 #define IS_OP 9
 #define NOT_OP 8

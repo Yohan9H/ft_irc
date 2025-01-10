@@ -1,16 +1,16 @@
-#ifndef COMMAND_HPP
+#ifndef COMMAND2_HPP
 
-#define COMMAND_HPP
+#define COMMAND2_HPP
+
+# include <string>
+# include <vector>
+
+#include "Server.hpp"
 
 class Server; 
 class Client;
 
-struct Command {
-    std::string prefix;
-    std::string command;
-    std::vector<std::string> params;
-    std::string trailing; 
-};
+struct cmd;
 
 typedef struct s_timeServ
 {
@@ -19,9 +19,10 @@ typedef struct s_timeServ
 	int	year;
 } t_timeServ;
 
-void 	handlePrivmsg(const Command &cmd);
-Command parseCommand(Server &serv, Client &cli, const std::string &input);
-bool 	isValidCommand(Server &serv, Client &cli, const Command &cmd);
+
+void 	handlePrivmsg(const cmd &cmd);
+void    parseCommand(Server &serv, Client &cli, const std::string &input);
+void 	executeCommand(Server &serv, Client &cli, const cmd &cmd);
 void 	parseline(const std::string &line);
 
 // CMD

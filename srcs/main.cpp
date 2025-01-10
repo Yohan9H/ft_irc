@@ -12,7 +12,8 @@
 
 #include "../includes/Server.hpp"
 #include "../includes/Client.hpp"
-#include "../includes/command.hpp"
+#include "../includes/Command.hpp"
+#include "../includes/Command2.hpp"
 
 int   main(int argc, char **argv)
 {

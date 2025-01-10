@@ -12,4 +12,26 @@
 # define COL_END "\033[0m"
 
 
+# include "../includes/commands/CAP.hpp"
+# include "../includes/commands/INVITE.hpp"
+# include "../includes/commands/JOIN.hpp"
+# include "../includes/commands/KICK.hpp"
+# include "../includes/commands/MODE.hpp"
+# include "../includes/commands/NICK.hpp"
+# include "../includes/commands/NOTICE.hpp"
+# include "../includes/commands/PART.hpp"
+# include "../includes/commands/PASS.hpp"
+# include "../includes/commands/PING.hpp"
+# include "../includes/commands/PRIVMSG.hpp"
+# include "../includes/commands/QUIT.hpp"
+# include "../includes/commands/TOPIC.hpp"
+# include "../includes/commands/USER.hpp"
+
+struct cmd {
+    std::string prefix;
+    std::string command;
+    std::vector<std::string> params;
+    std::string trailing; 
+};
+
 #endif
