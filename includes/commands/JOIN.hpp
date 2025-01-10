@@ -9,7 +9,7 @@ class JOIN : public Command {
         JOIN();
         virtual ~JOIN();
 
-        virtual void execCommand(Server &serv, Client &cli, const cmd &cmd);
+        virtual void execCommand(Server &serv, Client &cli, const com &cmd);
 };
 
 #endif

@@ -10,7 +10,7 @@
 class Server; 
 class Client;
 
-struct cmd;
+struct com;
 
 typedef struct s_timeServ
 {
@@ -20,9 +20,9 @@ typedef struct s_timeServ
 } t_timeServ;
 
 
-void 	handlePrivmsg(const cmd &cmd);
+void 	handlePrivmsg(const com &cmd);
 void    parseCommand(Server &serv, Client &cli, const std::string &input);
-void 	executeCommand(Server &serv, Client &cli, const cmd &cmd);
+void 	executeCommand(Server &serv, Client &cli, const com &cmd);
 void 	parseline(const std::string &line);
 
 // CMD

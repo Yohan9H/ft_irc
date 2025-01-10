@@ -3,7 +3,7 @@
 PRIVMSG::PRIVMSG() : Command("PRIVMSG", 1, false) {};
 PRIVMSG::~PRIVMSG() {};
 
-void PRIVMSG::execCommand(Server &serv, Client &cli, const cmd &cmd)
+void PRIVMSG::execCommand(Server &serv, Client &cli, const com &cmd)
 {
     
 }

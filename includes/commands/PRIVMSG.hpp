@@ -9,7 +9,7 @@ class PRIVMSG : public Command {
         PRIVMSG();
         virtual ~PRIVMSG();
 
-        virtual void execCommand(Server &serv, Client &cli, const cmd &cmd);
+        virtual void execCommand(Server &serv, Client &cli, const com &cmd);
 };
 
 #endif

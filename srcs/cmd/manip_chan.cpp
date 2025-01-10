@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   manip_chan.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yohurteb <yohurteb@student.42.fr>          +#+  +:+       +#+        */
+/*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 18:08:01 by yohurteb          #+#    #+#             */
-/*   Updated: 2024/12/21 15:32:37 by yohurteb         ###   ########.fr       */
+/*   Updated: 2025/01/10 14:36:32 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,3 +38,4 @@ void removeNewline(std::string& nick)
 {
 	nick.erase(std::remove(nick.begin(), nick.end(), '\n'), nick.end());
 }
+

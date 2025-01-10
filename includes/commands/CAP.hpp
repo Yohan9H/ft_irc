@@ -9,7 +9,7 @@ class CAP : public Command {
         CAP();
         virtual ~CAP();
 
-        virtual void execCommand(Server &serv, Client &cli, const cmd &cmd);
+        virtual void execCommand(Server &serv, Client &cli, const com &cmd);
 };
 
 #endif
