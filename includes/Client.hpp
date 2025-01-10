@@ -6,7 +6,7 @@
 /*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 13:13:34 by avandeve          #+#    #+#             */
-/*   Updated: 2025/01/09 17:11:50 by apernot          ###   ########.fr       */
+/*   Updated: 2025/01/10 11:05:14 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ private:
     std::string        				 _username;
 	std::string						 _nick;
 	std::map<std::string, Channel*>	 _listChan;
+    bool                             _isAuth;
 
 public:
     Client();
@@ -66,6 +67,7 @@ public:
 	bool				if_identify(int code);
 
 	void				print_for_test();
+    
 };
 
 #endif

@@ -35,6 +35,10 @@ void executeCommand(Server &serv, Client &cli, const cmd &cmd)
     if (cmd.params.size() < myCommand->getNbParam())
         throw std::logic_error("Wrong params");
     
+    myCommand->execCommand(serv, cli, cmd);
+
+    
+
     if (cmd.command == "NICK")
     {
 		Nick(serv, cli, cmd.params[0]);
