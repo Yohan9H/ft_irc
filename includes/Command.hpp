@@ -31,7 +31,7 @@ class Command
         int const& getNbParam();
         bool const& getMustbeAuth();
     
-        virtual void execCommand(Server &serv, Client &cli, const com &cmd) = 0;
+        virtual void execCommand(Server &serv, Client &client, const com &cmd) = 0;
 };
 
 

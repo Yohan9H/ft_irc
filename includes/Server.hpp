@@ -45,6 +45,7 @@
 #define MAX_CONNEXIONS 5
 #define BUFFER_MAX 1024
 #define NAME_SERV "irc.42.com"
+#define ENDLINE_MSG + "\n"
 
 class Client;
 
