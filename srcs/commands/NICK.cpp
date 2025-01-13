@@ -1,4 +1,4 @@
-#include "../includes/commands/NICK.hpp"
+#include "NICK.hpp"
 
 NICK::NICK() : Command("NICK", 1, false) {};
 NICK::~NICK() {};
@@ -65,3 +65,5 @@ void NICK::execCommand(Server &serv, Client &client, const com &cmd)
 	client.setNick(nick);
 
 	return ;
+
+}

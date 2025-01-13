@@ -1,9 +1,9 @@
-#include "../includes/commands/TOPIC.hpp"
+#include "TOPIC.hpp"
 
 TOPIC::TOPIC() : Command("TOPIC", 1, false) {};
 TOPIC::~TOPIC() {};
 
-void TOPIC::execCommand(Server &serv, Client &cli, const com &cmd)
+void TOPIC::execCommand(Server &serv, Client &client, const com &cmd)
 {
     
 }

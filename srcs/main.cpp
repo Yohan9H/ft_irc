@@ -10,9 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/Server.hpp"
-#include "../includes/Client.hpp"
-#include "../includes/Command.hpp"
+#include "irc_head.hpp"
 
 int   main(int argc, char **argv)
 {

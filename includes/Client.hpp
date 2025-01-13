@@ -6,7 +6,7 @@
 /*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 13:13:34 by avandeve          #+#    #+#             */
-/*   Updated: 2025/01/10 15:37:34 by apernot          ###   ########.fr       */
+/*   Updated: 2025/01/13 14:16:10 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 
 class Channel;
 class Server;
+
+struct com;
 
 class Client
 {
@@ -53,6 +55,7 @@ public:
 	// methods
 	void			sendMsgAllChan(Server &serv, std::string msg);
 	bool			if_identify(int code);
+	bool			if_NickIsCreate();
 	void			AuthIsGood();
 
 	void			print_for_test();

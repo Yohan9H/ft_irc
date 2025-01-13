@@ -1,10 +1,9 @@
-#include "Command.hpp"
-#include "../includes/commands/CAP.hpp"
+#include "CAP.hpp"
 
 CAP::CAP() : Command("CAP", 1, false) {};
 CAP::~CAP() {};
 
-void CAP::execCommand(Server &serv, Client &cli, const com &cmd)
+void CAP::execCommand(Server &serv, Client &client, const com &cmd)
 {
     
 }

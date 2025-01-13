@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yohurteb <yohurteb@student.42.fr>          +#+  +:+       +#+        */
+/*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 14:59:13 by yohurteb          #+#    #+#             */
-/*   Updated: 2024/12/21 15:46:10 by yohurteb         ###   ########.fr       */
+/*   Updated: 2025/01/13 16:31:24 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,6 +235,15 @@ bool	Channel::ifLimitUser()
 		return 0;
 }
 
+bool	Channel::isOperator(int clientFd) {
+	std::vector<int> listOperators = this->getOperatorsFd();
+	std::vector<int>::iterator it = std::find(listOperators.begin(), listOperators.end(), clientFd);
+	if (it != listOperators.end())
+		return (true);
+	else
+		return (false);
+}
+
 bool	Channel::checkPassWord(std::string mdp)
 {
 	if (_key == mdp)
@@ -248,6 +257,15 @@ bool	Channel::checkClientIsInvited(int clientFd)
 	std::vector<int> listInvited = this->getInvitedFd();
 	std::vector<int>::iterator it = std::find(listInvited.begin(), listInvited.end(), clientFd);
 	if (it != _invitedFd.end())
+		return true;
+	else
+		return false;
+}
+
+bool	Channel::checkClientIsMembre(int clientFd) {
+	std::vector<int> listMembres = this->getMembresFd();
+	std::vector<int>::iterator it = std::find(listMembres.begin(), listMembres.end(), clientFd);
+	if (it != _membresFd.end())
 		return true;
 	else
 		return false;

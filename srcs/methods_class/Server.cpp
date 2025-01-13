@@ -1,9 +1,11 @@
-#include "../includes/Server.hpp"
-#include "../includes/Channel.hpp"
-#include "../includes/irc_head.hpp"
-#include "../includes/Command.hpp"
+#include "Server.hpp"
+// #include "Channel.hpp"
+// #include "irc_head.hpp"
+// #include "Command.hpp"
+// #include "Client.hpp"
 
 class Channel;
+class Client; // Forward declaration
 
 bool Server::_signal = false;
 
@@ -402,6 +404,15 @@ Channel	*Server::getChannelbyName(std::string name)
 		return it->second;
 	else
 		return NULL;
+}
+
+Client  *Server::getClientbyName(std::string name) {
+	
+	for (std::map<int, Client*>::iterator it = _listClients.begin(); it != _listClients.end(); it++ ) {
+		if (it->second->getNickname() == name)
+			return (it->second);
+	}
+	return (NULL);
 }
 
 void	Server::addClient(Client &client)

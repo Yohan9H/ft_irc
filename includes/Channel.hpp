@@ -6,7 +6,7 @@
 /*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 13:31:50 by yohurteb          #+#    #+#             */
-/*   Updated: 2025/01/09 17:11:53 by apernot          ###   ########.fr       */
+/*   Updated: 2025/01/13 16:27:39 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,11 @@ class Channel
 		bool	ifTopic();
 		bool	ifProtectedByPassWord();
 		bool	ifLimitUser();
+		bool	isOperator(int clientFd);
 
 		bool	checkPassWord(std::string mdp);
 		bool	checkClientIsInvited(int clientFd);
+		bool	checkClientIsMembre(int clientFd);
 		bool	checkLimitUser();
 };
 

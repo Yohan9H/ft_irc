@@ -1,9 +1,9 @@
-#include "../includes/commands/PASS.hpp"
+#include "PASS.hpp"
 
 PASS::PASS() : Command("PASS", 1, false) {};
 PASS::~PASS() {};
 
-void PASS::execCommand(Server &serv, Client &cli, const com &cmd)
+void PASS::execCommand(Server &serv, Client &client, const com &cmd)
 {
     
 }

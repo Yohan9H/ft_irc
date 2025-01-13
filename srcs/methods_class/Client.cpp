@@ -73,6 +73,14 @@ void	Client::sendMsgAllChan(Server &serv, std::string msg)
 	}
 }
 
+bool	Client::if_NickIsCreate()
+{
+	if (_nick.empty())
+		return false;
+	else
+		return true;
+}
+
 bool	Client::if_identify(int code)
 {
 	print_for_test();

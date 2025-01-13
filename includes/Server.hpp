@@ -11,41 +11,12 @@
 /* ************************************************************************** */
 
 #pragma once
-#include <string.h>
-#include <sys/types.h>
-#include <sys/socket.h> //socket functions 
-#include <netinet/in.h> //data type sockaddr
-#include <iostream>
-#include <errno.h>
-#include <cstring>
-#include <cstdlib>
-#include <string>
-#include <unistd.h> // to close fds
-#include <arpa/inet.h> //function inet_ntoa
-#include <vector>
-#include <csignal>
-#include <fcntl.h>
-#include <poll.h>
-#include <map>
-#include <algorithm>
-#include <iterator>
-#include <exception>
-#include <cctype>
-#include <ctime>
-#include <sstream>
-#include "Channel.hpp"
-#include "proto.hpp"
-#include "Client.hpp"
-#include "irc_head.hpp"
-#include "Command.hpp"
-#include "Utils.hpp"
 
-#define MAX_CONNEXIONS 5
-#define BUFFER_MAX 1024
-#define NAME_SERV "irc.42.com"
-#define ENDLINE_MSG + "\n"
+#include "irc_head.hpp"
 
 class Client;
+class Channel;
+class Command;
 
 struct com;
 
@@ -91,6 +62,7 @@ public:
 	std::map<int, Client*>						&getClients();
 	Client										*getClientbyFd(int clientFd);
 	Channel										*getChannelbyName(std::string name);
+	Client										*getClientbyName(std::string name);
 	std::map<std::string, Channel*>::iterator	findChan(std::string name);
 
 	Command* getCommandByName(std::string cmdName);
@@ -109,3 +81,6 @@ public:
 
 	void					parseCommand(Client &client, const std::string &input);
 };
+
+#include "Channel.hpp"
+#include "Client.hpp"

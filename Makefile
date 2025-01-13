@@ -7,10 +7,11 @@ MTH_DIR = srcs/methods_class
 
 OBJ_DIR = .obj
 
-INCLUDE = ./includes
+INCLUDE = ./includes -I./includes/commands
 
 SRCS = $(SRC_DIR)/main.cpp \
 	   $(SRC_DIR)/command.cpp \
+	   $(SRC_DIR)/utils.cpp \
 	   $(MTH_DIR)/Server.cpp \
 	   $(MTH_DIR)/Client.cpp \
 	   $(MTH_DIR)/Channel.cpp \

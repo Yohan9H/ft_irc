@@ -1,4 +1,3 @@
-
 #include "Command.hpp"
 
 Command::Command(std::string name, int nbParam, bool mustbeAuth) : _name(name), _nbParam(nbParam), _mustbeAuth(mustbeAuth) {}

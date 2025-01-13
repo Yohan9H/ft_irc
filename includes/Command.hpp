@@ -1,12 +1,14 @@
 #pragma once
 
+
+
 #include <string>
 #include <vector>
 
-class Client;
-class Server;
+class Client; // Forward declaration
+class Server; // Forward declaration
+struct com;   // Forward declaration
 
-struct com;
 
 class Command
 {
@@ -15,7 +17,6 @@ class Command
         int _nbParam;
         bool _mustbeAuth;
     
-
     public:
         Command(std::string name, int nbParam, bool mustbeAuth);
         virtual ~Command();
