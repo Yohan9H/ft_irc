@@ -6,7 +6,7 @@
 /*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 13:31:50 by yohurteb          #+#    #+#             */
-/*   Updated: 2025/01/13 16:27:39 by apernot          ###   ########.fr       */
+/*   Updated: 2025/01/13 18:03:14 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ class Channel
 
 		void		addOperators(int clientFd);
 		void		addMembres(int clientFd);
+		void		addInvited(int clientFd);
 		void		delOperatores(int clientFd);
 		void		delMembres(int clientFd);
 		std::string	formatJoinMessage(std::string name_new_client, Channel channel);

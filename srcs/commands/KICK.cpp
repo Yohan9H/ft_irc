@@ -51,6 +51,7 @@ void KICK::execCommand(Server &serv, Client &client, const com &cmd)
 		else
 		{
 			channel->delMembres(kickClient->getClientSocket());
+			//retirer de la list des channels du client
 			msg = nick + " has been kicked by " + client.getNickname();
 			channel->sendMsgMembres(msg);
 		}

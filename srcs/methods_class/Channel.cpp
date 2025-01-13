@@ -6,7 +6,7 @@
 /*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 14:59:13 by yohurteb          #+#    #+#             */
-/*   Updated: 2025/01/13 16:31:24 by apernot          ###   ########.fr       */
+/*   Updated: 2025/01/13 18:05:38 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,11 @@ void	Channel::addOperators(int clientFd)
 void	Channel::addMembres(int clientFd)
 {
 	_membresFd.push_back(clientFd); 
+}
+
+void	Channel::addInvited(int clientFd)
+{
+	_invitedFd.push_back(clientFd);
 }
 
 void	Channel::delOperatores(int clientFd)
