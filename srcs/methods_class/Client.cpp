@@ -146,6 +146,8 @@ void Client::executeCommand(Server &serv, const com &cmd)
         throw std::logic_error("traling too long");
 
     Command *myCommand = serv.getCommandByName(cmd.command);
+	if (!myCommand)
+		throw std::logic_error("Command not found");
 
     if (cmd.params.size() < myCommand->getNbParam())
         throw std::logic_error("Wrong params");

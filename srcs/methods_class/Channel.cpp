@@ -6,7 +6,7 @@
 /*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 14:59:13 by yohurteb          #+#    #+#             */
-/*   Updated: 2025/01/13 18:05:38 by apernot          ###   ########.fr       */
+/*   Updated: 2025/01/15 13:05:00 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -259,8 +259,7 @@ bool	Channel::checkPassWord(std::string mdp)
 
 bool	Channel::checkClientIsInvited(int clientFd)
 {
-	std::vector<int> listInvited = this->getInvitedFd();
-	std::vector<int>::iterator it = std::find(listInvited.begin(), listInvited.end(), clientFd);
+	std::vector<int>::iterator it = std::find(_invitedFd.begin(), _invitedFd.end(), clientFd);
 	if (it != _invitedFd.end())
 		return true;
 	else
@@ -268,8 +267,7 @@ bool	Channel::checkClientIsInvited(int clientFd)
 }
 
 bool	Channel::checkClientIsMembre(int clientFd) {
-	std::vector<int> listMembres = this->getMembresFd();
-	std::vector<int>::iterator it = std::find(listMembres.begin(), listMembres.end(), clientFd);
+	std::vector<int>::iterator it = std::find(_membresFd.begin(), _membresFd.end(), clientFd);
 	if (it != _membresFd.end())
 		return true;
 	else

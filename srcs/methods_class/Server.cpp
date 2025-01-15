@@ -98,6 +98,7 @@ void	Server::setCommands() {
   _commands.insert(std::pair<std::string, Command*>("KICK", new KICK));
   _commands.insert(std::pair<std::string, Command*>("MODE", new MODE));
   _commands.insert(std::pair<std::string, Command*>("NICK", new NICK));
+  _commands.insert(std::pair<std::string, Command*>("INVITE", new INVITE));
   _commands.insert(std::pair<std::string, Command*>("NOTICE", new NOTICE));
   _commands.insert(std::pair<std::string, Command*>("PART", new PART));
   _commands.insert(std::pair<std::string, Command*>("PASS", new PASS));
@@ -316,6 +317,7 @@ void Server::parseCommand(Client &client, const std::string &input) {
         std::istringstream tokenStream(line);
         com command;
 
+		command.hasText = false;
         // Check if the command has a prefix
         if (!line.empty() && data[0] == ':') {
             std::getline(tokenStream, token, ' ');
@@ -329,6 +331,11 @@ void Server::parseCommand(Client &client, const std::string &input) {
         while (std::getline(tokenStream, token, ' ')) {
             if (!token.empty() && token[0] == ':') {
                 command.trailing = token.substr(1);
+				command.hasText = true;
+				std::string rest;
+				std::getline(tokenStream, rest);
+				if (!rest.empty())
+					command.trailing += " " + rest; 
                 break;
             } else {
                 command.params.push_back(token);

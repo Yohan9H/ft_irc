@@ -27,7 +27,7 @@ void INVITE::execCommand(Server &serv, Client &client, const com &cmd)
 		std::cerr << "ERR_NOTONCHANNEL" << std::endl;
 		return ;
 	}
-	else if (channel->isOperator(client.getClientSocket())) // rajouter condition pour Channel mode invite only
+	else if (!channel->isOperator(client.getClientSocket())) // rajouter condition pour Channel mode invite only
 	{
 		std::cerr << "ERR_CHANOPRIVSNEEDED" << std::endl;
 		return ;
@@ -35,7 +35,12 @@ void INVITE::execCommand(Server &serv, Client &client, const com &cmd)
 	else 
 	{
 		Client* invitedClient = serv.getClientbyName(nick);
-		if (channel->checkClientIsMembre(invitedClient->getClientSocket()))
+		if (!invitedClient)
+		{
+			std::cerr << "ERR_NOSUCHNICK" << std::endl;
+			return ;
+		}
+		else if (channel->checkClientIsMembre(invitedClient->getClientSocket()))
 		{
 			std::cerr << "ERR_USERONCHANNEL" << std::endl;
 			return ;
@@ -43,9 +48,7 @@ void INVITE::execCommand(Server &serv, Client &client, const com &cmd)
 		else
 		{
 			channel->addInvited(invitedClient->getClientSocket());
-			// add the rest below
+			std::cout << nick << " has been invited to channel " << chan_name << std::endl;
 		}
 	}
-	
-
 }
