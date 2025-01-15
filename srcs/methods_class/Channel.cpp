@@ -6,7 +6,7 @@
 /*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 14:59:13 by yohurteb          #+#    #+#             */
-/*   Updated: 2025/01/15 13:05:00 by apernot          ###   ########.fr       */
+/*   Updated: 2025/01/15 17:19:09 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ Channel::Channel()
 Channel::Channel(const Channel &src)
 	:	_name(src._name),
 		_key(src._key),
-		_subject(src._subject),
+		_topic(src._topic),
 		_perm(src._perm),
 		_operatorsFd(src._operatorsFd),
 		_membresFd(src._membresFd)
@@ -44,7 +44,7 @@ Channel		&Channel::operator=(const Channel &src)
 	{
 		_name = src._name;
 		_key = src._key;
-		_subject = src._subject;
+		_topic = src._topic;
 		_perm = src._perm;
 		_operatorsFd = src._operatorsFd;
 		_membresFd = src._membresFd;
@@ -64,9 +64,9 @@ std::string		Channel::getName() const
 	return _name;
 }
 
-std::string		Channel::getSubject() const
+std::string		Channel::getTopic() const
 {
-	return _subject;
+	return _topic;
 }
 
 t_perm		Channel::getPerm() const
@@ -100,9 +100,9 @@ void	Channel::setName(std::string name)
 	_name = name;
 }
 
-void	Channel::setSubject(std::string subject)
+void	Channel::setTopic(std::string topic)
 {
-	_subject = subject;
+	_topic = topic;
 }
 
 void	Channel::setPerm(bool i, bool t, bool k, bool o, bool l)

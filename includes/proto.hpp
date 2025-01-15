@@ -6,7 +6,7 @@
 /*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 09:55:06 by yohurteb          #+#    #+#             */
-/*   Updated: 2025/01/09 17:12:31 by apernot          ###   ########.fr       */
+/*   Updated: 2025/01/15 17:18:29 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ typedef struct s_perm
 	bool	t; // TOPIC
 	bool	k; // MDP
 	bool	o; // OPERATOR
-	bool	l; // LIMIT USER
+	int		l; // LIMIT USER
 } t_perm;
 
 Channel 	*createChannel(Server &server, std::string name_channel, Client &first_membre);

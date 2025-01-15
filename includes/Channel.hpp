@@ -6,7 +6,7 @@
 /*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 13:31:50 by yohurteb          #+#    #+#             */
-/*   Updated: 2025/01/13 18:03:14 by apernot          ###   ########.fr       */
+/*   Updated: 2025/01/15 16:55:08 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ class Channel
 	private:
 		std::string			_name;
 		std::string			_key;
-		std::string			_subject;
+		std::string			_topic;
 		size_t				_limit_user;
 		t_perm				_perm;
 		std::vector<int>	_operatorsFd;
@@ -43,7 +43,7 @@ class Channel
 
 		std::string			getKey() const;
 		std::string			getName() const;
-		std::string 		getSubject() const;
+		std::string 		getTopic() const;
 		t_perm				getPerm() const;
 		std::vector<int>	&getOperatorsFd();
 		std::vector<int>	&getMembresFd();
@@ -51,7 +51,7 @@ class Channel
 
 		void				setKey(std::string key);
 		void				setName(std::string name);
-		void				setSubject(std::string subject);
+		void				setTopic(std::string topic);
 		void				setPerm(bool i, bool t, bool k, bool o, bool l); // idee: faire des fcts seules pour plus simple par monmment du style addModI()
 
 		void		addOperators(int clientFd);
