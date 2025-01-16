@@ -6,7 +6,7 @@
 /*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 13:31:50 by yohurteb          #+#    #+#             */
-/*   Updated: 2025/01/15 16:55:08 by apernot          ###   ########.fr       */
+/*   Updated: 2025/01/16 15:40:22 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ class Channel
 		std::string			_key;
 		std::string			_topic;
 		size_t				_limit_user;
-		t_perm				_perm;
+		std::vector<char>	_modes;
 		std::vector<int>	_operatorsFd;
 		std::vector<int>	_membresFd;
 		std::vector<int>	_invitedFd;
@@ -44,7 +44,7 @@ class Channel
 		std::string			getKey() const;
 		std::string			getName() const;
 		std::string 		getTopic() const;
-		t_perm				getPerm() const;
+		std::vector<char>	&getModes();
 		std::vector<int>	&getOperatorsFd();
 		std::vector<int>	&getMembresFd();
 		std::vector<int>	&getInvitedFd();
@@ -52,8 +52,8 @@ class Channel
 		void				setKey(std::string key);
 		void				setName(std::string name);
 		void				setTopic(std::string topic);
-		void				setPerm(bool i, bool t, bool k, bool o, bool l); // idee: faire des fcts seules pour plus simple par monmment du style addModI()
-
+		void				setLimit(size_t limit);
+		
 		void		addOperators(int clientFd);
 		void		addMembres(int clientFd);
 		void		addInvited(int clientFd);
@@ -64,6 +64,8 @@ class Channel
 		void		infoJoinChannel(Server &serv, std::string name_serv, Channel &channe, Client &client);
 		std::string giveAllNameMembres(Server &serv);
 		void		sendMsgMembres(std::string msg);
+		void		addMode(char mode);
+		void		errMode(char mode);
 
 		bool	ifInvite();
 		bool	ifTopic();
@@ -75,5 +77,9 @@ class Channel
 		bool	checkClientIsInvited(int clientFd);
 		bool	checkClientIsMembre(int clientFd);
 		bool	checkLimitUser();
+		
+		bool	hasMode(char mode);
+		int		getTotalMembers();
+		
 };
 

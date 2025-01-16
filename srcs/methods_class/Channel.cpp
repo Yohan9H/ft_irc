@@ -6,7 +6,7 @@
 /*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 14:59:13 by yohurteb          #+#    #+#             */
-/*   Updated: 2025/01/15 17:19:09 by apernot          ###   ########.fr       */
+/*   Updated: 2025/01/16 15:41:15 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,11 @@ Channel::Channel(const Channel &src)
 	:	_name(src._name),
 		_key(src._key),
 		_topic(src._topic),
-		_perm(src._perm),
+		_modes(src._modes),
 		_operatorsFd(src._operatorsFd),
 		_membresFd(src._membresFd)
 {
-	_perm.i = 0;
-	_perm.t = 0;
-	_perm.k = 0;
-	_perm.o = 0;
-	_perm.l = 0;
+
 }
 
 Channel::~Channel()
@@ -45,7 +41,7 @@ Channel		&Channel::operator=(const Channel &src)
 		_name = src._name;
 		_key = src._key;
 		_topic = src._topic;
-		_perm = src._perm;
+		_modes = src._modes;
 		_operatorsFd = src._operatorsFd;
 		_membresFd = src._membresFd;
 	}
@@ -69,9 +65,9 @@ std::string		Channel::getTopic() const
 	return _topic;
 }
 
-t_perm		Channel::getPerm() const
+std::vector<char>		&Channel::getModes()
 {
-	return _perm;
+	return _modes;
 }
 
 std::vector<int>	&Channel::getOperatorsFd()
@@ -105,14 +101,11 @@ void	Channel::setTopic(std::string topic)
 	_topic = topic;
 }
 
-void	Channel::setPerm(bool i, bool t, bool k, bool o, bool l)
+void	Channel::setLimit(size_t limit)
 {
-	_perm.i = i;
-	_perm.t = t;
-	_perm.k = k;
-	_perm.o = o;
-	_perm.l = l;
+	_limit_user = limit;
 }
+
 
 
 void	Channel::addOperators(int clientFd)
@@ -166,15 +159,15 @@ void	Channel::sendJoinMsgAll(Channel &channel, std::string username_client, int 
 
 void	Channel::infoJoinChannel(Server &serv, std::string name_serv, Channel &channel, Client &client)
 {
-	std::string msg = ":" + name_serv + " 332 " + client.getUsername() + " " + channel.getSubject() + " :Bienvenue dans le channel !\n";
+	std::string msg = ":" + name_serv + " 332 " + client.getUsername() + " " + channel.getTopic() + " :Bienvenue dans le channel !\n";
 	send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
 	msg.clear();
 
-	msg = ":" + name_serv + " 353 " + client.getUsername() + " = " + channel.getSubject() + " :" + channel.giveAllNameMembres(serv) + "\n"; 
+	msg = ":" + name_serv + " 353 " + client.getUsername() + " = " + channel.getTopic() + " :" + channel.giveAllNameMembres(serv) + "\n"; 
 	send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
 	msg.clear();
 
-	msg = ":" + name_serv + " 366 " + client.getUsername() + " " + channel.getSubject() + " :End of /NAMES list\n";
+	msg = ":" + name_serv + " 366 " + client.getUsername() + " " + channel.getTopic() + " :End of /NAMES list\n";
 	send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
 }
 
@@ -210,7 +203,7 @@ void	Channel::sendMsgMembres(std::string msg)
 
 bool	Channel::ifInvite()
 {
-	if (_perm.i == 1)
+	if (this->hasMode('i') == 1)
 		return 1;
 	else
 		return 0;
@@ -218,7 +211,7 @@ bool	Channel::ifInvite()
 
 bool	Channel::ifTopic()
 {
-	if (_perm.t == 1)
+	if (this->hasMode('t') == 1)
 		return 1;
 	else
 		return 0;
@@ -226,7 +219,7 @@ bool	Channel::ifTopic()
 
 bool	Channel::ifProtectedByPassWord()
 {
-	if (_perm.k == 1)
+	if (this->hasMode('k') == 1)
 		return 1;
 	else
 		return 0;
@@ -234,7 +227,7 @@ bool	Channel::ifProtectedByPassWord()
 
 bool	Channel::ifLimitUser()
 {
-	if (_perm.l == 1)
+	if (this->hasMode('l') == 1)
 		return 1;
 	else
 		return 0;
@@ -280,4 +273,29 @@ bool	Channel::checkLimitUser()
 		return 1;
 	else
 		return 0;
+}
+
+bool	Channel::hasMode(char mode) {
+	std::vector<char> modes = this->getModes();
+	std::vector<char>::iterator it = std::find(modes.begin(), modes.end(), mode);
+	if (it != modes.end())
+		return (true);
+	else
+		return (false);
+}
+
+void	Channel::addMode(char mode) {
+	std::vector<char> modes = this->getModes();
+	modes.push_back(mode);
+}
+
+void	Channel::errMode(char mode) {
+	std::vector<char> modes = this->getModes();
+	std::vector<char>::iterator it = std::find(modes.begin(), modes.end(), mode);
+	if (it != modes.end())
+		modes.erase(it);
+}
+
+int		Channel::getTotalMembers() {
+	return (_membresFd.size());
 }

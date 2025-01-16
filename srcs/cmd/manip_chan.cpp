@@ -6,7 +6,7 @@
 /*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 18:08:01 by yohurteb          #+#    #+#             */
-/*   Updated: 2025/01/10 14:36:32 by apernot          ###   ########.fr       */
+/*   Updated: 2025/01/16 15:51:48 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,7 @@ Channel *createChannel(Server &server, std::string name_channel, Client &first_m
 	Channel	*new_chan = new Channel();
 	new_chan->setName(name_channel);
 	new_chan->setKey("");
-	new_chan->setSubject("");
-	new_chan->setPerm(0, 0, 0, 0, 0);
+	new_chan->setTopic("");
 	new_chan->addOperators(first_membre.getClientSocket());
 
 	server.addChannel(*new_chan);

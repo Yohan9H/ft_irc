@@ -38,19 +38,19 @@ void TOPIC::execCommand(Server &serv, Client &client, const com &cmd)
 	{
 		if (!cmd.hasText)
 		{
-			if (channel->getSubject().empty())
+			if (channel->getTopic().empty())
 				std::cerr << "No topic is set" << std::endl;
 			else
-				std::cout << channel->getSubject() << std::endl;
+				std::cout << channel->getTopic() << std::endl;
 		}
 		else if (topic == "")
 		{
-			channel->setSubject("");
+			channel->setTopic("");
 			std::cout << "TOPIC " << channel_name << " :" << std::endl;
 		}
 		else
 		{
-			channel->setSubject(topic);
+			channel->setTopic(topic);
 			std::cout << "TOPIC " << channel_name << " :" << topic << std::endl;
 		}
 
