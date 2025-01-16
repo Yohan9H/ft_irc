@@ -27,7 +27,7 @@ void INVITE::execCommand(Server &serv, Client &client, const com &cmd)
 		std::cerr << "ERR_NOTONCHANNEL" << std::endl;
 		return ;
 	}
-	else if (!channel->isOperator(client.getClientSocket())) // rajouter condition pour Channel mode invite only
+	else if (!channel->isOperator(client.getClientSocket()) && channel->hasMode('i')) // rajouter condition pour Channel mode invite only
 	{
 		std::cerr << "ERR_CHANOPRIVSNEEDED" << std::endl;
 		return ;

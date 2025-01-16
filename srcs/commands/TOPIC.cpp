@@ -29,7 +29,7 @@ void TOPIC::execCommand(Server &serv, Client &client, const com &cmd)
 		std::cerr << "ERR_NOTONCHANNEL" << std::endl;
 		return ;
 	}
-	else if (!channel->isOperator(client.getClientSocket())) // rajouter permissions
+	else if (!channel->isOperator(client.getClientSocket()) && channel->hasMode('t')) // rajouter permissions
 	{
 		std::cerr << "ERR_CHANOPRIVSNEEDED" << std::endl;
 		return ;

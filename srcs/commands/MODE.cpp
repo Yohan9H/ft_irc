@@ -32,7 +32,7 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 			std::cerr << "ERR_UMODEUNKNOWNFLAG" << std::endl;
 			return ;
 		}
-		switch (mode[1]) {
+		switch (type) {
 			// Invite-only
 			case 'i': {
 				if (sign == '+')

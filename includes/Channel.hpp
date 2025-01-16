@@ -6,7 +6,7 @@
 /*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 13:31:50 by yohurteb          #+#    #+#             */
-/*   Updated: 2025/01/16 15:40:22 by apernot          ###   ########.fr       */
+/*   Updated: 2025/01/16 16:57:48 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ class Channel
 		void		infoJoinChannel(Server &serv, std::string name_serv, Channel &channe, Client &client);
 		std::string giveAllNameMembres(Server &serv);
 		void		sendMsgMembres(std::string msg);
+		void		sendMsgMembresExceptFd(std::string msg, int clientFd);
 		void		addMode(char mode);
 		void		errMode(char mode);
 

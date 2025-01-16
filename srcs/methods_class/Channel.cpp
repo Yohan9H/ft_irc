@@ -6,7 +6,7 @@
 /*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 14:59:13 by yohurteb          #+#    #+#             */
-/*   Updated: 2025/01/16 15:41:15 by apernot          ###   ########.fr       */
+/*   Updated: 2025/01/16 16:58:55 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,6 +197,14 @@ void	Channel::sendMsgMembres(std::string msg)
 	for (std::vector<int>::iterator it = _membresFd.begin(); it != _membresFd.end() ;it++)
 	{
 		send(*it, msg.c_str(), msg.size(), 0);
+	}
+}
+
+void		Channel::sendMsgMembresExceptFd(std::string msg, int clientFd) {
+	for (std::vector<int>::iterator it = _membresFd.begin(); it != _membresFd.end() ;it++)
+	{
+		if (*it != clientFd)
+			send(*it, msg.c_str(), msg.size(), 0);
 	}
 }
 
