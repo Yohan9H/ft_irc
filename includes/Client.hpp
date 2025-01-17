@@ -6,7 +6,7 @@
 /*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 13:13:34 by avandeve          #+#    #+#             */
-/*   Updated: 2025/01/13 14:16:10 by apernot          ###   ########.fr       */
+/*   Updated: 2025/01/17 11:51:02 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ private:
 	std::string						_nick;
     std::string						_username;
 	std::vector<std::string>		_listChan;
+	bool							_passwordfilled;
+	
 
 public:
     Client();
@@ -46,11 +48,13 @@ public:
     std::string					&getNickname();
     std::string					&getUsername();
 	std::vector<std::string>	&getListChanJoined();
+	bool						getPasswordFilled();
 
 	// setters
 	void			setClientSocket(int clientFd);
 	void			setName(std::string new_name);
 	void			setNick(std::string new_nick);
+	void			setPasswordFilled(bool isPasswordFilled);
 
 	// methods
 	void			sendMsgAllChan(Server &serv, std::string msg);

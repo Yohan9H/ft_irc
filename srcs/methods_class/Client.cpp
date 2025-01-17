@@ -49,6 +49,11 @@ std::vector<std::string>	&Client::getListChanJoined()
 	return this->_listChan;
 }
 
+bool	Client::getPasswordFilled() 
+{
+	return this->_passwordfilled;
+}
+
 void		Client::setClientSocket(int clientFd)
 {
 	_clientSocket = clientFd;
@@ -62,6 +67,11 @@ void		Client::setName(std::string new_name)
 void		Client::setNick(std::string new_nick)
 {
 	_nick = new_nick;
+}
+
+void		Client::setPasswordFilled(bool isPasswordFilled)
+{
+	_passwordfilled = isPasswordFilled;
 }
 
 void	Client::sendMsgAllChan(Server &serv, std::string msg)

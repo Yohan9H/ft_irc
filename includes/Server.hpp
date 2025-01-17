@@ -63,6 +63,7 @@ public:
 	Client										*getClientbyFd(int clientFd);
 	Channel										*getChannelbyName(std::string name);
 	Client										*getClientbyName(std::string name);
+	std::string									getPassword();
 	std::map<std::string, Channel*>::iterator	findChan(std::string name);
 
 	Command* getCommandByName(std::string cmdName);

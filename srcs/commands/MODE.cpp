@@ -1,10 +1,12 @@
 #include "MODE.hpp"
 
-MODE::MODE() : Command("MODE", 1, false) {};
+MODE::MODE() : Command("MODE", 1, true) {};
 MODE::~MODE() {};
 
 void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 {
+	//rajouter message qui annonce le changement de mode
+	 
 	std::string channel_name = cmd.params[0];
 	if (channel_name[0] != '#' || cmd.params.size() < 2)
 		return ;

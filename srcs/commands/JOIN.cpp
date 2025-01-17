@@ -1,6 +1,6 @@
 #include "JOIN.hpp"
 
-JOIN::JOIN() : Command("JOIN", 1, false) {};
+JOIN::JOIN() : Command("JOIN", 1, true) {};
 JOIN::~JOIN() {};
 
 void JOIN::execCommand(Server &serv, Client &client, const com &cmd)

@@ -1,6 +1,6 @@
 #include "KICK.hpp"
 
-KICK::KICK() : Command("KICK", 2, false) {};
+KICK::KICK() : Command("KICK", 2, true) {};
 KICK::~KICK() {};
 
 void KICK::execCommand(Server &serv, Client &client, const com &cmd)

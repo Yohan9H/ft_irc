@@ -119,6 +119,10 @@ Command* Server::getCommandByName(std::string cmdName) {
   return NULL;
 }
 
+std::string	Server::getPassword() {
+	return (this->_password);
+}
+
 
 
 bool Server::createServerSocket()
