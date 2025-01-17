@@ -44,3 +44,27 @@ void normalizeCRLF(std::string& input) {
         }
     }
 }
+
+std::string to_string(int value) {
+    std::stringstream ss;
+    ss << value;
+    return ss.str();
+}
+
+void	sendNumeric(Client &client, int numeric, const std::string& message)
+{
+	std::string fullMessage = ":" + std::string(NAME_SERV) + " " + to_string(numeric) + " " + client.getNickname() + " :" + message + " \r\n";
+	send(client.getClientSocket(), fullMessage.c_str(), fullMessage.size(), 0);
+}
+
+void sendNotice(Client &client, const std::string& message) {
+    std::string notice = ":" + std::string(NAME_SERV) + " NOTICE " + client.getNickname() + " :" + message + "\r\n";
+    send(client.getClientSocket(), notice.c_str(), notice.size(), 0);
+}
+
+
+void sendModeParamMsg (Client &client, Channel &channel, std::string mode, std::string param)
+{
+	std::string msg = ":" + std::string(NAME_SERV) + " " + "MODE " + channel.getName() + " " + mode + " " + param;
+	channel.sendMsgMembres(msg);
+}

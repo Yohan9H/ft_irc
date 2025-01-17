@@ -15,27 +15,48 @@ void PRIVMSG::execCommand(Server &serv, Client &client, const com &cmd)
 
 	std::string target = cmd.params[0];
 	std::string message = cmd.trailing;
+	std::string msg;
+	int numeric;
 
-	if (target.empty()) {
-		std::cerr << "ERR_NORECIPIENT" << std::endl;
-	} else if (!cmd.hasText){
-		std::cerr << "ERR_NOTEXTTOSEND" << std::endl;
-	} else if (target[0] == '#') {
+	if (target.empty()) 
+	{
+		msg = "No recipient given " + cmd.command;
+		numeric = ERR_NORECIPIENT;
+	} 
+	else if (!cmd.hasText)
+	{
+		msg = "No text to send";
+		numeric = ERR_NOTEXTTOSEND;
+	} 
+	else if (target[0] == '#') 
+	{
 		Channel* channel = serv.getChannelbyName(target);
 		if (!channel)
-			std::cerr << "ERR_NOSUCHCHANNEL" << std::endl;
+		{
+			msg = "No such channel";
+			numeric = ERR_NOSUCHCHANNEL;
+		}
 		else if (!channel->checkClientIsMembre(client.getClientSocket()))
-			std::cerr << "ERR_CANNOTSENDTOCHAN" << std::endl;
+		{
+			msg = "Cannot send to channel";
+			numeric = ERR_CANNOTSENDTOCHAN;
+		}
 		else
 			channel->sendMsgMembresExceptFd(message, client.getClientSocket());
-	} else {
+	} 
+	else 
+	{
 		Client* targetclient = serv.getClientbyName(target);
 		if (!targetclient)
-			std::cerr << "ERR_NOSUCHNICK" << std::endl;
+		{
+			msg = "No such nick";
+			numeric = ERR_NOSUCHNICK;
+		}
 		else {
 			send(targetclient->getClientSocket(), message.c_str(), message.size(), 0);
 			send(client.getClientSocket(), message.c_str(), message.size(), 0);
 		}
 	}
-
+	if (msg.empty())
+		sendNumeric(client, numeric, msg);
 }

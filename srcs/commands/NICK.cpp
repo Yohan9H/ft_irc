@@ -6,15 +6,9 @@ NICK::~NICK() {};
 void NICK::execCommand(Server &serv, Client &client, const com &cmd)
 {
     std::string msg;
+	int numeric;
     std::string nick = cmd.params[0];
 
-	// Verif valide name
-	if (nick.length() > 9)
-	{
-		msg = msg_err(NAME_SERV, "432", nick, ":Erroneous nickname");
-		send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
-		return ;
-	}
 	bool verif_char = true;
 	for (std::string::const_iterator it = nick.begin(); it != nick.end(); ++it)
 	{
@@ -24,32 +18,26 @@ void NICK::execCommand(Server &serv, Client &client, const com &cmd)
 			break;
 		}
 	}
-	if (verif_char == false)
+	if (verif_char == false || nick.length() > 9 || std::isdigit(nick[0]))
 	{
-		msg = msg_err(NAME_SERV, "432", nick, ":Erroneous nickname");
-		send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
-		return ;
-	}
-	if (std::isdigit(nick[0]))
-	{
-		msg = msg_err(NAME_SERV, "432", nick, ":Erroneous nickname (debug - isalpha)");
-		send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
+		msg = "Erroneus nickname";
+		numeric = ERR_ERRONEUSNICKNAME;
+		sendNumeric(client, numeric, msg);
 		return ;
 	}
 	
 	removeNewline(nick);
-
 	// Verif if already use
 	for (std::map<int, Client*>::iterator it = serv.getClients().begin(); it != serv.getClients().end(); it++)
 	{
 		if (it->second->getNickname() == nick)
 		{
-			msg = msg_err(NAME_SERV, "433", nick, ":Nickname is already in use");
-			send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
+			msg = "Nickname is already in use";
+			numeric = ERR_NICKNAMEINUSE;
+			sendNumeric(client, numeric, msg);
 			return ;
 		}
 	}
-
 	// Informe tous les channels dont il fait partie de son changement
 	if (client.getIsAuth() == false)
 	{

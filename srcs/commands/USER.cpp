@@ -7,6 +7,7 @@ void USER::execCommand(Server &serv, Client &client, const com &cmd)
 {
     
 	std::string msg;
+	int numeric;
     std::string username = cmd.params[0];
 
 	// Verif client if identify

@@ -13,42 +13,48 @@ void INVITE::execCommand(Server &serv, Client &client, const com &cmd)
 	//verify if the user already belong to channel => ERR_USERONCHANNEL
 
 	std::string msg;
+	int	numeric;
 	std::string nick = cmd.params[0];
 	std::string chan_name = cmd.params[1];
 
 	Channel* channel = serv.getChannelbyName(chan_name);
 	if (!channel)
 	{
-		std::cerr << "ERR_NOSUCHCHANNEL" << std::endl;
-		return ;
+		msg = "No such channel";
+		numeric = ERR_NOSUCHCHANNEL;
 	}
 	else if (!channel->checkClientIsMembre(client.getClientSocket()))
 	{
-		std::cerr << "ERR_NOTONCHANNEL" << std::endl;
-		return ;
+		msg = "You're not on that channel";
+		numeric = ERR_NOTONCHANNEL;
 	}
 	else if (!channel->isOperator(client.getClientSocket()) && channel->hasMode('i')) // rajouter condition pour Channel mode invite only
 	{
-		std::cerr << "ERR_CHANOPRIVSNEEDED" << std::endl;
-		return ;
+		msg = "You're not channel operator";
+		numeric = ERR_CHANOPRIVSNEEDED;
 	}
 	else 
 	{
 		Client* invitedClient = serv.getClientbyName(nick);
 		if (!invitedClient)
 		{
-			std::cerr << "ERR_NOSUCHNICK" << std::endl;
-			return ;
+			msg = "No such nick/channel";
+			numeric = ERR_NOSUCHNICK;
 		}
 		else if (channel->checkClientIsMembre(invitedClient->getClientSocket()))
 		{
-			std::cerr << "ERR_USERONCHANNEL" << std::endl;
+			msg = "is already on channel";
+			numeric = ERR_USERONCHANNEL;
 			return ;
 		}
 		else
 		{
 			channel->addInvited(invitedClient->getClientSocket());
-			std::cout << nick << " has been invited to channel " << chan_name << std::endl;
+			msg = chan_name + " " + nick;
+			numeric = RPL_INVITING;
+			std::string invitedMsg = "You have been invited to " + chan_name + " by " + client.getNickname(); 
+			sendNotice(*invitedClient, invitedMsg);
 		}
 	}
+	sendNumeric(client, numeric, msg);
 }

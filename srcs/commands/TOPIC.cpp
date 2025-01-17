@@ -13,7 +13,9 @@ void TOPIC::execCommand(Server &serv, Client &client, const com &cmd)
 // user appartient au channel => NOTONCHANNEL
 // si private, user n'a pas les permissions => CHANOPRIVSNEEDED
 // 
-
+	std::string msg;
+	std::string cmdmsg;
+	int numeric;
 	std::string channel_name = cmd.params[0];
 	std::string topic;
 	if (cmd.hasText)
@@ -21,38 +23,47 @@ void TOPIC::execCommand(Server &serv, Client &client, const com &cmd)
 	Channel* channel = serv.getChannelbyName(channel_name);
 	if (!channel)
 	{
-		std::cerr << "ERR_NOSUCHCHANNEL" << std::endl;
-		return ;
+		msg = "No such channel";
+		numeric = ERR_NOSUCHCHANNEL;
 	}
 	else if (!channel->checkClientIsMembre(client.getClientSocket()))
 	{
-		std::cerr << "ERR_NOTONCHANNEL" << std::endl;
-		return ;
-	}
-	else if (!channel->isOperator(client.getClientSocket()) && channel->hasMode('t')) // rajouter permissions
-	{
-		std::cerr << "ERR_CHANOPRIVSNEEDED" << std::endl;
-		return ;
+		msg = "You're not on that channel";
+		numeric = ERR_NOTONCHANNEL;
 	}
 	else
 	{
 		if (!cmd.hasText)
 		{
 			if (channel->getTopic().empty())
-				std::cerr << "No topic is set" << std::endl;
+			{
+				msg = "No topic is set";
+				numeric = RPL_NOTOPIC;
+			}
 			else
-				std::cout << channel->getTopic() << std::endl;
+			{
+				msg = channel->getName() + " :" + channel->getTopic();
+				numeric = RPL_TOPIC;
+			}
+		}
+		else if (channel->hasMode('t') && !channel->isOperator(client.getClientSocket()))
+		{
+			msg = "You're not channel operator";
+			numeric = ERR_CHANOPRIVSNEEDED;
 		}
 		else if (topic == "")
 		{
 			channel->setTopic("");
-			std::cout << "TOPIC " << channel_name << " :" << std::endl;
+			cmdmsg = "TOPIC " + channel_name + " :";
 		}
 		else
 		{
 			channel->setTopic(topic);
-			std::cout << "TOPIC " << channel_name << " :" << topic << std::endl;
+			cmdmsg = "TOPIC " + channel_name + " :" + topic;
 		}
-
 	}
+	if (!msg.empty())
+		sendNumeric(client, numeric, msg);
+	else
+		channel->sendMsgMembres(cmdmsg);
 }

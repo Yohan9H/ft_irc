@@ -6,7 +6,8 @@ MODE::~MODE() {};
 void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 {
 	//rajouter message qui annonce le changement de mode
-	 
+	std::string msg;
+	int numeric;
 	std::string channel_name = cmd.params[0];
 	if (channel_name[0] != '#' || cmd.params.size() < 2)
 		return ;
@@ -17,85 +18,101 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 
 	if (!channel)
 	{
-		std::cerr << "ERR_NOSUCHCHANNEL" << std::endl;
-		return ;
+		msg = "No such channel";
+		numeric = ERR_NOSUCHCHANNEL;
 	}
 	else if (!channel->isOperator(client.getClientSocket()))
 	{
-		std::cerr << "ERR_CHANOPRIVSNEEDED" << std::endl;
-		return ;
+		msg = "You're not channel operator";
+		numeric = ERR_CHANOPRIVSNEEDED;
 	}
-	
 	else {
 		char sign = mode[0];
 		char type = mode[1];
 		if (mode.length() != 2 || ((sign != '-') && (sign != '+')))
 		{
-			std::cerr << "ERR_UMODEUNKNOWNFLAG" << std::endl;
-			return ;
+			msg = "Unknown MODE flag";
+			numeric = ERR_UMODEUNKNOWNFLAG;
 		}
 		switch (type) {
 			// Invite-only
 			case 'i': {
 				if (sign == '+')
+				{
 					channel->addMode('i');
+					sendModeParamMsg(client, *channel, mode, mdp);
+				}
 				else
+				{
 					channel->errMode('i');
+					sendModeParamMsg(client, *channel, mode, mdp);
+				}
 				break;
 			};
 			// TOPIC
 			case 't': {
 				if (sign == '+')
+				{
 					channel->addMode('t');
+					sendModeParamMsg(client, *channel, mode, mdp);
+				}
 				else
+				{
 					channel->errMode('t');
+					sendModeParamMsg(client, *channel, mode, mdp);
+				}
 				break;
 			};
 			//Password
 			case 'k': {
 				if (sign == '+') {
 					if (mdp.empty()) {
-						std::cerr << "ERR_NOPASSWORD" << std::endl;
+						msg = "Wrong password format";
+						numeric = ERR_INVALIDMODEPARAM;
 					} else {
 						channel->setKey(mdp);
 						channel->addMode('k');
-						std::cout << "channel password added" << std::endl; 
+						sendModeParamMsg(client, *channel, mode, mdp);
 					}
 				}
 				else {
 					channel->errMode('k');
-					std::cout << "channel password removed" << std::endl;
+					sendModeParamMsg(client, *channel, mode, mdp);
 				}
 				break;
 			};
 			//Operator
 			case 'o': {
 				if (mdp.empty()) {
-					std::cerr << "ERR_NOOP" << std::endl;
+						msg = "Not enough parameters";
+						numeric = ERR_NEEDMOREPARAMS;
 				} else {
 					Client* modeOperator = serv.getClientbyName(mdp);
 					if (!modeOperator)
 					{
-						std::cerr << "ERR_WRONOPERATORNAME" << std::endl;
-						return;
+						msg = "No such nick";
+						numeric = ERR_NOSUCHNICK;
 					}
-					if (sign == '+') {
-						if (!channel->isOperator(modeOperator->getClientSocket()))
-						{
-							channel->addOperators(modeOperator->getClientSocket());
-							channel->addMode('o');
-							std::cout << modeOperator->getNickname() << " added as operator" << std::endl;
+					else if (channel->checkClientIsMembre(modeOperator->getClientSocket()))
+					{
+						msg = "They aren't on that channel";
+						numeric = ERR_USERNOTINCHANNEL;
+					}
+					else {
+						if (sign == '+') {
+							if (!channel->isOperator(modeOperator->getClientSocket()))
+							{
+								channel->addOperators(modeOperator->getClientSocket());
+								channel->addMode('o');
+								sendModeParamMsg(client, *channel, mode, mdp);
+							}
 						} else {
-							std::cerr << "ERR_ALREADYOPERATOR" << std::endl;
-						}
-					} else {
-						if (channel->isOperator(modeOperator->getClientSocket()))
-						{
-							channel->delOperatores(modeOperator->getClientSocket());
-							channel->errMode('o');
-							std::cout << modeOperator->getNickname() << " removed as operator" << std::endl;
-						} else {
-							std::cerr << "ERR_WASNOTOPERATOR" << std::endl;
+							if (channel->isOperator(modeOperator->getClientSocket()))
+							{
+								channel->delOperatores(modeOperator->getClientSocket());
+								channel->errMode('o');
+								sendModeParamMsg(client, *channel, mode, mdp);
+							}	
 						}
 					}
 				}
@@ -105,33 +122,41 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 			case 'l': {
 				if (sign == '+') {
 					if (mdp.empty())
-						std::cerr << "ERR_NOLIMIT" << std::endl;
-					else {
+					{
+						msg = "Not enough parameters";
+						numeric = ERR_NEEDMOREPARAMS;
+					}
+					else 
+					{
 						int limit = atoi(mdp.c_str());
 						if (limit < channel->getTotalMembers()) {
-							std::cerr << "ERR_WRONGLIMIT" << std::endl;
+							msg = "Wrong limit number";
+							numeric = ERR_INVALIDMODEPARAM;
 						} else {
 							channel->addMode('l');
 							channel->setLimit(limit);
-							std::cout << "Channel set limit to " << limit << std::endl; 
+							sendModeParamMsg(client, *channel, mode, mdp); 
 						}
 					}
 				} else {
 					if (!mdp.empty())
-						std::cerr << "ERR_WRONGPARAM" << std::endl;
+					{
+						msg = "Not enough parameters";
+						numeric = ERR_NEEDMOREPARAMS;
+					}
 					else {
 						channel->errMode('l');
-						std::cout << "Channel limit removed " << std::endl;
+						sendModeParamMsg(client, *channel, mode, mdp);
 					}
 				}
 				break ;
 			}
 			default:{
-				std::cerr << "ERR_UMODEUNKNOWNFLAG" << std::endl;
-				return ;
+				msg = "Unknown MODE flag";
+				numeric = ERR_UMODEUNKNOWNFLAG;
 			}
 		}
-		
-
 	}
+	if (!msg.empty())
+		sendNumeric(client, numeric, msg);
 }

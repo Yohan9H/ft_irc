@@ -187,3 +187,11 @@ void Client::handlePrivmsg(const com &cmd) {
 
     // Logique métier (envoyer le message au destinataire)
 }
+
+
+void	Client::removeChan(std::string channel)
+{
+	std::vector<std::string>::iterator it = std::find(_listChan.begin(), _listChan.end(), channel);
+	if (it != _listChan.end())
+		_listChan.erase(it);
+}

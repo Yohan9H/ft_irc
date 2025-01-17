@@ -9,9 +9,12 @@ void JOIN::execCommand(Server &serv, Client &client, const com &cmd)
 	std::string name_chan = cmd.params[0];
 	std::string mdp = (cmd.params.size() > 1) ? cmd.params[1] : "";
 
+
+	//refaire join en verifiant que quand quelqu'un a ete invite puisqu'il join, il faut retirer
+	// de la liste des invited
+
 	// Verif if '#'
 	if (name_chan[0] && name_chan[0] != '#')
-		return ;
 
 	// Verif client is identify
 	if (client.getIsAuth() == false)
@@ -23,6 +26,7 @@ void JOIN::execCommand(Server &serv, Client &client, const com &cmd)
 
 	// Recup de la chaine
 	Channel *channel = createChannel(serv, name_chan, client);
+
 
 	// Permissions
 	if (channel->ifProtectedByPassWord() && !channel->checkPassWord(mdp))

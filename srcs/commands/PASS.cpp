@@ -6,16 +6,22 @@ PASS::~PASS() {};
 void PASS::execCommand(Server &serv, Client &client, const com &cmd)
 {
     std::string pwd = cmd.params[0];
+	std::string msg;
+	int numeric;
 
 	if (client.getIsAuth()) {
-		std::cerr << "ERR_ALREADYREGISTERED" << std::endl;
+		msg = "You may not reregister";
+		numeric = ERR_ALREADYREGISTERED;
 	}
 	else if (pwd != serv.getPassword())
 	{
-		std::cerr << "ERR_PASSWDMISMATCH" << std::endl;
+		msg = "Password incorrect";
+		numeric = ERR_PASSWDMISMATCH;
 	}
 	else {
 		client.setPasswordFilled(true);
 	}
+	if (!msg.empty())
+		sendNumeric(client, numeric, msg);
 	
 }

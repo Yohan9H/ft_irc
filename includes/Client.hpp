@@ -6,7 +6,7 @@
 /*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 13:13:34 by avandeve          #+#    #+#             */
-/*   Updated: 2025/01/17 11:51:02 by apernot          ###   ########.fr       */
+/*   Updated: 2025/01/17 14:38:44 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ public:
 	bool			if_identify(int code);
 	bool			if_NickIsCreate();
 	void			AuthIsGood();
+	void			removeChan(std::string channel);
 
 	void			print_for_test();
 

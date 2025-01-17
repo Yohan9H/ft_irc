@@ -5,18 +5,11 @@ KICK::~KICK() {};
 
 void KICK::execCommand(Server &serv, Client &client, const com &cmd)
 {
-
-	//verif if name is not on a channel -> ERR_USERNOTINCHANNEL
-	// verif if User is a channel operator => ERR_CHANOPRIVSNEEDED
-	//verif if channel exist and valid => ERR_BADCHANMASK or ERR_NOSUCHCHANNEL
-	//verif if there is a reason
-	//Send message to all channel that user has been KICK
-
 	std::string msg;
 	std::string chan_name = cmd.params[0];
 	std::string nick = cmd.params[1];
+	int numeric;
 
-	// verify the the user is authentified
 	if (client.getIsAuth() == false)
 	{
 		msg = ":" + std::string(NAME_SERV) + " 451 You have not registered" ENDLINE_MSG;
@@ -27,44 +20,43 @@ void KICK::execCommand(Server &serv, Client &client, const com &cmd)
 	Channel* channel = serv.getChannelbyName(chan_name);
 	if (!channel)
 	{
-		std::cerr << "ERR_NOSUCHCHANNEL" << std::endl;
-		return ;
+		msg = "No such channel";
+		numeric = ERR_NOSUCHCHANNEL;
 	}
 	else if (!channel->checkClientIsMembre(client.getClientSocket()))
 	{
-		std::cerr << "ERR_USERNOTINCHANNEL" << std::endl;
-		return ;
+		msg = "You're not on that channel";
+		numeric = ERR_NOTONCHANNEL;
 	}
 	else if (!channel->isOperator(client.getClientSocket()))
 	{
-		std::cerr << "ERR_CHANOPRIVSNEEDED" << std::endl;
-		return ;
+		msg = "You're not channel operator";
+		numeric = ERR_CHANOPRIVSNEEDED;
 	}
 	else
 	{
 		Client* kickClient = serv.getClientbyName(nick);
 		if (!kickClient)
 		{
-			std::cerr << "ERR_NOSUCHNICK" << std::endl;
-			return ;
+			msg = "No such nick/channel";
+			numeric = ERR_NOSUCHNICK;
+		}
+		else if (!channel->checkClientIsMembre(kickClient->getClientSocket()))
+		{
+			msg = "They aren't on that channel";
+			numeric = ERR_USERNOTINCHANNEL;
 		}
 		else
 		{
-			channel->delMembres(kickClient->getClientSocket());
-			//retirer de la list des channels du client
-			msg = nick + " has been kicked by " + client.getNickname();
+			std::string reason = (cmd.hasText) ? cmd.trailing : "";
+			std::string chanmsg = " KICK " + chan_name + " " + nick + " :" + reason;
 			channel->sendMsgMembres(msg);
+			channel->delMembres(kickClient->getClientSocket());
+			kickClient->removeChan(chan_name);
+			std::string kickedmsg = "You have been kicked from " + chan_name + " by " + client.getNickname() + " (Reason: " + reason + ")";
+			send(kickClient->getClientSocket(), kickedmsg.c_str(), kickedmsg.size(), 0);
 		}
-		return ;
 	}
-
-	if (!cmd.trailing.empty())
-		std::string reason = cmd.trailing;
-
-   
-
-
-	//verif if name exist -> ERR_NOSUCHNICK
-
-
+	if (!msg.empty())
+		sendNumeric(client, numeric, msg);
 }
