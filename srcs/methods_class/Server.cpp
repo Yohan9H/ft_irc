@@ -283,24 +283,17 @@ bool Server::receiveData(int fd)
         std::string bufferToParse;
         bufferToParse = std::string(buffer);
         parseCommand(*(this->getClientbyFd(fd)), bufferToParse);
-        // std::cout << "Prefix: "<< (command.prefix.empty() ? "empty" : command.prefix) << std::endl;
-        // std::cout << "cmd: " << command.command << std::endl;
-        // if (command.params.size() == 0)
-        //   std::cout << "Params: empty" << std::endl;
-        // for (size_t i = 0; i < command.params.size(); i++)
-        //   std::cout << "Params " << i << ": " << command.params[i] << std::endl;
-        // std::cout << "Trailing: "<< (command.trailing.empty() ? "empty" : command.trailing) << std::endl;
 
-    //Just some tests 
-      std::string ar = (std::string)"You sent";
-      ar += YELLOW;
-      ar += ": ";
-      ar += (std::string)buffer;
-      ar += COL_END;
-      // Just a test to reply to the client
-      const char *reply = ar.c_str();
-      send(fd, reply, strlen(reply), 0);
-      //End of sending messages test 
+    // //Just some tests 
+    //   std::string ar = (std::string)"You sent";
+    //   ar += YELLOW;
+    //   ar += ": ";
+    //   ar += (std::string)buffer;
+    //   ar += COL_END;
+    //   // Just a test to reply to the client
+    //   const char *reply = ar.c_str();
+    //   send(fd, reply, strlen(reply), 0);
+    //   //End of sending messages test 
       return (true);
     }
     else
@@ -347,19 +340,13 @@ void Server::parseCommand(Client &client, const std::string &input) {
         }
 
         // FOR TEST
-	    if (command.command == "CLIENT")
-		    showMapClient(*this);
-	    if (command.command == "CHANNEL")
-		    showMapChannel(*this);
+	    // if (command.command == "CLIENT")
+		//     showMapClient(*this);
+	    // if (command.command == "CHANNEL")
+		//     showMapChannel(*this);
         
-        try
-        {
-           client.executeCommand(*this, command);
-        }
-        catch(const std::exception& e)
-        {
-            std::cerr << e.what() << '\n';
-        }
+		client.executeCommand(*this, command);
+
     // return (command);
         data.erase(0, pos + 2);
     }

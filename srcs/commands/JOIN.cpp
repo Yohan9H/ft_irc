@@ -50,8 +50,11 @@ void JOIN::execCommand(Server &serv, Client &client, const com &cmd)
 		return ;
 	}
 ":" + std::string(NAME_SERV) + " 451 You have not registered" ENDLINE_MSG;
-	// Ajouter le membre
+
+	// Ajouter le membre et supprimer des invited
 	channel->addMembres(client.getClientSocket());
+	if (channel->ifInvite())
+		channel->delInvited(client.getClientSocket());
 
 	// Ajouter le chan au listchan du client
 	std::vector<std::string> &listChan = client.getListChanJoined();

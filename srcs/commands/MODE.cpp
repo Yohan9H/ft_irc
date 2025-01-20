@@ -10,7 +10,13 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 	int numeric;
 	std::string channel_name = cmd.params[0];
 	if (channel_name[0] != '#' || cmd.params.size() < 2)
+	{
+		msg = "Wrong params, not a channel";
+		numeric = ERR_INVALIDMODEPARAM;
+		sendNumericCmd(client, numeric, cmd.command, msg);
 		return ;
+	}
+	
 	std::string mode = cmd.params[1];
 	std::string mdp = (cmd.params.size() > 2) ? cmd.params[2] : "";
 
@@ -123,14 +129,14 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 				if (sign == '+') {
 					if (mdp.empty())
 					{
-						msg = "Not enough parameters";
+						msg = "Not enough parameters" ENDLINE_MSG;
 						numeric = ERR_NEEDMOREPARAMS;
 					}
 					else 
 					{
 						int limit = atoi(mdp.c_str());
 						if (limit < channel->getTotalMembers()) {
-							msg = "Wrong limit number";
+							msg = "Wrong limit number" ENDLINE_MSG;
 							numeric = ERR_INVALIDMODEPARAM;
 						} else {
 							channel->addMode('l');
@@ -141,7 +147,7 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 				} else {
 					if (!mdp.empty())
 					{
-						msg = "Not enough parameters";
+						msg = "Not enough parameters" ENDLINE_MSG;
 						numeric = ERR_NEEDMOREPARAMS;
 					}
 					else {
@@ -152,11 +158,11 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 				break ;
 			}
 			default:{
-				msg = "Unknown MODE flag";
+				msg = "Unknown MODE flag" ENDLINE_MSG;
 				numeric = ERR_UMODEUNKNOWNFLAG;
 			}
 		}
 	}
 	if (!msg.empty())
-		sendNumeric(client, numeric, msg);
+		sendNumericCmd(client, numeric, cmd.command, msg);
 }

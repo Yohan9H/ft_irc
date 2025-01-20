@@ -53,12 +53,18 @@ std::string to_string(int value) {
 
 void	sendNumeric(Client &client, int numeric, const std::string& message)
 {
-	std::string fullMessage = ":" + std::string(NAME_SERV) + " " + to_string(numeric) + " " + client.getNickname() + " :" + message + " \r\n";
+	std::string fullMessage = ":" + std::string(NAME_SERV) + " " + to_string(numeric) + " " + client.getNickname() + " :" + message;
+	send(client.getClientSocket(), fullMessage.c_str(), fullMessage.size(), 0);
+}
+
+void	sendNumericCmd(Client &client, int numeric, const std::string& message, const std::string& cmd)
+{
+	std::string fullMessage = ":" + std::string(NAME_SERV) + " " + to_string(numeric) + " " + client.getNickname() + " " + cmd + " :" + message;
 	send(client.getClientSocket(), fullMessage.c_str(), fullMessage.size(), 0);
 }
 
 void sendNotice(Client &client, const std::string& message) {
-    std::string notice = ":" + std::string(NAME_SERV) + " NOTICE " + client.getNickname() + " :" + message + "\r\n";
+    std::string notice = ":" + std::string(NAME_SERV) + " NOTICE " + client.getNickname() + " :" + message;
     send(client.getClientSocket(), notice.c_str(), notice.size(), 0);
 }
 

@@ -53,10 +53,11 @@ void PRIVMSG::execCommand(Server &serv, Client &client, const com &cmd)
 			numeric = ERR_NOSUCHNICK;
 		}
 		else {
-			send(targetclient->getClientSocket(), message.c_str(), message.size(), 0);
+			std :: string msg2 = ":" + client.getNickname() + "!" + client.getUsername() + NAME_SERV + " PRIVMSG " + targetclient->getNickname() + " :" + message;
+			send(targetclient->getClientSocket(), msg2.c_str(), msg2.size(), 0);
 			send(client.getClientSocket(), message.c_str(), message.size(), 0);
 		}
 	}
 	if (msg.empty())
-		sendNumeric(client, numeric, msg);
+		sendNumericCmd(client, numeric, cmd.command, msg + ENDLINE_MSG);
 }

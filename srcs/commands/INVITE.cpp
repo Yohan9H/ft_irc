@@ -52,9 +52,9 @@ void INVITE::execCommand(Server &serv, Client &client, const com &cmd)
 			channel->addInvited(invitedClient->getClientSocket());
 			msg = chan_name + " " + nick;
 			numeric = RPL_INVITING;
-			std::string invitedMsg = "You have been invited to " + chan_name + " by " + client.getNickname(); 
+			std::string invitedMsg = "You have been invited to " + chan_name + " by " + client.getNickname() + ENDLINE_MSG; 
 			sendNotice(*invitedClient, invitedMsg);
 		}
 	}
-	sendNumeric(client, numeric, msg);
+	sendNumericCmd(client, numeric, cmd.command, msg + ENDLINE_MSG);
 }

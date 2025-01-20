@@ -137,36 +137,54 @@ void Client::parseline(const std::string &line)
 
 void Client::executeCommand(Server &serv, const com &cmd)
 {
+	std::string msg;
+	int numeric;
     const std::string validCommands[] = {
         "NICK", "USER", "JOIN", "PRIVMSG", "PART", "QUIT", "TOPIC", "KICK", "MODE", "INVITE", "CAP", "PASS", "PING", "NOTICE"
     };
 
     if (cmd.command.empty())
-        throw std::logic_error("Empty command");
-    bool found = false;
-    for (size_t i = 0; i < (sizeof(validCommands) / sizeof(validCommands[0])); i++) {
-        if (cmd.command == validCommands[i]) {
-            found = true;
-            break;
-        }
-    }
-    if (!found)
-        throw std::logic_error("Invalid command");
-    if (cmd.trailing.length() > 512)
-        throw std::logic_error("traling too long");
-
-    Command *myCommand = serv.getCommandByName(cmd.command);
-	if (!myCommand)
-		throw std::logic_error("Command not found");
-
-    if (cmd.params.size() < myCommand->getNbParam())
-        throw std::logic_error("Wrong params");
-    
-    if (!this->getIsAuth() && myCommand->getMustbeAuth())
-        throw std::logic_error("User not authentified");
-
-    myCommand->execCommand(serv, *this, cmd);
-
+    {
+		msg = "Not enough parameters";
+		numeric = ERR_NEEDMOREPARAMS;
+	}
+	else
+	{
+		bool found = false;
+		for (size_t i = 0; i < (sizeof(validCommands) / sizeof(validCommands[0])); i++) {
+			if (cmd.command == validCommands[i]) {
+				found = true;
+				break;
+			}
+		}
+		if (!found)
+		{
+			msg = "Unknown command";
+			numeric = ERR_UNKNOWNCOMMAND;
+		}
+		else {
+			Command *myCommand = serv.getCommandByName(cmd.command);
+			if (!myCommand)
+			{
+				msg = "Unknown command";
+				numeric = ERR_UNKNOWNCOMMAND;
+			}
+			else if (cmd.params.size() < myCommand->getNbParam())
+			{
+				msg = "Not enough parameters";
+				numeric = ERR_NEEDMOREPARAMS;
+			}
+			else if (!this->getIsAuth() && myCommand->getMustbeAuth())
+			{
+				msg = "Unknown command";
+				numeric = ERR_UNKNOWNCOMMAND;
+			}
+			else 
+				myCommand->execCommand(serv, *this, cmd);
+		}
+	}
+	if (!msg.empty())
+		sendNumericCmd(*this, numeric, cmd.command, msg + ENDLINE_MSG);
 }
 
 void Client::handlePrivmsg(const com &cmd) {

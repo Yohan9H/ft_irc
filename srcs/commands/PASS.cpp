@@ -10,18 +10,18 @@ void PASS::execCommand(Server &serv, Client &client, const com &cmd)
 	int numeric;
 
 	if (client.getIsAuth()) {
-		msg = "You may not reregister";
+		msg = "You may not reregister" ENDLINE_MSG;
 		numeric = ERR_ALREADYREGISTERED;
 	}
 	else if (pwd != serv.getPassword())
 	{
-		msg = "Password incorrect";
+		msg = "Password incorrect" ENDLINE_MSG;
 		numeric = ERR_PASSWDMISMATCH;
 	}
 	else {
 		client.setPasswordFilled(true);
 	}
 	if (!msg.empty())
-		sendNumeric(client, numeric, msg);
+		sendNumericCmd(client, numeric, cmd.command, msg);
 	
 }

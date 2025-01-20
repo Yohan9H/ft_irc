@@ -6,7 +6,7 @@
 /*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 14:59:13 by yohurteb          #+#    #+#             */
-/*   Updated: 2025/01/16 16:58:55 by apernot          ###   ########.fr       */
+/*   Updated: 2025/01/20 15:13:49 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,14 +134,19 @@ void	Channel::delMembres(int clientFd)
 {
 	std::vector<int>::iterator it = std::find(_membresFd.begin(), _membresFd.end(), clientFd);
 	if (it != _membresFd.end())
-	{
 		_membresFd.erase(it);
-	}
+}
+
+void		Channel::delInvited(int clientFd)
+{
+	std::vector<int>::iterator it = std::find(_invitedFd.begin(), _invitedFd.end(), clientFd);
+	if (it != _invitedFd.end())
+		_invitedFd.erase(it);
 }
 
 std::string	Channel::formatJoinMessage(std::string name_new_client, Channel channel)
 {
-	std::string msg = ":" + name_new_client + " JOIN " + channel.getName();
+	std::string msg = ":" + name_new_client + " JOIN " + channel.getName() + "\r\n";
 	return msg;
 }
 
@@ -151,7 +156,7 @@ void	Channel::sendJoinMsgAll(Channel &channel, std::string username_client, int 
 	{	
 		if (*it != clientFd)
 		{
-			std::string msg = formatJoinMessage(username_client, channel);
+			std::string msg = formatJoinMessage(username_client, channel) ;
 			send(*it, msg.c_str(), msg.size(), 0);
 		}
 	}
@@ -284,24 +289,23 @@ bool	Channel::checkLimitUser()
 }
 
 bool	Channel::hasMode(char mode) {
-	std::vector<char> modes = this->getModes();
-	std::vector<char>::iterator it = std::find(modes.begin(), modes.end(), mode);
-	if (it != modes.end())
+	std::vector<char>::iterator it = std::find(_modes.begin(), _modes.end(), mode);
+	if (it != _modes.end())
 		return (true);
 	else
 		return (false);
 }
 
 void	Channel::addMode(char mode) {
-	std::vector<char> modes = this->getModes();
-	modes.push_back(mode);
+	if (std::find(_modes.begin(), _modes.end(), mode) == _modes.end()) {
+		_modes.push_back(mode);
+	}
 }
 
 void	Channel::errMode(char mode) {
-	std::vector<char> modes = this->getModes();
-	std::vector<char>::iterator it = std::find(modes.begin(), modes.end(), mode);
-	if (it != modes.end())
-		modes.erase(it);
+	std::vector<char>::iterator it = std::find(_modes.begin(), _modes.end(), mode);
+	if (it != _modes.end())
+		_modes.erase(it);
 }
 
 int		Channel::getTotalMembers() {

@@ -20,9 +20,9 @@ void NICK::execCommand(Server &serv, Client &client, const com &cmd)
 	}
 	if (verif_char == false || nick.length() > 9 || std::isdigit(nick[0]))
 	{
-		msg = "Erroneus nickname";
+		msg = "Erroneus nickname" ENDLINE_MSG;
 		numeric = ERR_ERRONEUSNICKNAME;
-		sendNumeric(client, numeric, msg);
+		sendNumericCmd(client, numeric, cmd.command, msg);
 		return ;
 	}
 	
@@ -34,19 +34,19 @@ void NICK::execCommand(Server &serv, Client &client, const com &cmd)
 		{
 			msg = "Nickname is already in use";
 			numeric = ERR_NICKNAMEINUSE;
-			sendNumeric(client, numeric, msg);
+			sendNumericCmd(client, numeric, cmd.command, msg + ENDLINE_MSG);
 			return ;
 		}
 	}
 	// Informe tous les channels dont il fait partie de son changement
 	if (client.getIsAuth() == false)
 	{
-		msg = ":" + nick + " NICK :" + nick ENDLINE_MSG;
+		msg = ":" + nick + " NICK :" + nick + ENDLINE_MSG;
 		send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
 	}
 	else
 	{
-		msg = ":" + client.getNickname() + " NICK :" + nick ENDLINE_MSG;
+		msg = ":" + client.getNickname() + " NICK :" + nick + ENDLINE_MSG;
 		client.sendMsgAllChan(serv, msg);
 	}
 

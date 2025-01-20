@@ -63,7 +63,7 @@ void TOPIC::execCommand(Server &serv, Client &client, const com &cmd)
 		}
 	}
 	if (!msg.empty())
-		sendNumeric(client, numeric, msg);
+		sendNumericCmd(client, numeric, cmd.command, msg + ENDLINE_MSG);
 	else
-		channel->sendMsgMembres(cmdmsg);
+		channel->sendMsgMembres(cmdmsg + ENDLINE_MSG);
 }
