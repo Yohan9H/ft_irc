@@ -60,7 +60,7 @@ void TOPIC::execCommand(Server &serv, Client &client, const com &cmd)
 		else
 		{
 			channel->setTopic(topic);
-			cmdmsg = ":localhost " + to_string(RPL_TOPIC) + " " + client.getNickname() + " " + channel->getName() + topic;
+			cmdmsg = ":localhost " + to_string(RPL_TOPIC) + " " + client.getNickname() + " " + channel->getName() + " " + topic;
 		}
 	}
 	if (!msg.empty())
