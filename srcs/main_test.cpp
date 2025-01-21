@@ -90,7 +90,7 @@ int   main(void)
         break;
       }
       const char *reply = "Copy that °>\n";
-      send(clientSocket, reply, strlen(reply), 0);
+      send(clientSocket, reply, strlen(reply), MSG_NOSIGNAL);
     }
     close(clientSocket);
     close(serverSocket);

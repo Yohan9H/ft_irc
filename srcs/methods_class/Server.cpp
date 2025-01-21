@@ -48,6 +48,11 @@ void Server::closeAndClear()
 {
     std::cout << "Cleaning up all resources..." << std::endl;
 
+	// suppression des commandes
+	for (std::map<std::string, Command*>::iterator it = _commands.begin(); it != _commands.end(); it++) {
+		delete it->second;
+	}
+
     // Close all client sockets and clear arrays
     for (size_t i = 1; i < _fds.size(); i++) 
     {
@@ -292,7 +297,7 @@ bool Server::receiveData(int fd)
     //   ar += COL_END;
     //   // Just a test to reply to the client
     //   const char *reply = ar.c_str();
-    //   send(fd, reply, strlen(reply), 0);
+    //   send(fd, reply, strlen(reply), MSG_NOSIGNAL);
     //   //End of sending messages test 
       return (true);
     }

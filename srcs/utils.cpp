@@ -54,13 +54,13 @@ std::string to_string(int value) {
 void	sendNumeric(Client &client, int numeric, const std::string& message)
 {
 	std::string fullMessage = ":" + std::string(NAME_SERV) + " " + to_string(numeric) + " " + client.getNickname() + " :" + message;
-	send(client.getClientSocket(), fullMessage.c_str(), fullMessage.size(), 0);
+	send(client.getClientSocket(), fullMessage.c_str(), fullMessage.size(), MSG_NOSIGNAL);
 }
 
-void	sendNumericCmd(Client &client, int numeric, const std::string& message, const std::string& cmd)
+void	sendNumericCmd(Client &client, int numeric, const std::string& cmd, const std::string& message)
 {
 	std::string fullMessage = ":" + std::string(NAME_SERV) + " " + to_string(numeric) + " " + client.getNickname() + " " + cmd + " :" + message;
-	send(client.getClientSocket(), fullMessage.c_str(), fullMessage.size(), 0);
+	send(client.getClientSocket(), fullMessage.c_str(), fullMessage.size(), MSG_NOSIGNAL);
 }
 
 void sendNotice(Client &client, const std::string& message) {
@@ -72,5 +72,31 @@ void sendNotice(Client &client, const std::string& message) {
 void sendModeParamMsg (Client &client, Channel &channel, std::string mode, std::string param)
 {
 	std::string msg = ":" + std::string(NAME_SERV) + " " + "MODE " + channel.getName() + " " + mode + " " + param;
-	channel.sendMsgMembres(msg);
+	channel.sendMsgMembres(msg + ENDLINE_MSG);
+}
+
+std::vector<std::string> split(std::string const& str, char sep) {
+    std::vector<std::string> tokens;
+    std::string token;
+    std::istringstream stream(str);
+    while (std::getline(stream, token, sep))
+        tokens.push_back(token);
+    return tokens;
+};
+
+std::map<std::string,std::string> createMap(std::vector<std::string> channel, std::vector<std::string> mdp)
+{
+	std::map<std::string,std::string> res;
+	if (channel.empty())
+		return (res);
+	else if (mdp.empty())
+		mdp.push_back("");
+
+	for (size_t i = 0; i < channel.size(); i++)
+	{
+		std::string key = channel[i];
+		std::string value = (i < mdp.size()) ? mdp[i] : mdp.back();
+		res.insert(std::pair<std::string, std::string>(key, value));
+	}
+	return (res);
 }

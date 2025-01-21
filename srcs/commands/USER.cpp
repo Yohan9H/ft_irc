@@ -24,7 +24,7 @@ void USER::execCommand(Server &serv, Client &client, const com &cmd)
 	if (username.length() > 9)
 	{
 		msg = msg_err(NAME_SERV, "432", username, ":Erroneous nickname");
-		send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
+		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
 		return ;
 	}
 	bool verif_char = true;
@@ -39,13 +39,13 @@ void USER::execCommand(Server &serv, Client &client, const com &cmd)
 	if (verif_char == false)
 	{
 		msg = msg_err(NAME_SERV, "432", username, ":Erroneous nickname");
-		send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
+		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
 		return ;
 	}
 	if (std::isdigit(username[0]))
 	{
 		msg = msg_err(NAME_SERV, "432", username, ":Erroneous nickname");
-		send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
+		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
 		return ;
 	}
 
@@ -55,7 +55,7 @@ void USER::execCommand(Server &serv, Client &client, const com &cmd)
 		if (it->second->getUsername() == username)
 		{
 			msg = msg_err(NAME_SERV, "433", username, ":Username is already in use");
-			send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
+			send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
 			return ;
 		}
 	}
@@ -66,7 +66,7 @@ void USER::execCommand(Server &serv, Client &client, const com &cmd)
 	msg = ":" + std::string(NAME_SERV) + " 001 " + client.getNickname() + " :Welcome to the ft_irc " + client.getNickname() + "! " + client.getUsername() + "@" + "localhost\n";
 	msg += ":" + std::string(NAME_SERV) + " 002 " + client.getNickname() + " :Your host is ft_irc 1.0\n";
 	msg += ":" + std::string(NAME_SERV) + " 003 " + client.getNickname() + " :Created at [" + serv.getTime() + "]\n";
-	send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
+	send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
 	
 	return ;
 }

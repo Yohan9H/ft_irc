@@ -6,7 +6,7 @@
 /*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 14:59:13 by yohurteb          #+#    #+#             */
-/*   Updated: 2025/01/20 15:13:49 by apernot          ###   ########.fr       */
+/*   Updated: 2025/01/21 13:43:49 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,30 +150,30 @@ std::string	Channel::formatJoinMessage(std::string name_new_client, Channel chan
 	return msg;
 }
 
-void	Channel::sendJoinMsgAll(Channel &channel, std::string username_client, int clientFd)
+void	Channel::sendJoinMsgAll(Channel &channel, std::string name_serv, std::string username_client, int clientFd)
 {
 	for (std::vector<int>::iterator it = _membresFd.begin(); it != _membresFd.end(); it++)
 	{	
 		if (*it != clientFd)
 		{
-			std::string msg = formatJoinMessage(username_client, channel) ;
-			send(*it, msg.c_str(), msg.size(), 0);
+			std::string  msg = ":" + name_serv + " 366 " + username_client + " " + channel.getTopic() + " :End of /NAMES list\n";
+			send(clientFd, msg.c_str(), msg.size(), MSG_NOSIGNAL);
 		}
 	}
 }
 
 void	Channel::infoJoinChannel(Server &serv, std::string name_serv, Channel &channel, Client &client)
 {
-	std::string msg = ":" + name_serv + " 332 " + client.getUsername() + " " + channel.getTopic() + " :Bienvenue dans le channel !\n";
-	send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
+	std::string msg = ":" + name_serv + " 332 " + client.getNickname() + " " + channel.getTopic() + " :Bienvenue dans le channel !\n";
+	send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
 	msg.clear();
 
-	msg = ":" + name_serv + " 353 " + client.getUsername() + " = " + channel.getTopic() + " :" + channel.giveAllNameMembres(serv) + "\n"; 
-	send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
+	msg = ":" + name_serv + " 353 " + client.getNickname() + " = " + channel.getTopic() + " :" + channel.giveAllNameMembres(serv) + "\n"; 
+	send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
 	msg.clear();
 
-	msg = ":" + name_serv + " 366 " + client.getUsername() + " " + channel.getTopic() + " :End of /NAMES list\n";
-	send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
+	msg = ":" + name_serv + " 366 " + client.getNickname() + " " + channel.getTopic() + " :End of /NAMES list\n";
+	send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
 }
 
 std::string Channel::giveAllNameMembres(Server &serv)
@@ -187,11 +187,11 @@ std::string Channel::giveAllNameMembres(Server &serv)
 		std::vector<int>::iterator it_ope = std::find(_operatorsFd.begin(), _operatorsFd.end(), *it);
 		if (it_ope != _operatorsFd.end())
 		{
-			msg += "@" + client_it->getUsername() + " ";
+			msg += "@" + client_it->getNickname() + " ";
 		}
 		else
 		{
-			msg += client_it->getUsername() + " ";
+			msg += client_it->getNickname() + " ";
 		}
 	}
 	return msg;
@@ -201,7 +201,7 @@ void	Channel::sendMsgMembres(std::string msg)
 {
 	for (std::vector<int>::iterator it = _membresFd.begin(); it != _membresFd.end() ;it++)
 	{
-		send(*it, msg.c_str(), msg.size(), 0);
+		send(*it, msg.c_str(), msg.size(), MSG_NOSIGNAL);
 	}
 }
 
@@ -209,7 +209,7 @@ void		Channel::sendMsgMembresExceptFd(std::string msg, int clientFd) {
 	for (std::vector<int>::iterator it = _membresFd.begin(); it != _membresFd.end() ;it++)
 	{
 		if (*it != clientFd)
-			send(*it, msg.c_str(), msg.size(), 0);
+			send(*it, msg.c_str(), msg.size(), MSG_NOSIGNAL);
 	}
 }
 

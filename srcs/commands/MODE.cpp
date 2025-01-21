@@ -164,5 +164,5 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 		}
 	}
 	if (!msg.empty())
-		sendNumericCmd(client, numeric, cmd.command, msg);
+		sendNumericCmd(client, numeric, cmd.command, msg + ENDLINE_MSG);
 }

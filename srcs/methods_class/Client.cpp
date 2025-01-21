@@ -176,7 +176,7 @@ void Client::executeCommand(Server &serv, const com &cmd)
 			}
 			else if (!this->getIsAuth() && myCommand->getMustbeAuth())
 			{
-				msg = "Unknown command";
+				msg = "Need to be logged in";
 				numeric = ERR_UNKNOWNCOMMAND;
 			}
 			else 

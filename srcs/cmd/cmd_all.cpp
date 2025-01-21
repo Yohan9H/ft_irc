@@ -6,7 +6,7 @@
 /*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 14:26:36 by yohurteb          #+#    #+#             */
-/*   Updated: 2025/01/10 15:23:43 by apernot          ###   ########.fr       */
+/*   Updated: 2025/01/21 13:16:19 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ bool	join(Server &serv, Client &client, std::string name_chan, std::string mdp)
 	if (client.getIsAuth() == false)
 	{
 		msg = ":" + std::string(NAME_SERV) + " 451 You have not registered\n";
-		send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
+		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
 		return false;
 	}
 
@@ -36,21 +36,21 @@ bool	join(Server &serv, Client &client, std::string name_chan, std::string mdp)
 	if (channel->ifProtectedByPassWord() && !channel->checkPassWord(mdp))
 	{
 		msg = mdp_false(NAME_SERV, name_chan);
-		send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
+		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
 		return false;
 	}
 
 	if (channel->ifInvite() && !channel->checkClientIsInvited(client.getClientSocket()))
 	{
 		msg = invite_false(NAME_SERV, "JOIN", name_chan);
-		send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
+		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
 		return false;
 	}
 
 	if (channel->ifLimitUser() && !channel->checkLimitUser())
 	{
 		msg = limit_user_false(NAME_SERV, client.getUsername());
-		send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
+		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
 		return false;
 	}
 
@@ -62,7 +62,7 @@ bool	join(Server &serv, Client &client, std::string name_chan, std::string mdp)
 	listChan.push_back(name_chan);
 
 	// Notifier les autres membres et le nouveau
-	channel->sendJoinMsgAll(*channel, client.getUsername(), client.getClientSocket());
+	//channel->sendJoinMsgAll(*channel, client.getUsername(), client.getClientSocket());
 
 	// Envoyer les infos du channel au client
 	channel->infoJoinChannel(serv, NAME_SERV, *channel, client);
@@ -80,7 +80,7 @@ bool	Nick(Server &serv, Client &client, std::string nick)
 	if (nick.length() > 9)
 	{
 		msg = msg_err(NAME_SERV, "432", nick, ":Erroneous nickname");
-		send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
+		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
 		return false;
 	}
 	bool verif_char = true;
@@ -95,13 +95,13 @@ bool	Nick(Server &serv, Client &client, std::string nick)
 	if (verif_char == false)
 	{
 		msg = msg_err(NAME_SERV, "432", nick, ":Erroneous nickname");
-		send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
+		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
 		return false;
 	}
 	if (std::isdigit(nick[0]))
 	{
 		msg = msg_err(NAME_SERV, "432", nick, ":Erroneous nickname (debug - isalpha)");
-		send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
+		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
 		return false;
 	}
 	
@@ -114,7 +114,7 @@ bool	Nick(Server &serv, Client &client, std::string nick)
 		{
 			std::cout << "in if" << std::endl;
 			msg = msg_err(NAME_SERV, "433", nick, ":Nickname is already in use");
-			send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
+			send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
 			return false;
 		}
 	}
@@ -147,7 +147,7 @@ bool	User(Server &serv, Client &client, std::string username)
 	if (client.if_identify(1) == false)
 	{
 		msg = ":" + std::string(NAME_SERV) + " 431 No nickname given\n";
-		send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
+		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
 		return false;
 	}
 
@@ -156,7 +156,7 @@ bool	User(Server &serv, Client &client, std::string username)
 	if (username.length() > 9)
 	{
 		msg = msg_err(NAME_SERV, "432", username, ":Erroneous nickname");
-		send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
+		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
 		return false;
 	}
 	bool verif_char = true;
@@ -171,13 +171,13 @@ bool	User(Server &serv, Client &client, std::string username)
 	if (verif_char == false)
 	{
 		msg = msg_err(NAME_SERV, "432", username, ":Erroneous nickname");
-		send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
+		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
 		return false;
 	}
 	if (std::isdigit(username[0]))
 	{
 		msg = msg_err(NAME_SERV, "432", username, ":Erroneous nickname");
-		send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
+		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
 		return false;
 	}
 
@@ -187,7 +187,7 @@ bool	User(Server &serv, Client &client, std::string username)
 		if (it->second->getUsername() == username)
 		{
 			msg = msg_err(NAME_SERV, "433", username, ":Username is already in use");
-			send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
+			send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
 			return false;
 		}
 	}
@@ -198,7 +198,7 @@ bool	User(Server &serv, Client &client, std::string username)
 	msg = ":" + std::string(NAME_SERV) + " 001 " + client.getNickname() + " :Welcome to the ft_irc " + client.getNickname() + "! " + client.getUsername() + "@" + "localhost\n";
 	msg += ":" + std::string(NAME_SERV) + " 002 " + client.getNickname() + " :Your host is ft_irc 1.0\n";
 	msg += ":" + std::string(NAME_SERV) + " 003 " + client.getNickname() + " :Created at [" + serv.getTime() + "]\n";
-	send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
+	send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
 	
 	client.print_for_test();
 

@@ -50,10 +50,10 @@ void INVITE::execCommand(Server &serv, Client &client, const com &cmd)
 		else
 		{
 			channel->addInvited(invitedClient->getClientSocket());
-			msg = chan_name + " " + nick;
 			numeric = RPL_INVITING;
-			std::string invitedMsg = "You have been invited to " + chan_name + " by " + client.getNickname() + ENDLINE_MSG; 
-			sendNotice(*invitedClient, invitedMsg);
+			std::string invitedMsg = ":" + std::string(NAME_SERV) + " " + to_string(numeric) + " " + client.getNickname() + " " + invitedClient->getNickname() + " " + chan_name + ENDLINE_MSG;
+			send(invitedClient->getClientSocket(), invitedMsg.c_str(), invitedMsg.size(), MSG_NOSIGNAL);
+			return ;
 		}
 	}
 	sendNumericCmd(client, numeric, cmd.command, msg + ENDLINE_MSG);

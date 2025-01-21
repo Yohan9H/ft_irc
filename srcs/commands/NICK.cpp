@@ -42,7 +42,7 @@ void NICK::execCommand(Server &serv, Client &client, const com &cmd)
 	if (client.getIsAuth() == false)
 	{
 		msg = ":" + nick + " NICK :" + nick + ENDLINE_MSG;
-		send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
+		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
 	}
 	else
 	{
