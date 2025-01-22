@@ -95,7 +95,7 @@ void	Client::setUserFilled(bool isUserFilled)
 
 void	Client::sendMsgAllChan(Server &serv, std::string msg)
 {
-	for (std::vector<std::string>::iterator it = _listChan.end(); it != _listChan.end(); it++)
+	for (std::vector<std::string>::iterator it = _listChan.begin(); it != _listChan.end(); it++)
 	{
 		Channel *channel = serv.getChannelbyName(*it);
 		channel->sendMsgMembres(msg);

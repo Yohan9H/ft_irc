@@ -5,13 +5,7 @@ PRIVMSG::~PRIVMSG() {};
 
 void PRIVMSG::execCommand(Server &serv, Client &client, const com &cmd)
 {
-	// pas de destinataire => ERR_NORECIPIENT
-	// pas de text a envoyer ==> ERR_NOTEXTTOSEND
-    // destinataire n'existe pas => ERR_NOSUCHNICK
-	// if # => channel
-	//	channel n'existe pas => ERR_NOSUCHCHANNEL
-	// pas membre sur le channel => ERR_CANNOTSENDTOCHAN
-	//
+
 
 	std::string target = cmd.params[0];
 	std::string message = cmd.trailing;
@@ -60,6 +54,6 @@ void PRIVMSG::execCommand(Server &serv, Client &client, const com &cmd)
 			send(targetclient->getClientSocket(), privmsg.c_str(), privmsg.size(), MSG_NOSIGNAL);
 		}
 	}
-	if (msg.empty())
+	if (!msg.empty())
 		sendNumericCmd(client, numeric, cmd.command, msg + ENDLINE_MSG);
 }

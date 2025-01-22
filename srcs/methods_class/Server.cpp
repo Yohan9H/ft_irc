@@ -491,6 +491,8 @@ void	Server::delClientChannelAssociate(Client &client)
 		{
 			it_lst->second->delOperatores(client.getClientSocket());
 			it_lst->second->delMembres(client.getClientSocket());
+			it_lst->second->delInvited(client.getClientSocket());
+			client.removeChan(it_lst->second->getName());
 
 			// Supprimer le channel si vide
 			if (it_lst->second->getMembresFd().size() == 0)
@@ -500,8 +502,8 @@ void	Server::delClientChannelAssociate(Client &client)
 			}
 			else
 			{
-				std::string msg = ":" + client.getUsername() + " disconnected.\n";
-				it_lst->second->sendMsgMembres(msg);
+				std::string msg = ":" + client.getNickname() + "!" + client.getUsername() + "@localhost QUIT :";
+				it_lst->second->sendMsgMembres(msg + ENDLINE_MSG);
 			}
 		}
 	}
