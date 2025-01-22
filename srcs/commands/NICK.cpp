@@ -9,6 +9,13 @@ void NICK::execCommand(Server &serv, Client &client, const com &cmd)
 	int numeric;
     std::string nick = cmd.params[0];
 
+	if (!client.getPasswordFilled() && !client.getIsAuth())
+	{
+		msg = "You may start by command PASS to log in with the password" ENDLINE_MSG;
+		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
+		return ;
+	}
+
 	bool verif_char = true;
 	for (std::string::const_iterator it = nick.begin(); it != nick.end(); ++it)
 	{
@@ -38,19 +45,32 @@ void NICK::execCommand(Server &serv, Client &client, const com &cmd)
 			return ;
 		}
 	}
-	// Informe tous les channels dont il fait partie de son changement
+
 	if (client.getIsAuth() == false)
 	{
-		msg = ":" + nick + " NICK :" + nick + ENDLINE_MSG;
+		if (client.getUserFilled())
+			msg = ":!" + client.getUsername() + "@localhost NICK " + nick + ENDLINE_MSG;
+		else
+			msg = ":!@localhost NICK " + nick + ENDLINE_MSG;
+		if (client.getUserFilled() && client.getPasswordFilled())
+		{
+			client.AuthIsGood();
+			msg += std::string(HOST) + " 001 " + nick + " :Welcome to the ft_irc : " + nick + "!" + client.getUsername() + "@" + "localhost" + ENDLINE_MSG;
+			msg += std::string(HOST) + " 002 " + nick + " :Your host is ft_irc 1.0" + ENDLINE_MSG;
+			msg += std::string(HOST) + " 003 " + nick + " :Created at [" + serv.getTime() + "]" + ENDLINE_MSG;
+
+		}
 		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
 	}
+	// Informe tous les channels dont il fait partie de son changement
 	else
 	{
-		msg = ":" + client.getNickname() + " NICK :" + nick + ENDLINE_MSG;
+		msg = ":" + client.getNickname() + "!" + client.getUsername() + "@localhost NICK " + nick + ENDLINE_MSG;
 		client.sendMsgAllChan(serv, msg);
 	}
 
 	client.setNick(nick);
+	client.setNickFilled(true);
 
 	return ;
 

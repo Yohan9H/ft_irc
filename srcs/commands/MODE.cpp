@@ -13,7 +13,7 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 	{
 		msg = "Wrong params, not a channel";
 		numeric = ERR_INVALIDMODEPARAM;
-		sendNumericCmd(client, numeric, cmd.command, msg);
+		sendNumericCmd(client, numeric, cmd.command, msg + ENDLINE_MSG);
 		return ;
 	}
 	
@@ -99,26 +99,20 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 						msg = "No such nick";
 						numeric = ERR_NOSUCHNICK;
 					}
-					else if (channel->checkClientIsMembre(modeOperator->getClientSocket()))
+					else if (!channel->checkClientIsMembre(modeOperator->getClientSocket()))
 					{
 						msg = "They aren't on that channel";
 						numeric = ERR_USERNOTINCHANNEL;
 					}
 					else {
 						if (sign == '+') {
-							if (!channel->isOperator(modeOperator->getClientSocket()))
-							{
-								channel->addOperators(modeOperator->getClientSocket());
-								channel->addMode('o');
-								sendModeParamMsg(client, *channel, mode, mdp);
-							}
+							channel->addOperators(modeOperator->getClientSocket());
+							channel->addMode('o');
+							sendModeParamMsg(client, *channel, mode, mdp);
 						} else {
-							if (channel->isOperator(modeOperator->getClientSocket()))
-							{
-								channel->delOperatores(modeOperator->getClientSocket());
-								channel->errMode('o');
-								sendModeParamMsg(client, *channel, mode, mdp);
-							}	
+							channel->delOperatores(modeOperator->getClientSocket());
+							channel->errMode('o');
+							sendModeParamMsg(client, *channel, mode, mdp);	
 						}
 					}
 				}
@@ -145,15 +139,8 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 						}
 					}
 				} else {
-					if (!mdp.empty())
-					{
-						msg = "Not enough parameters" ENDLINE_MSG;
-						numeric = ERR_NEEDMOREPARAMS;
-					}
-					else {
 						channel->errMode('l');
 						sendModeParamMsg(client, *channel, mode, mdp);
-					}
 				}
 				break ;
 			}

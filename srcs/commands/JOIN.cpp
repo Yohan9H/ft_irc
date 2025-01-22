@@ -28,13 +28,6 @@ void JOIN::execCommand(Server &serv, Client &client, const com &cmd)
 
 
 		// Permissions
-		if (channel->ifProtectedByPassWord() && !channel->checkPassWord(mdp))
-		{
-			msg = "Password incorrect";
-			numeric = ERR_PASSWDMISMATCH;
-			sendNumericCmd(client, numeric, cmd.command, msg + ENDLINE_MSG);
-			return ;
-		}
 
 		if (channel->ifInvite() && !channel->checkClientIsInvited(client.getClientSocket()))
 		{
@@ -44,7 +37,15 @@ void JOIN::execCommand(Server &serv, Client &client, const com &cmd)
 			return ;
 		}
 
-		if (channel->ifLimitUser() && !channel->checkLimitUser())
+		if (channel->ifProtectedByPassWord() && !channel->checkPassWord(mdp))
+		{
+			msg = "Password incorrect";
+			numeric = ERR_PASSWDMISMATCH;
+			sendNumericCmd(client, numeric, cmd.command, msg + ENDLINE_MSG);
+			return ;
+		}
+
+		if (channel->ifLimitUser() && channel->checkOverLimitUser())
 		{
 			msg = "Cannot join channel (+l)";
 			numeric = ERR_CHANNELISFULL;
@@ -66,12 +67,12 @@ void JOIN::execCommand(Server &serv, Client &client, const com &cmd)
 		channel->sendMsgMembres(msg1 + ENDLINE_MSG);
 		if (!channel->getTopic().empty())
 		{
-			std::string msg2 = ":localhost " + to_string(RPL_TOPIC) + " " + client.getNickname() + " " + channel->getTopic();
+			std::string msg2 = HOST + to_string(RPL_TOPIC) + " " + client.getNickname() + " " + channel->getTopic();
 			channel->sendMsgMembres(msg2 + ENDLINE_MSG);
 		}
-		std::string msg3 = ":localhost " + to_string(RPL_NAMREPLY) + " "  + client.getNickname() + " = " + channel->getName() + " :" + channel->giveAllNameMembres(serv);
+		std::string msg3 = HOST + to_string(RPL_NAMREPLY) + " "  + client.getNickname() + " = " + channel->getName() + " :" + channel->giveAllNameMembres(serv);
 		channel->sendMsgMembres(msg3 + ENDLINE_MSG);
-		std::string msg4 = ":localhost " + to_string(RPL_ENDOFNAMES) + " " + client.getNickname() + " " + channel->getName() + " :End of /NAMES list";
+		std::string msg4 = HOST + to_string(RPL_ENDOFNAMES) + " " + client.getNickname() + " " + channel->getName() + " :End of /NAMES list";
 		channel->sendMsgMembres(msg4 + ENDLINE_MSG);
 
 		// // Envoyer les infos du channel au client

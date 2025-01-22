@@ -6,7 +6,7 @@
 /*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 14:59:13 by yohurteb          #+#    #+#             */
-/*   Updated: 2025/01/21 13:43:49 by apernot          ###   ########.fr       */
+/*   Updated: 2025/01/22 13:18:27 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -280,9 +280,9 @@ bool	Channel::checkClientIsMembre(int clientFd) {
 		return false;
 }
 
-bool	Channel::checkLimitUser()
+bool	Channel::checkOverLimitUser()
 {
-	if (_membresFd.size() + 1 != _limit_user)
+	if (_membresFd.size() >= _limit_user)
 		return 1;
 	else
 		return 0;

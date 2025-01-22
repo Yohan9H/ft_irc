@@ -53,25 +53,25 @@ std::string to_string(int value) {
 
 void	sendNumeric(Client &client, int numeric, const std::string& message)
 {
-	std::string fullMessage = ":" + std::string(NAME_SERV) + " " + to_string(numeric) + " " + client.getNickname() + " :" + message;
+	std::string fullMessage = std::string(HOST) + to_string(numeric) + " " + client.getNickname() + " :" + message;
 	send(client.getClientSocket(), fullMessage.c_str(), fullMessage.size(), MSG_NOSIGNAL);
 }
 
 void	sendNumericCmd(Client &client, int numeric, const std::string& cmd, const std::string& message)
 {
-	std::string fullMessage = ":" + std::string(NAME_SERV) + " " + to_string(numeric) + " " + client.getNickname() + " " + cmd + " :" + message;
+	std::string fullMessage = std::string(HOST) + to_string(numeric) + " " + client.getNickname() + " " + cmd + " :" + message;
 	send(client.getClientSocket(), fullMessage.c_str(), fullMessage.size(), MSG_NOSIGNAL);
 }
 
 void sendNotice(Client &client, const std::string& message) {
-    std::string notice = ":" + std::string(NAME_SERV) + " NOTICE " + client.getNickname() + " :" + message;
+    std::string notice = std::string(HOST) + "NOTICE " + client.getNickname() + " :" + message;
     send(client.getClientSocket(), notice.c_str(), notice.size(), 0);
 }
 
 
 void sendModeParamMsg (Client &client, Channel &channel, std::string mode, std::string param)
 {
-	std::string msg = ":" + std::string(NAME_SERV) + " " + "MODE " + channel.getName() + " " + mode + " " + param;
+	std::string msg = std::string(HOST) + "MODE " + channel.getName() + " " + mode + " " + param;
 	channel.sendMsgMembres(msg + ENDLINE_MSG);
 }
 

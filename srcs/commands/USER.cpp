@@ -10,23 +10,24 @@ void USER::execCommand(Server &serv, Client &client, const com &cmd)
 	int numeric;
     std::string username = cmd.params[0];
 
-	// Verif client if identify
-	if (client.if_NickIsCreate() == false)
-	{
-		msg = ":" + std::string(NAME_SERV) + " 431 No nickname given\n";
-		send(client.getClientSocket(), msg.c_str(), msg.size(), 0);
-		return ;
-	}
-
 	// Verif valide name
 	removeNewline(username);
 
-	if (username.length() > 9)
+	if (!client.getPasswordFilled() && !client.getIsAuth())
 	{
-		msg = msg_err(NAME_SERV, "432", username, ":Erroneous nickname");
+		msg = "You may start by command PASS to log in with the password" ENDLINE_MSG;
 		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
 		return ;
 	}
+
+	if (client.getIsAuth())
+	{
+		msg = "You may not reregister";
+		numeric = ERR_ALREADYREGISTERED;
+		sendNumeric(client, numeric, msg + ENDLINE_MSG);
+		return ;
+	}
+
 	bool verif_char = true;
 	for (std::string::iterator it = username.begin(); it != username.end(); ++it)
 	{
@@ -36,16 +37,11 @@ void USER::execCommand(Server &serv, Client &client, const com &cmd)
 			break;
 		}
 	}
-	if (verif_char == false)
+	if (verif_char == false || username.length() > 9 || std::isdigit(username[0]))
 	{
-		msg = msg_err(NAME_SERV, "432", username, ":Erroneous nickname");
-		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
-		return ;
-	}
-	if (std::isdigit(username[0]))
-	{
-		msg = msg_err(NAME_SERV, "432", username, ":Erroneous nickname");
-		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
+		msg = "Erroneous nickname";
+		numeric = ERR_ERRONEUSNICKNAME;
+		sendNumeric(client, numeric, msg + ENDLINE_MSG);
 		return ;
 	}
 
@@ -54,19 +50,23 @@ void USER::execCommand(Server &serv, Client &client, const com &cmd)
 	{
 		if (it->second->getUsername() == username)
 		{
-			msg = msg_err(NAME_SERV, "433", username, ":Username is already in use");
-			send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
+			msg = "Erroneous nickname";
+			numeric = ERR_ERRONEUSNICKNAME;
+			sendNumeric(client, numeric, msg + ENDLINE_MSG);
 			return ;
 		}
 	}
 
 	client.setName(username);
-	client.AuthIsGood();
+	client.setUserFilled(true);
 
-	msg = ":" + std::string(NAME_SERV) + " 001 " + client.getNickname() + " :Welcome to the ft_irc " + client.getNickname() + "! " + client.getUsername() + "@" + "localhost\n";
-	msg += ":" + std::string(NAME_SERV) + " 002 " + client.getNickname() + " :Your host is ft_irc 1.0\n";
-	msg += ":" + std::string(NAME_SERV) + " 003 " + client.getNickname() + " :Created at [" + serv.getTime() + "]\n";
-	send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
-	
+	if (client.getNickFilled() && client.getPasswordFilled())
+	{
+		client.AuthIsGood();
+		msg = std::string(HOST) + " 001 " + client.getNickname() + " :Welcome to the ft_irc " + client.getNickname() + "!" + client.getUsername() + "@" + "localhost\n";
+		msg += std::string(HOST) + " 002 " + client.getNickname() + " :Your host is ft_irc 1.0\n";
+		msg += std::string(HOST) + " 003 " + client.getNickname() + " :Created at [" + serv.getTime() + "]\n";
+		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
+	}
 	return ;
 }

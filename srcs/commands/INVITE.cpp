@@ -51,7 +51,7 @@ void INVITE::execCommand(Server &serv, Client &client, const com &cmd)
 		{
 			channel->addInvited(invitedClient->getClientSocket());
 			numeric = RPL_INVITING;
-			std::string invitedMsg = ":" + std::string(NAME_SERV) + " " + to_string(numeric) + " " + client.getNickname() + " " + invitedClient->getNickname() + " " + chan_name + ENDLINE_MSG;
+			std::string invitedMsg = std::string(HOST) + " " + to_string(numeric) + " " + client.getNickname() + " " + invitedClient->getNickname() + " " + chan_name + ENDLINE_MSG;
 			send(invitedClient->getClientSocket(), invitedMsg.c_str(), invitedMsg.size(), MSG_NOSIGNAL);
 			return ;
 		}

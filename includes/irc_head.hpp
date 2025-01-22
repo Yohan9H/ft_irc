@@ -200,5 +200,5 @@ void	sendNumeric(Client &client, int numeric, const std::string& message);
 
 # define MAX_CONNEXIONS 5
 # define BUFFER_MAX 1024
-# define NAME_SERV "irc.42.com"
+# define HOST ":localhost "
 # define ENDLINE_MSG "\r\n"

@@ -6,7 +6,7 @@
 /*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 13:31:50 by yohurteb          #+#    #+#             */
-/*   Updated: 2025/01/21 13:16:00 by apernot          ###   ########.fr       */
+/*   Updated: 2025/01/22 13:18:27 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ class Channel
 		bool	checkPassWord(std::string mdp);
 		bool	checkClientIsInvited(int clientFd);
 		bool	checkClientIsMembre(int clientFd);
-		bool	checkLimitUser();
+		bool	checkOverLimitUser();
 		
 		bool	hasMode(char mode);
 		int		getTotalMembers();

@@ -53,13 +53,22 @@ bool	Client::getPasswordFilled()
 {
 	return this->_passwordfilled;
 }
+bool	Client::getNickFilled()
+{
+	return this->_nickfilled;
+}
 
-void		Client::setClientSocket(int clientFd)
+bool	Client::getUserFilled()
+{
+	return this->_userfilled;
+}
+
+void	Client::setClientSocket(int clientFd)
 {
 	_clientSocket = clientFd;
 }
 
-void		Client::setName(std::string new_name)
+void	Client::setName(std::string new_name)
 {
 	_username = new_name;
 }
@@ -72,6 +81,16 @@ void		Client::setNick(std::string new_nick)
 void		Client::setPasswordFilled(bool isPasswordFilled)
 {
 	_passwordfilled = isPasswordFilled;
+}
+
+void	Client::setNickFilled(bool isNickFilled)
+{
+	_nickfilled = isNickFilled;
+}
+
+void	Client::setUserFilled(bool isUserFilled)
+{
+	_userfilled = isUserFilled;
 }
 
 void	Client::sendMsgAllChan(Server &serv, std::string msg)

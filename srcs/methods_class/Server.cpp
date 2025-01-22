@@ -251,6 +251,10 @@ bool Server::acceptClients()
     _newClient.events = POLLIN;
     _newClient.revents = 0;
     newClient->setClientSocket(clientSocket);
+	newClient->setNickFilled(false);
+	newClient->setUserFilled(false);
+	newClient->setPasswordFilled(false);
+
     // newClient->setClientAddress(_cliAddress);
     // newClient->setIPAdd(inet_ntoa(_cliAddress.sin_addr));
 	_listClients.insert(std::make_pair(newClient->getClientSocket(), newClient));

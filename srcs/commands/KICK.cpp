@@ -12,7 +12,7 @@ void KICK::execCommand(Server &serv, Client &client, const com &cmd)
 
 	if (client.getIsAuth() == false)
 	{
-		msg = ":" + std::string(NAME_SERV) + " 451 You have not registered" ENDLINE_MSG;
+		msg = ":" + std::string(HOST) + " 451 You have not registered" ENDLINE_MSG;
 		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
 		return ;
 	}
@@ -48,9 +48,11 @@ void KICK::execCommand(Server &serv, Client &client, const com &cmd)
 		}
 		else
 		{
+			
 			std::string reason = (cmd.hasText) ? cmd.trailing : "";
 			std::string chanmsg = " KICK " + chan_name + " " + nick + " :" + reason;
 			channel->sendMsgMembres(msg + ENDLINE_MSG);
+			channel->delOperatores(kickClient->getClientSocket());
 			channel->delMembres(kickClient->getClientSocket());
 			kickClient->removeChan(chan_name);
 			std::string kickedmsg = "You have been kicked from " + chan_name + " by " + client.getNickname() + " (Reason: " + reason + ")" + ENDLINE_MSG;
