@@ -349,12 +349,12 @@ void Server::parseCommand(Client &client, const std::string &input) {
         }
 
         // FOR TEST
-	    // if (command.command == "CLIENT")
-		//     showMapClient(*this);
-	    // if (command.command == "CHANNEL")
-		//     showMapChannel(*this);
-        
+       
 		client.executeCommand(*this, command);
+		std::cout << std::endl << "%%%%%%%%%%%%%%%%%%%%%% BEGIN TEST %%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl;
+		showMapClient(*this);
+		showMapChannel(*this);
+		std::cout << "%%%%%%%%%%%%%%%%%%%%%% END TEST %%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl  << std::endl ;
 
     // return (command);
         data.erase(0, pos + 2);

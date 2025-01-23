@@ -136,15 +136,16 @@ void	Client::AuthIsGood()
 
 void	Client::print_for_test()
 {
-	std::cout << "--- INFO TEST ---\n" << std::endl;
+	std::cout << "--- INFO CLIENT TEST ---\n" << std::endl;
 	std::cout << "username = " << _username << std::endl;
 	std::cout << "nick = " << _nick << std::endl;
 
-	std::cout << "list channel :" << std::endl;
+	std::cout << "list channel : ";
 	for (std::vector<std::string>::iterator it = _listChan.begin(); it != _listChan.end(); it++)
 	{
-		std::cout << *it;
+		std::cout << *it << " - ";
 	}
+	std::cout << std::endl;
 	std::cout << "----- END TEST -----" << std::endl;
 }
 
@@ -170,7 +171,7 @@ void Client::executeCommand(Server &serv, const com &cmd)
 	else
 	{
 		bool found = false;
-		for (size_t i = 0; i < (sizeof(validCommands) / sizeof(validCommands[0])); i++) {
+		for (int i = 0; i < (sizeof(validCommands) / sizeof(validCommands[0])); i++) {
 			if (cmd.command == validCommands[i]) {
 				found = true;
 				break;

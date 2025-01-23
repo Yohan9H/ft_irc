@@ -45,7 +45,12 @@ void INVITE::execCommand(Server &serv, Client &client, const com &cmd)
 		{
 			msg = "is already on channel";
 			numeric = ERR_USERONCHANNEL;
-			return ;
+		}
+		//verifier si on garde cette confition
+		else if (channel->checkClientIsInvited(invitedClient->getClientSocket()))
+		{
+			msg = "is already invited";
+			numeric = ERR_USERONCHANNEL;
 		}
 		else
 		{

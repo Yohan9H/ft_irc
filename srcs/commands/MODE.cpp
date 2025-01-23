@@ -104,6 +104,11 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 						msg = "They aren't on that channel";
 						numeric = ERR_USERNOTINCHANNEL;
 					}
+					else if (channel->checkClientIsOperator(modeOperator->getClientSocket()))
+					{
+						msg = "They are already an operator";
+						numeric = ERR_USERNOTINCHANNEL;
+					}
 					else {
 						if (sign == '+') {
 							channel->addOperators(modeOperator->getClientSocket());
@@ -123,14 +128,14 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 				if (sign == '+') {
 					if (mdp.empty())
 					{
-						msg = "Not enough parameters" ENDLINE_MSG;
+						msg = "Not enough parameters";
 						numeric = ERR_NEEDMOREPARAMS;
 					}
 					else 
 					{
 						int limit = atoi(mdp.c_str());
 						if (limit < channel->getTotalMembers()) {
-							msg = "Wrong limit number" ENDLINE_MSG;
+							msg = "Wrong limit number";
 							numeric = ERR_INVALIDMODEPARAM;
 						} else {
 							channel->addMode('l');
@@ -140,12 +145,13 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 					}
 				} else {
 						channel->errMode('l');
+						channel->setLimit(-1);
 						sendModeParamMsg(client, *channel, mode, mdp);
 				}
 				break ;
 			}
 			default:{
-				msg = "Unknown MODE flag" ENDLINE_MSG;
+				msg = "Unknown MODE flag";
 				numeric = ERR_UMODEUNKNOWNFLAG;
 			}
 		}

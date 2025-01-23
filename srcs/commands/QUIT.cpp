@@ -28,6 +28,8 @@ void QUIT::execCommand(Server &serv, Client &client, const com &cmd)
 	// 		}
 	// 	}
 	// }
+	
 	close(client.getClientSocket());
 	serv.delClientWithFd(client.getClientSocket());
+	
 }

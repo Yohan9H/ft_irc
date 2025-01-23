@@ -1,4 +1,4 @@
-NAME = irc
+NAME = ircserv
 
 SRC_DIR = srcs
 CMD_DIR = srcs/cmd

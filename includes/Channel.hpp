@@ -6,7 +6,7 @@
 /*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 13:31:50 by yohurteb          #+#    #+#             */
-/*   Updated: 2025/01/22 13:18:27 by apernot          ###   ########.fr       */
+/*   Updated: 2025/01/23 17:37:33 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ class Channel
 		std::string			_name;
 		std::string			_key;
 		std::string			_topic;
-		size_t				_limit_user;
+		int				_limit_user;
 		std::vector<char>	_modes;
 		std::vector<int>	_operatorsFd;
 		std::vector<int>	_membresFd;
@@ -52,7 +52,7 @@ class Channel
 		void				setKey(std::string key);
 		void				setName(std::string name);
 		void				setTopic(std::string topic);
-		void				setLimit(size_t limit);
+		void				setLimit(int limit);
 		
 		void		addOperators(int clientFd);
 		void		addMembres(int clientFd);
@@ -78,10 +78,15 @@ class Channel
 		bool	checkPassWord(std::string mdp);
 		bool	checkClientIsInvited(int clientFd);
 		bool	checkClientIsMembre(int clientFd);
+		bool	checkClientIsOperator(int clientFd);
 		bool	checkOverLimitUser();
 		
 		bool	hasMode(char mode);
 		int		getTotalMembers();
+
+		//test
+		void	printChannelForTest(Server &serv);
+		
 		
 };
 

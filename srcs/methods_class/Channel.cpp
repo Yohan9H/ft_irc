@@ -6,7 +6,7 @@
 /*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 14:59:13 by yohurteb          #+#    #+#             */
-/*   Updated: 2025/01/22 13:18:27 by apernot          ###   ########.fr       */
+/*   Updated: 2025/01/23 17:50:27 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,11 @@ Channel::Channel(const Channel &src)
 	:	_name(src._name),
 		_key(src._key),
 		_topic(src._topic),
+		_limit_user(src._limit_user),
 		_modes(src._modes),
 		_operatorsFd(src._operatorsFd),
-		_membresFd(src._membresFd)
+		_membresFd(src._membresFd),
+		_invitedFd(src._invitedFd)
 {
 
 }
@@ -41,9 +43,11 @@ Channel		&Channel::operator=(const Channel &src)
 		_name = src._name;
 		_key = src._key;
 		_topic = src._topic;
+		_limit_user = src._limit_user;
 		_modes = src._modes;
 		_operatorsFd = src._operatorsFd;
 		_membresFd = src._membresFd;
+		_invitedFd = src._invitedFd;
 	}
 	return *this;
 }
@@ -101,7 +105,7 @@ void	Channel::setTopic(std::string topic)
 	_topic = topic;
 }
 
-void	Channel::setLimit(size_t limit)
+void	Channel::setLimit(int limit)
 {
 	_limit_user = limit;
 }
@@ -280,6 +284,14 @@ bool	Channel::checkClientIsMembre(int clientFd) {
 		return false;
 }
 
+bool	Channel::checkClientIsOperator(int clientFd) {
+	std::vector<int>::iterator it = std::find(_operatorsFd.begin(), _operatorsFd.end(), clientFd);
+	if (it != _operatorsFd.end())
+		return true;
+	else
+		return false;
+}
+
 bool	Channel::checkOverLimitUser()
 {
 	if (_membresFd.size() >= _limit_user)
@@ -310,4 +322,38 @@ void	Channel::errMode(char mode) {
 
 int		Channel::getTotalMembers() {
 	return (_membresFd.size());
+}
+
+void	Channel::printChannelForTest(Server &serv) 
+{
+	std::cout << "--- INFO CHANNEL TEST ---\n" << std::endl;
+	std::cout << "Channel Name - " << this->_name << std::endl;
+	std::cout << "Topic - " << this->_topic << std::endl;
+	std::cout << "limit - " << this->_limit_user << std::endl;
+	for (std::vector<char>::iterator it = this->_modes.begin(); it != this->_modes.end(); it++)
+	{
+		std::cout << "mode - " << *it << std::endl;
+	}
+	std::cout << "Operators - ";
+	for (std::vector<int>::iterator it = this->_operatorsFd.begin(); it != this->_operatorsFd.end(); it++)
+	{
+		Client* client = serv.getClientbyFd(*it);
+		std::cout << client->getNickname() << " - ";
+	}
+	std::cout << std::endl;
+	std::cout << "membres - ";
+	for (std::vector<int>::iterator it = this->_membresFd.begin(); it != this->_membresFd.end(); it++)
+	{
+		Client* client = serv.getClientbyFd(*it);
+		std::cout << client->getNickname() << " - ";
+	}
+	std::cout << std::endl;
+	std::cout << "Invited - ";
+	for (std::vector<int>::iterator it = this->_invitedFd.begin(); it != this->_invitedFd.end(); it++)
+	{
+		Client* client = serv.getClientbyFd(*it);
+		std::cout << client->getNickname() << " - ";
+	}
+	std::cout << std::endl;
+	std::cout << "----- END CHANNEL TEST -----" << std::endl;
 }

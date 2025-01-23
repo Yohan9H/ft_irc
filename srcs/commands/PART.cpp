@@ -17,20 +17,26 @@ void PART::execCommand(Server &serv, Client &client, const com &cmd)
 		{
 			msg = "No such channel";
 			numeric = ERR_NOSUCHCHANNEL;
+			sendNumeric(client, numeric, msg + ENDLINE_MSG);
 		}
 		else if (!channel->checkClientIsMembre(client.getClientSocket()))
 		{
 			msg = "You're not on that channel";
 			numeric = ERR_NOTONCHANNEL;
+			sendNumeric(client, numeric, msg + ENDLINE_MSG);
 		}
 		else 
 		{
 			std::string partmsg = ":" + client.getNickname() + "!" + client.getUsername() + "@localhost PART " + channel->getName() + " :" + reason + ENDLINE_MSG;
 			channel->sendMsgMembres(partmsg);
 			channel->delMembres(client.getClientSocket());
+			channel->delOperatores(client.getClientSocket());
 			client.removeChan(channel->getName());
+			if (channel->getMembresFd().empty())
+			{
+				delete channel;
+	 			serv.getChannel().erase(*it);
+			}
 		}
-		if (!msg.empty())
-			sendNumeric(client, numeric, msg + ENDLINE_MSG);
 	}
 }

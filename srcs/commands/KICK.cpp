@@ -50,11 +50,16 @@ void KICK::execCommand(Server &serv, Client &client, const com &cmd)
 		{
 			
 			std::string reason = (cmd.hasText) ? cmd.trailing : "";
-			std::string chanmsg = " KICK " + chan_name + " " + nick + " :" + reason;
-			channel->sendMsgMembres(msg + ENDLINE_MSG);
+			std::string chanmsg = "KICK " + chan_name + " " + nick + " :" + reason;
+			channel->sendMsgMembres(chanmsg + ENDLINE_MSG);
 			channel->delOperatores(kickClient->getClientSocket());
 			channel->delMembres(kickClient->getClientSocket());
 			kickClient->removeChan(chan_name);
+			if (channel->getMembresFd().empty())
+			{
+				delete channel;
+	 			serv.getChannel().erase(chan_name);
+			}
 			std::string kickedmsg = "You have been kicked from " + chan_name + " by " + client.getNickname() + " (Reason: " + reason + ")" + ENDLINE_MSG;
 			send(kickClient->getClientSocket(), kickedmsg.c_str(), kickedmsg.size(), MSG_NOSIGNAL);
 		}

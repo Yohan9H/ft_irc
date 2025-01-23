@@ -16,17 +16,19 @@ void	showMapClient(Server &serv)
 	std::cout << "|Map Client|" << std::endl;
 	for (std::map<int, Client*>::const_iterator it = serv.getClients().begin(); it != serv.getClients().end(); it++)
 	{
-		std::cout << "name client : " << it->second->getUsername() << std::endl;	
+		it->second->print_for_test();
 	}
 }
 
 void	showMapChannel(Server &serv)
 {
+	std::cout << "|Map Channel|" << std::endl;
 	for (std::map<std::string, Channel*>::const_iterator it = serv.getChannel().begin(); it != serv.getChannel().end(); it++)
 	{
-		std::cout << "name channel : " << it->first << std::endl;
+		it->second->printChannelForTest(serv);
 	}
 }
+
 
 void normalizeCRLF(std::string& input) {
     size_t pos = 0;
