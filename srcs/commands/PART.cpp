@@ -37,6 +37,8 @@ void PART::execCommand(Server &serv, Client &client, const com &cmd)
 				delete channel;
 	 			serv.getChannel().erase(*it);
 			}
+			else if (channel->getOperatorsFd().empty())
+				channel->addOperators(channel->getMembresFd()[0]);
 		}
 	}
 }

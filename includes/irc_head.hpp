@@ -196,7 +196,6 @@ bool	is_good(char c);
 void	showMapClient(Server &serv);
 void	showMapChannel(Server &serv);
 void    normalizeCRLF(std::string& input);
-void	sendNumericParam1(Client &client, int numeric, const std::string& message);
 
 # define MAX_CONNEXIONS 5
 # define BUFFER_MAX 1024

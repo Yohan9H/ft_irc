@@ -18,7 +18,7 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 	else
 	{
 		std::string mode = cmd.params[1];
-		std::string mdp = (cmd.params.size() > 2) ? cmd.params[2] : "";
+		std::string param = (cmd.params.size() > 2) ? cmd.params[2] : "";
 
 		Channel *channel = serv.getChannelbyName(channel_name);
 
@@ -49,12 +49,12 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 					if (sign == '+')
 					{
 						channel->addMode('i');
-						sendModeParamMsg(client, *channel, mode, mdp);
+						sendModeParamMsg(client, *channel, mode, param);
 					}
 					else
 					{
 						channel->errMode('i');
-						sendModeParamMsg(client, *channel, mode, mdp);
+						sendModeParamMsg(client, *channel, mode, param);
 					}
 					break;
 				};
@@ -63,42 +63,42 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 					if (sign == '+')
 					{
 						channel->addMode('t');
-						sendModeParamMsg(client, *channel, mode, mdp);
+						sendModeParamMsg(client, *channel, mode, param);
 					}
 					else
 					{
 						channel->errMode('t');
-						sendModeParamMsg(client, *channel, mode, mdp);
+						sendModeParamMsg(client, *channel, mode, param);
 					}
 					break;
 				};
 				//Password
 				case 'k': {
 					if (sign == '+') {
-						if (mdp.empty()) {
+						if (param.empty()) {
 							msg = "Wrong password format";
 							numeric = ERR_INVALIDMODEPARAM;
 							sendNumericParam3(client, numeric, client.getNickname(), channel_name, "k", msg + ENDLINE_MSG);
 						} else {
-							channel->setPass(mdp);
+							channel->setPass(param);
 							channel->addMode('k');
-							sendModeParamMsg(client, *channel, mode, mdp);
+							sendModeParamMsg(client, *channel, mode, param);
 						}
 					}
 					else {
 						channel->errMode('k');
-						sendModeParamMsg(client, *channel, mode, mdp);
+						sendModeParamMsg(client, *channel, mode, param);
 					}
 					break;
 				};
 				//Operator
 				case 'o': {
-					if (mdp.empty()) {
+					if (param.empty()) {
 							msg = "Not enough parameters";
 							numeric = ERR_NEEDMOREPARAMS;
 							sendNumericParam2(client, numeric, client.getNickname(), "mode +o", msg + ENDLINE_MSG);
 					} else {
-						Client* modeOperator = serv.getClientbyName(mdp);
+						Client* modeOperator = serv.getClientbyName(param);
 						if (!modeOperator)
 						{
 							msg = "No such nick";
@@ -122,11 +122,11 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 							if (sign == '+') {
 								channel->addOperators(modeOperator->getClientSocket());
 								channel->addMode('o');
-								sendModeParamMsg(client, *channel, mode, mdp);
+								sendModeParamMsg(client, *channel, mode, param);
 							} else {
 								channel->delOperatores(modeOperator->getClientSocket());
 								channel->errMode('o');
-								sendModeParamMsg(client, *channel, mode, mdp);	
+								sendModeParamMsg(client, *channel, mode, param);	
 							}
 						}
 					}
@@ -135,7 +135,7 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 				//Limits
 				case 'l': {
 					if (sign == '+') {
-						if (mdp.empty())
+						if (param.empty())
 						{
 							msg = "Not enough parameters";
 							numeric = ERR_NEEDMOREPARAMS;
@@ -143,7 +143,7 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 						}
 						else 
 						{
-							int limit = atoi(mdp.c_str());
+							int limit = atoi(param.c_str());
 							if (limit < channel->getTotalMembers()) {
 								msg = "Wrong limit number";
 								numeric = ERR_INVALIDMODEPARAM;
@@ -151,13 +151,13 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 							} else {
 								channel->addMode('l');
 								channel->setLimit(limit);
-								sendModeParamMsg(client, *channel, mode, mdp); 
+								sendModeParamMsg(client, *channel, mode, param); 
 							}
 						}
 					} else {
 							channel->errMode('l');
 							channel->setLimit(-1);
-							sendModeParamMsg(client, *channel, mode, mdp);
+							sendModeParamMsg(client, *channel, mode, param);
 					}
 					break ;
 				}
