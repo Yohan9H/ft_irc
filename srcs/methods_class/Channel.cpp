@@ -6,7 +6,7 @@
 /*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 14:59:13 by yohurteb          #+#    #+#             */
-/*   Updated: 2025/01/23 17:50:27 by apernot          ###   ########.fr       */
+/*   Updated: 2025/01/27 14:29:30 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ Channel::Channel()
 
 Channel::Channel(const Channel &src)
 	:	_name(src._name),
-		_key(src._key),
+		_pass(src._pass),
 		_topic(src._topic),
 		_limit_user(src._limit_user),
 		_modes(src._modes),
@@ -41,7 +41,7 @@ Channel		&Channel::operator=(const Channel &src)
 	if (this != &src)
 	{
 		_name = src._name;
-		_key = src._key;
+		_pass = src._pass;
 		_topic = src._topic;
 		_limit_user = src._limit_user;
 		_modes = src._modes;
@@ -56,7 +56,7 @@ Channel		&Channel::operator=(const Channel &src)
 
 std::string		Channel::getKey() const
 {
-	return _key;
+	return _pass;
 }
 
 std::string		Channel::getName() const
@@ -90,9 +90,9 @@ std::vector<int>	&Channel::getInvitedFd()
 }
 
 
-void	Channel::setKey(std::string key)
+void	Channel::setPass(std::string key)
 {
-	_key = key;
+	_pass = key;
 }
 
 void	Channel::setName(std::string name)
@@ -261,7 +261,7 @@ bool	Channel::isOperator(int clientFd) {
 
 bool	Channel::checkPassWord(std::string mdp)
 {
-	if (_key == mdp)
+	if (_pass == mdp)
 		return 1;
 	else
 		return 0;

@@ -27,9 +27,9 @@ void NICK::execCommand(Server &serv, Client &client, const com &cmd)
 	}
 	if (verif_char == false || nick.length() > 9 || std::isdigit(nick[0]))
 	{
-		msg = "Erroneus nickname" ENDLINE_MSG;
+		msg = "Erroneus nickname";
 		numeric = ERR_ERRONEUSNICKNAME;
-		sendNumericCmd(client, numeric, cmd.command, msg);
+		sendNumericParam2(client, numeric, client.getNickname(), nick, msg + ENDLINE_MSG);
 		return ;
 	}
 	
@@ -41,11 +41,10 @@ void NICK::execCommand(Server &serv, Client &client, const com &cmd)
 		{
 			msg = "Nickname is already in use";
 			numeric = ERR_NICKNAMEINUSE;
-			sendNumericCmd(client, numeric, cmd.command, msg + ENDLINE_MSG);
+			sendNumericParam2(client, numeric, client.getNickname(), nick, msg + ENDLINE_MSG);
 			return ;
 		}
 	}
-
 	if (client.getIsAuth() == false)
 	{
 		if (client.getUserFilled())

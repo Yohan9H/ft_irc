@@ -16,11 +16,13 @@ void PRIVMSG::execCommand(Server &serv, Client &client, const com &cmd)
 	{
 		msg = "No recipient given " + cmd.command;
 		numeric = ERR_NORECIPIENT;
+		sendNumericParam1(client, numeric, client.getNickname(), msg + ENDLINE_MSG);
 	} 
 	else if (!cmd.hasText)
 	{
 		msg = "No text to send";
 		numeric = ERR_NOTEXTTOSEND;
+		sendNumericParam1(client, numeric, client.getNickname(), msg + ENDLINE_MSG);
 	} 
 	else if (target[0] == '#') 
 	{
@@ -29,12 +31,13 @@ void PRIVMSG::execCommand(Server &serv, Client &client, const com &cmd)
 		{
 			msg = "No such channel";
 			numeric = ERR_NOSUCHCHANNEL;
+			sendNumericParam2(client, numeric, client.getNickname(), channel->getName(), msg + ENDLINE_MSG);
 		}
 		else if (!channel->checkClientIsMembre(client.getClientSocket()))
 		{
 			msg = "Cannot send to channel";
 			numeric = ERR_CANNOTSENDTOCHAN;
-		}
+			sendNumericParam2(client, numeric, client.getNickname(), channel->getName(), msg + ENDLINE_MSG);		}
 		else
 		{
 			std::string privmsg = ":" + client.getNickname() + "!" + client.getUsername() + "@localhost PRIVMSG " + channel->getName() + " :" + message + ENDLINE_MSG;
@@ -48,12 +51,12 @@ void PRIVMSG::execCommand(Server &serv, Client &client, const com &cmd)
 		{
 			msg = "No such nick";
 			numeric = ERR_NOSUCHNICK;
+			sendNumericParam2(client, numeric, client.getNickname(), targetclient->getNickname(), msg + ENDLINE_MSG);
+
 		}
 		else {
 			std :: string privmsg = ":" + client.getNickname() + "!" + client.getUsername() + "@localhost PRIVMSG " + targetclient->getNickname() + " :" + message + ENDLINE_MSG;
 			send(targetclient->getClientSocket(), privmsg.c_str(), privmsg.size(), MSG_NOSIGNAL);
 		}
 	}
-	if (!msg.empty())
-		sendNumericCmd(client, numeric, cmd.command, msg + ENDLINE_MSG);
 }

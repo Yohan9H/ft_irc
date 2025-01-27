@@ -167,6 +167,7 @@ void Client::executeCommand(Server &serv, const com &cmd)
     {
 		msg = "Not enough parameters";
 		numeric = ERR_NEEDMOREPARAMS;
+		sendNumericParam2(*this, numeric, this->getNickname(), cmd.command, msg + ENDLINE_MSG);
 	}
 	else
 	{
@@ -181,30 +182,31 @@ void Client::executeCommand(Server &serv, const com &cmd)
 		{
 			msg = "Unknown command";
 			numeric = ERR_UNKNOWNCOMMAND;
-		}
+			sendNumericParam2(*this, numeric, this->getNickname(), cmd.command, msg + ENDLINE_MSG);		}
 		else {
 			Command *myCommand = serv.getCommandByName(cmd.command);
 			if (!myCommand)
 			{
 				msg = "Unknown command";
 				numeric = ERR_UNKNOWNCOMMAND;
+				sendNumericParam2(*this, numeric, this->getNickname(), cmd.command, msg + ENDLINE_MSG);
 			}
 			else if (cmd.params.size() < myCommand->getNbParam())
 			{
 				msg = "Not enough parameters";
 				numeric = ERR_NEEDMOREPARAMS;
+				sendNumericParam2(*this, numeric, this->getNickname(), cmd.command, msg + ENDLINE_MSG);
 			}
 			else if (!this->getIsAuth() && myCommand->getMustbeAuth())
 			{
 				msg = "Need to be logged in";
 				numeric = ERR_UNKNOWNCOMMAND;
+				sendNumericParam2(*this, numeric, this->getNickname(), cmd.command, msg + ENDLINE_MSG);
 			}
 			else 
 				myCommand->execCommand(serv, *this, cmd);
 		}
 	}
-	if (!msg.empty())
-		sendNumericCmd(*this, numeric, cmd.command, msg + ENDLINE_MSG);
 }
 
 void Client::handlePrivmsg(const com &cmd) {

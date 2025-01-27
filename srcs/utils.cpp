@@ -53,15 +53,21 @@ std::string to_string(int value) {
     return ss.str();
 }
 
-void	sendNumeric(Client &client, int numeric, const std::string& message)
+void	sendNumericParam1(Client &client, int numeric, std::string param, const std::string& message)
 {
-	std::string fullMessage = std::string(HOST) + to_string(numeric) + " " + client.getNickname() + " :" + message;
+	std::string fullMessage = std::string(HOST) + to_string(numeric) + " " + param + " :" + message;
 	send(client.getClientSocket(), fullMessage.c_str(), fullMessage.size(), MSG_NOSIGNAL);
 }
 
-void	sendNumericCmd(Client &client, int numeric, const std::string& cmd, const std::string& message)
+void	sendNumericParam2(Client &client, int numeric, const std::string param, const std::string param2, const std::string& message)
 {
-	std::string fullMessage = std::string(HOST) + to_string(numeric) + " " + client.getNickname() + " " + cmd + " :" + message;
+	std::string fullMessage = std::string(HOST) + to_string(numeric) + " " + param + " " + param2 + " :" + message;
+	send(client.getClientSocket(), fullMessage.c_str(), fullMessage.size(), MSG_NOSIGNAL);
+}
+
+void	sendNumericParam3(Client &client, int numeric, const std::string param, const std::string param2, const std::string param3, const std::string& message)
+{
+	std::string fullMessage = std::string(HOST) + to_string(numeric) + " " + param + " " + param2 + " " + param3 + " :" + message;
 	send(client.getClientSocket(), fullMessage.c_str(), fullMessage.size(), MSG_NOSIGNAL);
 }
 

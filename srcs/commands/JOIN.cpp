@@ -21,60 +21,66 @@ void JOIN::execCommand(Server &serv, Client &client, const com &cmd)
 		std::string msg;
 		int numeric;
 		// Verif if '#'
-
-		// Recup de la chaine
-		Channel *channel = createChannel(serv, name_chan, client);
-
-
-		// Permissions
-
-		if (channel->ifInvite() && !channel->checkClientIsInvited(client.getClientSocket()))
+		if (name_chan[0] != '#')
 		{
-			msg = "Cannot join channel (+i)";
-			numeric = ERR_INVITEONLYCHAN;
-			sendNumericCmd(client, numeric, cmd.command, msg + ENDLINE_MSG);
-		}
-		else if (channel->checkClientIsMembre(client.getClientSocket()))
-		{
-			msg = "You're already on that channel";
-			numeric = ERR_USERONCHANNEL;
-			sendNumericCmd(client, numeric, cmd.command, msg + ENDLINE_MSG);
-		}
-		else if (channel->ifProtectedByPassWord() && !channel->checkPassWord(mdp))
-		{
-			msg = "Password incorrect";
-			numeric = ERR_PASSWDMISMATCH;
-			sendNumericCmd(client, numeric, cmd.command, msg + ENDLINE_MSG);
-		}
-		else if (channel->ifLimitUser() && channel->checkOverLimitUser())
-		{
-			msg = "Cannot join channel (+l)";
-			numeric = ERR_CHANNELISFULL;
-			sendNumericCmd(client, numeric, cmd.command, msg + ENDLINE_MSG);
+			msg = "Bad Channel Mask";
+			numeric = ERR_BADCHANMASK;
+			sendNumericParam1(client, numeric, name_chan, msg + ENDLINE_MSG);
 		}
 		else 
 		{
-			// Ajouter le membre et supprimer des invited
-			channel->addMembres(client.getClientSocket());
-			if (channel->checkClientIsInvited(client.getClientSocket()))
-				channel->delInvited(client.getClientSocket());
+			// Recup de la chaine
+			Channel *channel = createChannel(serv, name_chan, client);
 
-			// Ajouter le chan au listchan du client
-			std::vector<std::string> &listChan = client.getListChanJoined();
-			listChan.push_back(name_chan);
-			
-			//Envoyer les infos:
-			std::string msg1 = ":" + client.getNickname() + "!" + client.getUsername() + "@localhost JOIN " + channel->getName();
-			channel->sendMsgMembres(msg1 + ENDLINE_MSG);
-			if (!channel->getTopic().empty())
+			// Permissions
+			if (channel->ifInvite() && !channel->checkClientIsInvited(client.getClientSocket()))
 			{
-				std::string msg2 = HOST + to_string(RPL_TOPIC) + " " + client.getNickname() + " " + channel->getTopic();
-				channel->sendMsgMembres(msg2 + ENDLINE_MSG);
+				msg = "Cannot join channel (+i)";
+				numeric = ERR_INVITEONLYCHAN;
+				sendNumericParam2(client, numeric, client.getNickname(), name_chan, msg + ENDLINE_MSG);
 			}
-			std::string msg3 = HOST + to_string(RPL_NAMREPLY) + " "  + client.getNickname() + " = " + channel->getName() + " :" + channel->giveAllNameMembres(serv);
-			channel->sendMsgMembres(msg3 + ENDLINE_MSG);
-			std::string msg4 = HOST + to_string(RPL_ENDOFNAMES) + " " + client.getNickname() + " " + channel->getName() + " :End of /NAMES list";
-			channel->sendMsgMembres(msg4 + ENDLINE_MSG);
+			else if (channel->checkClientIsMembre(client.getClientSocket()))
+			{
+				msg = "You're already on that channel";
+				numeric = ERR_USERONCHANNEL;
+				sendNumericParam2(client, numeric, client.getNickname(), name_chan, msg + ENDLINE_MSG);
+			}
+			else if (channel->ifProtectedByPassWord() && !channel->checkPassWord(mdp))
+			{
+				msg = "Cannot join channel (+k)";
+				numeric = ERR_BADCHANNELKEY;
+				sendNumericParam2(client, numeric, client.getNickname(), name_chan, msg + ENDLINE_MSG);
+			}
+			else if (channel->ifLimitUser() && channel->checkOverLimitUser())
+			{
+				msg = "Cannot join channel (+l)";
+				numeric = ERR_CHANNELISFULL;
+				sendNumericParam2(client, numeric, client.getNickname(), name_chan, msg + ENDLINE_MSG);
+			}
+			else 
+			{
+				// Ajouter le membre et supprimer des invited
+				channel->addMembres(client.getClientSocket());
+				if (channel->checkClientIsInvited(client.getClientSocket()))
+					channel->delInvited(client.getClientSocket());
+
+				// Ajouter le chan au listchan du client
+				std::vector<std::string> &listChan = client.getListChanJoined();
+				listChan.push_back(name_chan);
+				
+				//Envoyer les infos:
+				std::string msg1 = ":" + client.getNickname() + "!" + client.getUsername() + "@localhost JOIN " + channel->getName();
+				channel->sendMsgMembres(msg1 + ENDLINE_MSG);
+				if (!channel->getTopic().empty())
+				{
+					std::string msg2 = HOST + to_string(RPL_TOPIC) + " " + client.getNickname() + " " + channel->getTopic();
+					channel->sendMsgMembres(msg2 + ENDLINE_MSG);
+				}
+				std::string msg3 = HOST + to_string(RPL_NAMREPLY) + " "  + client.getNickname() + " = " + channel->getName() + " :" + channel->giveAllNameMembres(serv);
+				channel->sendMsgMembres(msg3 + ENDLINE_MSG);
+				std::string msg4 = HOST + to_string(RPL_ENDOFNAMES) + " " + client.getNickname() + " " + channel->getName() + " :End of /NAMES list";
+				channel->sendMsgMembres(msg4 + ENDLINE_MSG);
+			}
 		}
 	}
 }

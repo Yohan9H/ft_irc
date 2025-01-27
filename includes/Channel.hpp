@@ -6,7 +6,7 @@
 /*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 13:31:50 by yohurteb          #+#    #+#             */
-/*   Updated: 2025/01/23 17:37:33 by apernot          ###   ########.fr       */
+/*   Updated: 2025/01/27 14:31:42 by apernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,13 @@ class Client;
 
 class Server;
 
-typedef struct	s_perm t_perm;
-
 class Channel
 {
 	private:
 		std::string			_name;
-		std::string			_key;
+		std::string			_pass;
 		std::string			_topic;
-		int				_limit_user;
+		int					_limit_user;
 		std::vector<char>	_modes;
 		std::vector<int>	_operatorsFd;
 		std::vector<int>	_membresFd;
@@ -49,7 +47,7 @@ class Channel
 		std::vector<int>	&getMembresFd();
 		std::vector<int>	&getInvitedFd();
 
-		void				setKey(std::string key);
+		void				setPass(std::string pass);
 		void				setName(std::string name);
 		void				setTopic(std::string topic);
 		void				setLimit(int limit);

@@ -24,37 +24,8 @@ void USER::execCommand(Server &serv, Client &client, const com &cmd)
 	{
 		msg = "You may not reregister";
 		numeric = ERR_ALREADYREGISTERED;
-		sendNumeric(client, numeric, msg + ENDLINE_MSG);
+		sendNumericParam1(client, numeric, client.getNickname(), msg + ENDLINE_MSG);
 		return ;
-	}
-
-	bool verif_char = true;
-	for (std::string::iterator it = username.begin(); it != username.end(); ++it)
-	{
-		if (is_good(*it) == false)
-		{
-			verif_char = false;
-			break;
-		}
-	}
-	if (verif_char == false || username.length() > 9 || std::isdigit(username[0]))
-	{
-		msg = "Erroneous nickname";
-		numeric = ERR_ERRONEUSNICKNAME;
-		sendNumeric(client, numeric, msg + ENDLINE_MSG);
-		return ;
-	}
-
-	// Verif if already use
-	for (std::map<int, Client*>::const_iterator it = serv.getClients().begin(); it != serv.getClients().end(); it++)
-	{
-		if (it->second->getUsername() == username)
-		{
-			msg = "Erroneous nickname";
-			numeric = ERR_ERRONEUSNICKNAME;
-			sendNumeric(client, numeric, msg + ENDLINE_MSG);
-			return ;
-		}
 	}
 
 	client.setName(username);
