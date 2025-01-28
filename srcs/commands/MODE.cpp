@@ -123,9 +123,16 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 									sendModeParamMsg(client, *channel, mode, param);
 								}
 							} else if (sign == '-') {
-								channel->delOperatores(modeOperator->getClientSocket());
-								channel->errMode('o');
-								sendModeParamMsg(client, *channel, mode, param);	
+								if (channel->getOperatorsFd().size() > 1)
+								{
+									channel->delOperatores(modeOperator->getClientSocket());
+									channel->errMode('o');
+									sendModeParamMsg(client, *channel, mode, param);
+								} else {
+									msg = "Cannot have no operator";
+									numeric = ERR_USERNOTINCHANNEL;
+									sendNumericParam3(client, numeric, client.getNickname(), modeOperator->getNickname(), channel_name, msg + ENDLINE_MSG);
+								}
 							}
 						}
 					}
