@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Client.hpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/11 13:13:34 by avandeve          #+#    #+#             */
-/*   Updated: 2025/01/22 15:17:20 by apernot          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #pragma once
 #include "Server.hpp"
 #include "Channel.hpp"
@@ -27,10 +15,10 @@ struct com;
 class Client
 {
 private:
-    int								_clientSocket;
+	int								_clientSocket;
 	bool							_isAuth;
 	std::string						_nick;
-    std::string						_username;
+	std::string						_username;
 	std::vector<std::string>		_listChan;
 	bool							_passwordfilled;
 	bool							_nickfilled;
@@ -38,17 +26,17 @@ private:
 	
 
 public:
-    Client();
-    Client(int clientSocket);
-    Client (const Client& other);
-    Client &operator=(const Client &other);
-    ~Client();
+	Client();
+	Client(int clientSocket);
+	Client (const Client& other);
+	Client &operator=(const Client &other);
+	~Client();
 
 	// getters
-    int 						&getClientSocket();
+	int 						&getClientSocket();
 	bool						getIsAuth();
-    std::string					&getNickname();
-    std::string					&getUsername();
+	std::string					&getNickname();
+	std::string					&getUsername();
 	std::vector<std::string>	&getListChanJoined();
 	bool						getPasswordFilled();
 	bool						getNickFilled();
@@ -71,7 +59,7 @@ public:
 
 	void			print_for_test();
 
-    void 	handlePrivmsg(const com &cmd);
-    void 	executeCommand(Server &serv, const com &cmd);
-    void 	parseline(const std::string &line);
+	void 	handlePrivmsg(const com &cmd);
+	void 	executeCommand(Server &serv, const com &cmd);
+	void 	parseline(const std::string &line);
 };

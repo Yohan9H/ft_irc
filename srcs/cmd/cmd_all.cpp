@@ -1,17 +1,5 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   cmd_all.cpp                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/12 14:26:36 by yohurteb          #+#    #+#             */
-/*   Updated: 2025/01/22 13:18:27 by apernot          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "../includes/Server.hpp"
-#include "../includes/Command.hpp"
+#include "Server.hpp"
+#include "Command.hpp"
 
 bool	join(Server &serv, Client &client, std::string name_chan, std::string mdp)
 {

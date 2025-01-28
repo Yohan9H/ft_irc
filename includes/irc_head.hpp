@@ -167,17 +167,13 @@
 # define ERR_SASLALREADY 907
 # define RPL_SASLMECHS 908
 
-
-# include "CAP.hpp"
 # include "INVITE.hpp"
 # include "JOIN.hpp"
 # include "KICK.hpp"
 # include "MODE.hpp"
 # include "NICK.hpp"
-# include "NOTICE.hpp"
 # include "PART.hpp"
 # include "PASS.hpp"
-# include "PING.hpp"
 # include "PRIVMSG.hpp"
 # include "QUIT.hpp"
 # include "TOPIC.hpp"
@@ -195,7 +191,7 @@ struct com {
 bool	is_good(char c);
 void	showMapClient(Server &serv);
 void	showMapChannel(Server &serv);
-void    normalizeCRLF(std::string& input);
+void	normalizeCRLF(std::string& input);
 
 # define MAX_CONNEXIONS 5
 # define BUFFER_MAX 1024

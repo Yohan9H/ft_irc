@@ -1,4 +1,4 @@
-#include "../includes/Client.hpp"
+#include "Client.hpp"
 
 Client::Client() : _clientSocket(-1), _isAuth(false)
 {
@@ -16,8 +16,8 @@ Client::Client(const Client &other)  : _clientSocket(other._clientSocket), _isAu
 
 Client &Client::operator=(const Client &other)
 {
-    (void)other;
-    return (*this);
+	(void)other;
+	return (*this);
 }
 
 Client::~Client()
@@ -26,7 +26,7 @@ Client::~Client()
 
 int &Client::getClientSocket()
 {
-    return (this->_clientSocket);
+	return (this->_clientSocket);
 }
 
 bool	Client::getIsAuth()
@@ -152,19 +152,19 @@ void	Client::print_for_test()
 void Client::parseline(const std::string &line)
 {
    (void)line;
-    //split when you find /r/n
+	//split when you find /r/n
 }
 
 void Client::executeCommand(Server &serv, const com &cmd)
 {
 	std::string msg;
 	int numeric;
-    const std::string validCommands[] = {
-        "NICK", "USER", "JOIN", "PRIVMSG", "PART", "QUIT", "TOPIC", "KICK", "MODE", "INVITE", "CAP", "PASS", "PING", "NOTICE"
-    };
+	const std::string validCommands[] = {
+		"NICK", "USER", "JOIN", "PRIVMSG", "PART", "QUIT", "TOPIC", "KICK", "MODE", "INVITE", "CAP", "PASS", "PING", "NOTICE"
+	};
 
-    if (cmd.command.empty())
-    {
+	if (cmd.command.empty())
+	{
 		msg = "Not enough parameters";
 		numeric = ERR_NEEDMOREPARAMS;
 		sendNumericParam2(*this, numeric, this->getNickname(), cmd.command, msg + ENDLINE_MSG);
@@ -210,22 +210,22 @@ void Client::executeCommand(Server &serv, const com &cmd)
 }
 
 void Client::handlePrivmsg(const com &cmd) {
-    if (cmd.params.size() < 2) {
-        std::string errorCode = "461";
-        std::string errorMessage = "PRIVMSG :Not enough parameters";
-        throw std::logic_error(errorCode + " " + errorMessage);
-    }
+	if (cmd.params.size() < 2) {
+		std::string errorCode = "461";
+		std::string errorMessage = "PRIVMSG :Not enough parameters";
+		throw std::logic_error(errorCode + " " + errorMessage);
+	}
 
-    const std::string &target = cmd.params[0];
-    const std::string &message = cmd.trailing;
+	const std::string &target = cmd.params[0];
+	const std::string &message = cmd.trailing;
 
-    if (target.empty() || message.empty()) {
-        std::string errorCode = "412";
-        std::string errorMessage = "No text to send";
-        throw std::logic_error(errorCode + " " + errorMessage);
-    }
+	if (target.empty() || message.empty()) {
+		std::string errorCode = "412";
+		std::string errorMessage = "No text to send";
+		throw std::logic_error(errorCode + " " + errorMessage);
+	}
 
-    // Logique métier (envoyer le message au destinataire)
+	// Logique métier (envoyer le message au destinataire)
 }
 
 
