@@ -128,8 +128,8 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 								} else {
 									channel->addOperators(modeOperator->getClientSocket());
 									channel->addMode('o');
+									sendModeParamMsg(client, *channel, mode, param);
 								}
-								sendModeParamMsg(client, *channel, mode, param);
 							} else if (sign == '-') {
 								channel->delOperatores(modeOperator->getClientSocket());
 								channel->errMode('o');
