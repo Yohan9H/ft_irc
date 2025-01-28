@@ -512,7 +512,11 @@ void	Server::delClientChannelAssociate(Client &client)
 				_listChannels.erase(it_lst);
 			}
 			else
-			{
+			{ //verifier si c'est le dernier operator
+				if (it_lst->second->getOperatorsFd().empty())
+				{
+					it_lst->second->addOperators(it_lst->second->getMembresFd()[0]);
+				}
 				std::string msg = ":" + client.getNickname() + "!" + client.getUsername() + "@localhost QUIT :";
 				it_lst->second->sendMsgMembres(msg + ENDLINE_MSG);
 			}
