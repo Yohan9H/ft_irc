@@ -13,6 +13,13 @@ void USER::execCommand(Server &serv, Client &client, const com &cmd)
 	// Verif valide name
 	removeNewline(username);
 
+	if (cmd.params[1] != "*" || cmd.params[2] != "0")
+	{
+		msg =  client.getUsername() + " " + cmd.command + " :Not enough parameters" ENDLINE_MSG;
+		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
+		return ;
+	}
+
 	if (!client.getPasswordFilled() && !client.getIsAuth())
 	{
 		msg = "You may start by command PASS to log in with the password" ENDLINE_MSG;
