@@ -51,7 +51,7 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 						channel->addMode('i');
 						sendModeParamMsg(client, *channel, mode, param);
 					}
-					else
+					else if (sign == '-') 
 					{
 						channel->errMode('i');
 						sendModeParamMsg(client, *channel, mode, param);
@@ -65,7 +65,7 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 						channel->addMode('t');
 						sendModeParamMsg(client, *channel, mode, param);
 					}
-					else
+					else if (sign == '-')
 					{
 						channel->errMode('t');
 						sendModeParamMsg(client, *channel, mode, param);
@@ -85,7 +85,7 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 							sendModeParamMsg(client, *channel, mode, param);
 						}
 					}
-					else {
+					else if (sign == '-') {
 						channel->errMode('k');
 						sendModeParamMsg(client, *channel, mode, param);
 					}
@@ -110,23 +110,29 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 							msg = "They aren't on that channel";
 							numeric = ERR_USERNOTINCHANNEL;
 							sendNumericParam3(client, numeric, client.getNickname(), modeOperator->getNickname(), channel_name, msg + ENDLINE_MSG);
-						}
-						else if (channel->checkClientIsOperator(modeOperator->getClientSocket()))
-						{
-							msg = "They are already an operator";
-							numeric = ERR_USERNOTINCHANNEL;
-							sendNumericParam3(client, numeric, client.getNickname(), modeOperator->getNickname(), channel_name, msg + ENDLINE_MSG);
-
-						}
-						else {
+						} else {
 							if (sign == '+') {
-								channel->addOperators(modeOperator->getClientSocket());
-								channel->addMode('o');
-								sendModeParamMsg(client, *channel, mode, param);
-							} else {
-								channel->delOperatores(modeOperator->getClientSocket());
-								channel->errMode('o');
-								sendModeParamMsg(client, *channel, mode, param);	
+								if (channel->checkClientIsOperator(modeOperator->getClientSocket()))
+								{
+									msg = "They are already an operator";
+									numeric = ERR_USERNOTINCHANNEL;
+									sendNumericParam3(client, numeric, client.getNickname(), modeOperator->getNickname(), channel_name, msg + ENDLINE_MSG);
+								} else {
+									channel->addOperators(modeOperator->getClientSocket());
+									channel->addMode('o');
+									sendModeParamMsg(client, *channel, mode, param);
+								}
+							} else if (sign == '-') {
+								if (channel->getOperatorsFd().size() > 1)
+								{
+									channel->delOperatores(modeOperator->getClientSocket());
+									channel->errMode('o');
+									sendModeParamMsg(client, *channel, mode, param);
+								} else {
+									msg = "Cannot have no operator";
+									numeric = ERR_USERNOTINCHANNEL;
+									sendNumericParam3(client, numeric, client.getNickname(), modeOperator->getNickname(), channel_name, msg + ENDLINE_MSG);
+								}
 							}
 						}
 					}

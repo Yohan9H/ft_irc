@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   proto.hpp                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/17 09:55:06 by yohurteb          #+#    #+#             */
-/*   Updated: 2025/01/27 14:31:22 by apernot          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #pragma once
 #include <iostream>
 
@@ -19,9 +7,9 @@ class Client;
 
 #include "irc_head.hpp"
 
-Channel 	*createChannel(Server &server, std::string name_channel, Client &first_membre);
+Channel		*createChannel(Server &server, std::string name_channel, Client &first_membre);
 
-void 		removeNewline(std::string& nick);
+void		removeNewline(std::string& nick);
 
 std::string	mdp_false(std::string name_serv, std::string name);
 
@@ -30,5 +18,3 @@ std::string invite_false(std::string serv, std::string request, std::string chan
 std::string limit_user_false(std::string name_serv, std::string name_client);
 
 std::string msg_err(std::string name_serv, std::string code, std::string name_input, std::string motif);
-
-void    parseCommand(Server &serv, Client &client, const std::string &input);

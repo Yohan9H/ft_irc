@@ -18,16 +18,12 @@ SRCS = $(SRC_DIR)/main.cpp \
 	   $(CMD_DIR)/manip_chan.cpp \
 	   $(CMD_DIR)/msg.cpp \
 	   $(CMD_DIR)/cmd_all.cpp \
-	   $(CMD_DIR)/cmd_ope.cpp \
-	   $(CDM_DIR2)/CAP.cpp \
 	   $(CDM_DIR2)/JOIN.cpp \
 	   $(CDM_DIR2)/KICK.cpp \
 	   $(CDM_DIR2)/MODE.cpp \
 	   $(CDM_DIR2)/NICK.cpp \
-	   $(CDM_DIR2)/NOTICE.cpp \
 	   $(CDM_DIR2)/PART.cpp \
 	   $(CDM_DIR2)/PASS.cpp \
-	   $(CDM_DIR2)/PING.cpp \
 	   $(CDM_DIR2)/INVITE.cpp \
 	   $(CDM_DIR2)/PRIVMSG.cpp \
 	   $(CDM_DIR2)/QUIT.cpp \

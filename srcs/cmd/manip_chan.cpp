@@ -1,17 +1,5 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   manip_chan.cpp                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: apernot <apernot@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/16 18:08:01 by yohurteb          #+#    #+#             */
-/*   Updated: 2025/01/27 14:29:30 by apernot          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "../includes/Server.hpp"
-#include "../includes/Client.hpp"
+#include "Server.hpp"
+#include "Client.hpp"
 
 class Server;
 class Client;

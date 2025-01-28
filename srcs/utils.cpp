@@ -31,26 +31,26 @@ void	showMapChannel(Server &serv)
 
 
 void normalizeCRLF(std::string& input) {
-    size_t pos = 0;
+	size_t pos = 0;
 
-    while (pos < input.size()) {
-        pos = input.find("\n", pos);
-        if (pos == std::string::npos) {
-            break;
-        }
-        if (pos == 0 || input[pos - 1] != '\r') {
-            input.insert(pos, "\r");
-            pos += 2;
-        } else {
-            pos += 1;
-        }
-    }
+	while (pos < input.size()) {
+		pos = input.find("\n", pos);
+		if (pos == std::string::npos) {
+			break;
+		}
+		if (pos == 0 || input[pos - 1] != '\r') {
+			input.insert(pos, "\r");
+			pos += 2;
+		} else {
+			pos += 1;
+		}
+	}
 }
 
 std::string to_string(int value) {
-    std::stringstream ss;
-    ss << value;
-    return ss.str();
+	std::stringstream ss;
+	ss << value;
+	return ss.str();
 }
 
 void	sendNumericParam1(Client &client, int numeric, std::string param, const std::string& message)
@@ -72,8 +72,8 @@ void	sendNumericParam3(Client &client, int numeric, const std::string param, con
 }
 
 void sendNotice(Client &client, const std::string& message) {
-    std::string notice = std::string(HOST) + "NOTICE " + client.getNickname() + " :" + message;
-    send(client.getClientSocket(), notice.c_str(), notice.size(), 0);
+	std::string notice = std::string(HOST) + "NOTICE " + client.getNickname() + " :" + message;
+	send(client.getClientSocket(), notice.c_str(), notice.size(), 0);
 }
 
 
@@ -84,12 +84,12 @@ void sendModeParamMsg (Client &client, Channel &channel, std::string mode, std::
 }
 
 std::vector<std::string> split(std::string const& str, char sep) {
-    std::vector<std::string> tokens;
-    std::string token;
-    std::istringstream stream(str);
-    while (std::getline(stream, token, sep))
-        tokens.push_back(token);
-    return tokens;
+	std::vector<std::string> tokens;
+	std::string token;
+	std::istringstream stream(str);
+	while (std::getline(stream, token, sep))
+		tokens.push_back(token);
+	return tokens;
 };
 
 std::map<std::string,std::string> createMap(std::vector<std::string> channel, std::vector<std::string> mdp)
