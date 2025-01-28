@@ -59,7 +59,18 @@ void Server::closeAndClear()
         close(_fds[i].fd);
     }
     _fds.clear();
+
+	for (std::map<int, Client*>::iterator it = _listClients.begin(); it != _listClients.end(); it++)
+	{
+		delete it->second;
+	}
     _listClients.clear();
+
+	for (std::map<std::string, Channel *>::iterator it = _listChannels.begin(); it != _listChannels.end(); it++)
+	{
+		delete it->second;
+	}
+    _listChannels.clear();
 
     // Close the server socket
     if (_serverSocket >= 0)
