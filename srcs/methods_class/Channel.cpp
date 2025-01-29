@@ -200,7 +200,7 @@ void	Channel::sendMsgMembres(std::string msg, Server& serv)
 	}
 }
 
-void		Channel::sendMsgMembresExceptFd(std::string msg, int clientFd, Server& serv) {
+void	Channel::sendMsgMembresExceptFd(std::string msg, int clientFd, Server& serv) {
 	for (std::vector<int>::iterator it = _membresFd.begin(); it != _membresFd.end() ;it++)
 	{
 		if (*it != clientFd)

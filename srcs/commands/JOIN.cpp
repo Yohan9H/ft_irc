@@ -69,17 +69,12 @@ void JOIN::execCommand(Server &serv, Client &client, const com &cmd)
 				listChan.push_back(name_chan);
 				
 				//Envoyer les infos:
-				std::string msg1 = ":" + client.getNickname() + "!" + client.getUsername() + "@localhost JOIN " + channel->getName();
-				channel->sendMsgMembres(msg1 + ENDLINE_MSG, serv);
+				msg = ":" + client.getNickname() + "!" + client.getUsername() + "@localhost JOIN " + channel->getName() + ENDLINE_MSG;
 				if (!channel->getTopic().empty())
-				{
-					std::string msg2 = HOST + to_string(RPL_TOPIC) + " " + client.getNickname() + " " + channel->getTopic();
-					channel->sendMsgMembres(msg2 + ENDLINE_MSG, serv);
-				}
-				std::string msg3 = HOST + to_string(RPL_NAMREPLY) + " "  + client.getNickname() + " = " + channel->getName() + " :" + channel->giveAllNameMembres(serv);
-				channel->sendMsgMembres(msg3 + ENDLINE_MSG, serv);
-				std::string msg4 = HOST + to_string(RPL_ENDOFNAMES) + " " + client.getNickname() + " " + channel->getName() + " :End of /NAMES list";
-				channel->sendMsgMembres(msg4 + ENDLINE_MSG, serv);
+					msg += HOST + to_string(RPL_TOPIC) + " " + client.getNickname() + " " + channel->getTopic() + ENDLINE_MSG;
+				msg += HOST + to_string(RPL_NAMREPLY) + " "  + client.getNickname() + " = " + channel->getName() + " :" + channel->giveAllNameMembres(serv) + ENDLINE_MSG;
+				msg += HOST + to_string(RPL_ENDOFNAMES) + " " + client.getNickname() + " " + channel->getName() + " :End of /NAMES list" + ENDLINE_MSG;
+				channel->sendMsgMembres(msg, serv);
 			}
 		}
 	}

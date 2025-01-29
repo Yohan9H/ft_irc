@@ -198,7 +198,7 @@ bool Server::manageEvents()
 	}
 	for (size_t i = 0; i < _fds.size(); i++)
 	{
-	  if (_fds[i].revents & POLLIN | POLLOUT)
+	  if (_fds[i].revents & (POLLIN | POLLOUT) != 0)
 	  {
 		if (_fds[i].fd < 0) 
 		{
@@ -211,7 +211,7 @@ bool Server::manageEvents()
 			std::cerr << RED << "Failed to accept new client." << COL_END << std::endl;
 		  continue;
 		}
-		else if (!receiveData(this->_fds[i].fd))
+		if (!receiveData(this->_fds[i].fd))
 		{
 			close(_fds[i].fd);
 			_fds.erase(_fds.begin() + i);
