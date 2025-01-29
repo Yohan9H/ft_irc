@@ -25,13 +25,13 @@ void TOPIC::execCommand(Server &serv, Client &client, const com &cmd)
 	{
 		msg = "No such channel";
 		numeric = ERR_NOSUCHCHANNEL;
-		sendNumericParam2(client, numeric, client.getNickname(), channel->getName(), msg + ENDLINE_MSG);
+		OutDataNumericParam2(client, numeric, client.getNickname(), channel->getName(), msg + ENDLINE_MSG);
 	}
 	else if (!channel->checkClientIsMembre(client.getClientSocket()))
 	{
 		msg = "You're not on that channel";
 		numeric = ERR_NOTONCHANNEL;
-		sendNumericParam2(client, numeric, client.getNickname(), channel->getName(), msg + ENDLINE_MSG);	}
+		OutDataNumericParam2(client, numeric, client.getNickname(), channel->getName(), msg + ENDLINE_MSG);	}
 	else
 	{
 		if (!cmd.hasText)
@@ -40,20 +40,20 @@ void TOPIC::execCommand(Server &serv, Client &client, const com &cmd)
 			{
 				msg = "No topic is set";
 				numeric = RPL_NOTOPIC;
-				sendNumericParam2(client, numeric, client.getNickname(), channel->getName(), msg + ENDLINE_MSG);
+				OutDataNumericParam2(client, numeric, client.getNickname(), channel->getName(), msg + ENDLINE_MSG);
 			}
 			else
 			{
 				msg = channel->getName() + " :" + channel->getTopic();
 				numeric = RPL_TOPIC;
-				sendNumericParam2(client, numeric, client.getNickname(), channel->getName(), msg + ENDLINE_MSG);
+				OutDataNumericParam2(client, numeric, client.getNickname(), channel->getName(), msg + ENDLINE_MSG);
 			}
 		}
 		else if (channel->hasMode('t') && !channel->isOperator(client.getClientSocket()))
 		{
 			msg = "You're not channel operator";
 			numeric = ERR_CHANOPRIVSNEEDED;
-			sendNumericParam2(client, numeric, client.getNickname(), channel->getName(), msg + ENDLINE_MSG);
+			OutDataNumericParam2(client, numeric, client.getNickname(), channel->getName(), msg + ENDLINE_MSG);
 		}
 		else if (topic == "")
 		{

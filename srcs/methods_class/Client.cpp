@@ -63,6 +63,11 @@ bool	Client::getUserFilled()
 	return this->_userfilled;
 }
 
+std::string& Client::getOutData()
+{
+	return this->_outdata;
+}
+
 void	Client::setClientSocket(int clientFd)
 {
 	_clientSocket = clientFd;
@@ -91,6 +96,11 @@ void	Client::setNickFilled(bool isNickFilled)
 void	Client::setUserFilled(bool isUserFilled)
 {
 	_userfilled = isUserFilled;
+}
+
+void	Client::setOutData(std::string message)
+{
+	_outdata = message;
 }
 
 void	Client::sendMsgAllChan(Server &serv, std::string msg)
@@ -167,7 +177,7 @@ void Client::executeCommand(Server &serv, const com &cmd)
 	{
 		msg = "Not enough parameters";
 		numeric = ERR_NEEDMOREPARAMS;
-		sendNumericParam2(*this, numeric, this->getNickname(), cmd.command, msg + ENDLINE_MSG);
+		OutDataNumericParam2(*this, numeric, this->getNickname(), cmd.command, msg + ENDLINE_MSG);
 	}
 	else
 	{
@@ -182,26 +192,26 @@ void Client::executeCommand(Server &serv, const com &cmd)
 		{
 			msg = "Unknown command";
 			numeric = ERR_UNKNOWNCOMMAND;
-			sendNumericParam2(*this, numeric, this->getNickname(), cmd.command, msg + ENDLINE_MSG);		}
+			OutDataNumericParam2(*this, numeric, this->getNickname(), cmd.command, msg + ENDLINE_MSG);		}
 		else {
 			Command *myCommand = serv.getCommandByName(cmd.command);
 			if (!myCommand)
 			{
 				msg = "Unknown command";
 				numeric = ERR_UNKNOWNCOMMAND;
-				sendNumericParam2(*this, numeric, this->getNickname(), cmd.command, msg + ENDLINE_MSG);
+				OutDataNumericParam2(*this, numeric, this->getNickname(), cmd.command, msg + ENDLINE_MSG);
 			}
 			else if (cmd.params.size() < myCommand->getNbParam())
 			{
 				msg = "Not enough parameters";
 				numeric = ERR_NEEDMOREPARAMS;
-				sendNumericParam2(*this, numeric, this->getNickname(), cmd.command, msg + ENDLINE_MSG);
+				OutDataNumericParam2(*this, numeric, this->getNickname(), cmd.command, msg + ENDLINE_MSG);
 			}
 			else if (!this->getIsAuth() && myCommand->getMustbeAuth())
 			{
 				msg = "Need to be logged in";
 				numeric = ERR_UNKNOWNCOMMAND;
-				sendNumericParam2(*this, numeric, this->getNickname(), cmd.command, msg + ENDLINE_MSG);
+				OutDataNumericParam2(*this, numeric, this->getNickname(), cmd.command, msg + ENDLINE_MSG);
 			}
 			else 
 				myCommand->execCommand(serv, *this, cmd);
@@ -209,24 +219,24 @@ void Client::executeCommand(Server &serv, const com &cmd)
 	}
 }
 
-void Client::handlePrivmsg(const com &cmd) {
-	if (cmd.params.size() < 2) {
-		std::string errorCode = "461";
-		std::string errorMessage = "PRIVMSG :Not enough parameters";
-		throw std::logic_error(errorCode + " " + errorMessage);
-	}
+// void Client::handlePrivmsg(const com &cmd) {
+// 	if (cmd.params.size() < 2) {
+// 		std::string errorCode = "461";
+// 		std::string errorMessage = "PRIVMSG :Not enough parameters";
+// 		throw std::logic_error(errorCode + " " + errorMessage);
+// 	}
 
-	const std::string &target = cmd.params[0];
-	const std::string &message = cmd.trailing;
+// 	const std::string &target = cmd.params[0];
+// 	const std::string &message = cmd.trailing;
 
-	if (target.empty() || message.empty()) {
-		std::string errorCode = "412";
-		std::string errorMessage = "No text to send";
-		throw std::logic_error(errorCode + " " + errorMessage);
-	}
+// 	if (target.empty() || message.empty()) {
+// 		std::string errorCode = "412";
+// 		std::string errorMessage = "No text to send";
+// 		throw std::logic_error(errorCode + " " + errorMessage);
+// 	}
 
 	// Logique métier (envoyer le message au destinataire)
-}
+// }
 
 
 void	Client::removeChan(std::string channel)

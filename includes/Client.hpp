@@ -23,6 +23,7 @@ private:
 	bool							_passwordfilled;
 	bool							_nickfilled;
 	bool							_userfilled;
+	std::string						_outdata;
 	
 
 public:
@@ -41,6 +42,7 @@ public:
 	bool						getPasswordFilled();
 	bool						getNickFilled();
 	bool						getUserFilled();
+	std::string					&getOutData();
 
 	// setters
 	void			setClientSocket(int clientFd);
@@ -49,6 +51,7 @@ public:
 	void			setPasswordFilled(bool isPasswordFilled);
 	void			setNickFilled(bool isNickFilled);
 	void			setUserFilled(bool isNickFilled);
+	void			setOutData(std::string message);
 
 	// methods
 	void			sendMsgAllChan(Server &serv, std::string msg);
@@ -59,7 +62,6 @@ public:
 
 	void			print_for_test();
 
-	void 	handlePrivmsg(const com &cmd);
 	void 	executeCommand(Server &serv, const com &cmd);
 	void 	parseline(const std::string &line);
 };

@@ -13,7 +13,7 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 	{
 		msg = "Wrong params, not a channel";
 		numeric = ERR_INVALIDMODEPARAM;
-		sendNumericParam2(client, numeric, client.getNickname(), channel_name, msg + ENDLINE_MSG);
+		OutDataNumericParam2(client, numeric, client.getNickname(), channel_name, msg + ENDLINE_MSG);
 	}
 	else
 	{
@@ -26,13 +26,13 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 		{
 			msg = "No such channel";
 			numeric = ERR_NOSUCHCHANNEL;
-			sendNumericParam2(client, numeric, client.getNickname(), channel_name, msg + ENDLINE_MSG);
+			OutDataNumericParam2(client, numeric, client.getNickname(), channel_name, msg + ENDLINE_MSG);
 		}
 		else if (!channel->isOperator(client.getClientSocket()))
 		{
 			msg = "You're not channel operator";
 			numeric = ERR_CHANOPRIVSNEEDED;
-			sendNumericParam2(client, numeric, client.getNickname(), channel_name, msg + ENDLINE_MSG);
+			OutDataNumericParam2(client, numeric, client.getNickname(), channel_name, msg + ENDLINE_MSG);
 		}
 		else {
 			char sign = mode[0];
@@ -41,7 +41,7 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 			{
 				msg = "Unknown MODE flag";
 				numeric = ERR_UMODEUNKNOWNFLAG;
-				sendNumericParam1(client, numeric, client.getNickname(), msg + ENDLINE_MSG);
+				OutDataNumericParam1(client, numeric, client.getNickname(), msg + ENDLINE_MSG);
 			}
 			switch (type) {
 				// Invite-only
@@ -78,7 +78,7 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 						if (param.empty()) {
 							msg = "Wrong password format";
 							numeric = ERR_INVALIDMODEPARAM;
-							sendNumericParam3(client, numeric, client.getNickname(), channel_name, "k", msg + ENDLINE_MSG);
+							OutDataNumericParam3(client, numeric, client.getNickname(), channel_name, "k", msg + ENDLINE_MSG);
 						} else {
 							channel->setPass(param);
 							channel->addMode('k');
@@ -96,27 +96,27 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 					if (param.empty()) {
 							msg = "Not enough parameters";
 							numeric = ERR_NEEDMOREPARAMS;
-							sendNumericParam2(client, numeric, client.getNickname(), "mode +o", msg + ENDLINE_MSG);
+							OutDataNumericParam2(client, numeric, client.getNickname(), "mode +o", msg + ENDLINE_MSG);
 					} else {
 						Client* modeOperator = serv.getClientbyName(param);
 						if (!modeOperator)
 						{
 							msg = "No such nick";
 							numeric = ERR_NOSUCHNICK;
-							sendNumericParam2(client, numeric, client.getNickname(), modeOperator->getNickname(), msg + ENDLINE_MSG);
+							OutDataNumericParam2(client, numeric, client.getNickname(), modeOperator->getNickname(), msg + ENDLINE_MSG);
 						}
 						else if (!channel->checkClientIsMembre(modeOperator->getClientSocket()))
 						{
 							msg = "They aren't on that channel";
 							numeric = ERR_USERNOTINCHANNEL;
-							sendNumericParam3(client, numeric, client.getNickname(), modeOperator->getNickname(), channel_name, msg + ENDLINE_MSG);
+							OutDataNumericParam3(client, numeric, client.getNickname(), modeOperator->getNickname(), channel_name, msg + ENDLINE_MSG);
 						} else {
 							if (sign == '+') {
 								if (channel->checkClientIsOperator(modeOperator->getClientSocket()))
 								{
 									msg = "They are already an operator";
 									numeric = ERR_USERNOTINCHANNEL;
-									sendNumericParam3(client, numeric, client.getNickname(), modeOperator->getNickname(), channel_name, msg + ENDLINE_MSG);
+									OutDataNumericParam3(client, numeric, client.getNickname(), modeOperator->getNickname(), channel_name, msg + ENDLINE_MSG);
 								} else {
 									channel->addOperators(modeOperator->getClientSocket());
 									channel->addMode('o');
@@ -131,7 +131,7 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 								} else {
 									msg = "Cannot have no operator";
 									numeric = ERR_USERNOTINCHANNEL;
-									sendNumericParam3(client, numeric, client.getNickname(), modeOperator->getNickname(), channel_name, msg + ENDLINE_MSG);
+									OutDataNumericParam3(client, numeric, client.getNickname(), modeOperator->getNickname(), channel_name, msg + ENDLINE_MSG);
 								}
 							}
 						}
@@ -145,7 +145,7 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 						{
 							msg = "Not enough parameters";
 							numeric = ERR_NEEDMOREPARAMS;
-							sendNumericParam2(client, numeric, client.getNickname(), "mode +l", msg + ENDLINE_MSG);
+							OutDataNumericParam2(client, numeric, client.getNickname(), "mode +l", msg + ENDLINE_MSG);
 						}
 						else 
 						{
@@ -153,7 +153,7 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 							if (limit < channel->getTotalMembers()) {
 								msg = "Wrong limit number";
 								numeric = ERR_INVALIDMODEPARAM;
-								sendNumericParam3(client, numeric, client.getNickname(), channel_name, "l", msg + ENDLINE_MSG);
+								OutDataNumericParam3(client, numeric, client.getNickname(), channel_name, "l", msg + ENDLINE_MSG);
 							} else {
 								channel->addMode('l');
 								channel->setLimit(limit);
@@ -170,7 +170,7 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 				default:{
 					msg = "Unknown MODE flag";
 					numeric = ERR_UMODEUNKNOWNFLAG;
-					sendNumericParam1(client, numeric, client.getNickname(), msg + ENDLINE_MSG);
+					OutDataNumericParam1(client, numeric, client.getNickname(), msg + ENDLINE_MSG);
 				}
 			}
 		}

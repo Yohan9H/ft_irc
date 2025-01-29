@@ -17,13 +17,13 @@ void PART::execCommand(Server &serv, Client &client, const com &cmd)
 		{
 			msg = "No such channel";
 			numeric = ERR_NOSUCHCHANNEL;
-			sendNumericParam2(client, numeric, client.getNickname(), channel->getName(), msg + ENDLINE_MSG);
+			OutDataNumericParam2(client, numeric, client.getNickname(), channel->getName(), msg + ENDLINE_MSG);
 		}
 		else if (!channel->checkClientIsMembre(client.getClientSocket()))
 		{
 			msg = "You're not on that channel";
 			numeric = ERR_NOTONCHANNEL;
-			sendNumericParam2(client, numeric, client.getNickname(), channel->getName(), msg + ENDLINE_MSG);
+			OutDataNumericParam2(client, numeric, client.getNickname(), channel->getName(), msg + ENDLINE_MSG);
 		}
 		else 
 		{

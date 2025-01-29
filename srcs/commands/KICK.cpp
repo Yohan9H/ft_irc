@@ -14,7 +14,7 @@ void KICK::execCommand(Server &serv, Client &client, const com &cmd)
 	{
 		msg = "You have not registered";
 		numeric = ERR_NOTREGISTERED;
-		sendNumericParam1(client, numeric, client.getUsername(), msg + ENDLINE_MSG);
+		OutDataNumericParam1(client, numeric, client.getUsername(), msg + ENDLINE_MSG);
 	}
 	else 
 	{
@@ -23,19 +23,19 @@ void KICK::execCommand(Server &serv, Client &client, const com &cmd)
 		{
 			msg = "No such channel";
 			numeric = ERR_NOSUCHCHANNEL;
-			sendNumericParam2(client, numeric, client.getUsername(), chan_name, msg + ENDLINE_MSG);
+			OutDataNumericParam2(client, numeric, client.getUsername(), chan_name, msg + ENDLINE_MSG);
 		}
 		else if (!channel->checkClientIsMembre(client.getClientSocket()))
 		{
 			msg = "You're not on that channel";
 			numeric = ERR_NOTONCHANNEL;
-			sendNumericParam2(client, numeric, client.getUsername(), chan_name, msg + ENDLINE_MSG);
+			OutDataNumericParam2(client, numeric, client.getUsername(), chan_name, msg + ENDLINE_MSG);
 		}
 		else if (!channel->isOperator(client.getClientSocket()))
 		{
 			msg = "You're not channel operator";
 			numeric = ERR_CHANOPRIVSNEEDED;
-			sendNumericParam2(client, numeric, client.getUsername(), chan_name, msg + ENDLINE_MSG);
+			OutDataNumericParam2(client, numeric, client.getUsername(), chan_name, msg + ENDLINE_MSG);
 		}
 		else
 		{
@@ -45,19 +45,19 @@ void KICK::execCommand(Server &serv, Client &client, const com &cmd)
 			{
 				msg = "No such nick/channel";
 				numeric = ERR_NOSUCHNICK;
-				sendNumericParam2(client, numeric, client.getUsername(), nick_name, msg + ENDLINE_MSG);
+				OutDataNumericParam2(client, numeric, client.getUsername(), nick_name, msg + ENDLINE_MSG);
 			}
 			else if (!channel->checkClientIsMembre(kickClient->getClientSocket()))
 			{
 				msg = "They aren't on that channel";
 				numeric = ERR_USERNOTINCHANNEL;
-				sendNumericParam3(client, numeric, client.getUsername(), nick_name, chan_name, msg + ENDLINE_MSG);
+				OutDataNumericParam3(client, numeric, client.getUsername(), nick_name, chan_name, msg + ENDLINE_MSG);
 			}
 			else
 			{
 				std::string reason = (cmd.hasText) ? cmd.trailing : "";
 				std::string chanmsg = "KICK " + chan_name + " " + nick + " :" + reason;
-				channel->sendMsgMembres(chanmsg + ENDLINE_MSG);
+				channel->sendMsgMembres(chanmsg + ENDLINE_MSG, serv);
 				channel->delOperatores(kickClient->getClientSocket());
 				channel->delMembres(kickClient->getClientSocket());
 				kickClient->removeChan(chan_name);
@@ -69,7 +69,8 @@ void KICK::execCommand(Server &serv, Client &client, const com &cmd)
 				else if (channel->getOperatorsFd().empty())
 					channel->addOperators(channel->getMembresFd()[0]);
 				std::string kickedmsg = "You have been kicked from " + chan_name + " by " + client.getNickname() + " (Reason: " + reason + ")" + ENDLINE_MSG;
-				send(kickClient->getClientSocket(), kickedmsg.c_str(), kickedmsg.size(), MSG_NOSIGNAL);
+				//send(kickClient->getClientSocket(), kickedmsg.c_str(), kickedmsg.size(), MSG_NOSIGNAL);
+				kickClient->setOutData(kickedmsg);
 			}
 		}
 	}

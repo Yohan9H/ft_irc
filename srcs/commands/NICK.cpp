@@ -12,7 +12,8 @@ void NICK::execCommand(Server &serv, Client &client, const com &cmd)
 	if (!client.getPasswordFilled() && !client.getIsAuth())
 	{
 		msg = "You may start by command PASS to log in with the password" ENDLINE_MSG;
-		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
+		//send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
+		client.setOutData(msg);
 		return ;
 	}
 
@@ -29,7 +30,7 @@ void NICK::execCommand(Server &serv, Client &client, const com &cmd)
 	{
 		msg = "Erroneus nickname";
 		numeric = ERR_ERRONEUSNICKNAME;
-		sendNumericParam2(client, numeric, client.getNickname(), nick, msg + ENDLINE_MSG);
+		OutDataNumericParam2(client, numeric, client.getNickname(), nick, msg + ENDLINE_MSG);
 		return ;
 	}
 	
@@ -41,7 +42,7 @@ void NICK::execCommand(Server &serv, Client &client, const com &cmd)
 		{
 			msg = "Nickname is already in use";
 			numeric = ERR_NICKNAMEINUSE;
-			sendNumericParam2(client, numeric, client.getNickname(), nick, msg + ENDLINE_MSG);
+			OutDataNumericParam2(client, numeric, client.getNickname(), nick, msg + ENDLINE_MSG);
 			return ;
 		}
 	}
@@ -59,7 +60,8 @@ void NICK::execCommand(Server &serv, Client &client, const com &cmd)
 			msg += std::string(HOST) + " 003 " + nick + " :Created at [" + serv.getTime() + "]" + ENDLINE_MSG;
 
 		}
-		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
+		//send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
+		client.setOutData(msg);
 	}
 	// Informe tous les channels dont il fait partie de son changement
 	else

@@ -31,7 +31,7 @@ void USER::execCommand(Server &serv, Client &client, const com &cmd)
 	{
 		msg = "You may not reregister";
 		numeric = ERR_ALREADYREGISTERED;
-		sendNumericParam1(client, numeric, client.getNickname(), msg + ENDLINE_MSG);
+		OutDataNumericParam1(client, numeric, client.getNickname(), msg + ENDLINE_MSG);
 		return ;
 	}
 

@@ -198,27 +198,32 @@ bool Server::manageEvents()
 	}
 	for (size_t i = 0; i < _fds.size(); i++)
 	{
-	  if (_fds[i].revents & POLLIN)
+	  if (_fds[i].revents & POLLIN | POLLOUT)
 	  {
 		if (_fds[i].fd < 0) 
 		{
 			std::cerr << RED << "Invalid file descriptor: " << COL_END << _fds[i].fd << std::endl;
 			return (false);
 		}
-		if (_fds[i].fd == this->_serverSocket)
+		if (_fds[i].fd == this->_serverSocket) // nouveau client
 		{
 		  if (!acceptClients())
 			std::cerr << RED << "Failed to accept new client." << COL_END << std::endl;
 		  continue;
 		}
-		else
+		else if (!receiveData(this->_fds[i].fd))
 		{
-		  if (!receiveData(this->_fds[i].fd))
-		  {
 			close(_fds[i].fd);
 			_fds.erase(_fds.begin() + i);
 			--i;
-		  }
+		}
+		else {
+			Client* client = getClientbyFd(_fds[i].fd);
+			if (client) 
+			{
+				std::string outData = client->getOutData();
+				send()
+			}
 		}
 	  }
 	}

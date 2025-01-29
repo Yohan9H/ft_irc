@@ -50,8 +50,8 @@ class Channel
 		void		sendJoinMsgAll(Channel &channel, std::string name_serv, std::string username_client, int clientFd);
 		void		infoJoinChannel(Server &serv, std::string name_serv, Channel &channe, Client &client);
 		std::string giveAllNameMembres(Server &serv);
-		void		sendMsgMembres(std::string msg);
-		void		sendMsgMembresExceptFd(std::string msg, int clientFd);
+		void		sendMsgMembres(std::string msg, Server& serv);
+		void		sendMsgMembresExceptFd(std::string msg, int clientFd, Server& serv);
 		void		addMode(char mode);
 		void		errMode(char mode);
 

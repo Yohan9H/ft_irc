@@ -189,19 +189,25 @@ std::string Channel::giveAllNameMembres(Server &serv)
 	return msg;
 }
 
-void	Channel::sendMsgMembres(std::string msg)
+void	Channel::sendMsgMembres(std::string msg, Server& serv)
 {
 	for (std::vector<int>::iterator it = _membresFd.begin(); it != _membresFd.end() ;it++)
 	{
-		send(*it, msg.c_str(), msg.size(), MSG_NOSIGNAL);
+		//send(*it, msg.c_str(), msg.size(), MSG_NOSIGNAL);
+		Client* client = serv.getClientbyFd(*it);
+		client->setOutData(msg);
 	}
 }
 
-void		Channel::sendMsgMembresExceptFd(std::string msg, int clientFd) {
+void		Channel::sendMsgMembresExceptFd(std::string msg, int clientFd, Server& serv) {
 	for (std::vector<int>::iterator it = _membresFd.begin(); it != _membresFd.end() ;it++)
 	{
 		if (*it != clientFd)
-			send(*it, msg.c_str(), msg.size(), MSG_NOSIGNAL);
+		{
+			//send(*it, msg.c_str(), msg.size(), MSG_NOSIGNAL);
+			Client* client = serv.getClientbyFd(*it);
+			client->setOutData(msg);
+		}
 	}
 }
 

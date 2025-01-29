@@ -25,7 +25,7 @@ void JOIN::execCommand(Server &serv, Client &client, const com &cmd)
 		{
 			msg = "Bad Channel Mask";
 			numeric = ERR_BADCHANMASK;
-			sendNumericParam1(client, numeric, name_chan, msg + ENDLINE_MSG);
+			OutDataNumericParam1(client, numeric, name_chan, msg + ENDLINE_MSG);
 		}
 		else 
 		{
@@ -37,25 +37,25 @@ void JOIN::execCommand(Server &serv, Client &client, const com &cmd)
 			{
 				msg = "Cannot join channel (+i)";
 				numeric = ERR_INVITEONLYCHAN;
-				sendNumericParam2(client, numeric, client.getNickname(), name_chan, msg + ENDLINE_MSG);
+				OutDataNumericParam2(client, numeric, client.getNickname(), name_chan, msg + ENDLINE_MSG);
 			}
 			else if (channel->checkClientIsMembre(client.getClientSocket()))
 			{
 				msg = "You're already on that channel";
 				numeric = ERR_USERONCHANNEL;
-				sendNumericParam2(client, numeric, client.getNickname(), name_chan, msg + ENDLINE_MSG);
+				OutDataNumericParam2(client, numeric, client.getNickname(), name_chan, msg + ENDLINE_MSG);
 			}
 			else if (channel->ifProtectedByPassWord() && !channel->checkPassWord(mdp))
 			{
 				msg = "Cannot join channel (+k)";
 				numeric = ERR_BADCHANNELKEY;
-				sendNumericParam2(client, numeric, client.getNickname(), name_chan, msg + ENDLINE_MSG);
+				OutDataNumericParam2(client, numeric, client.getNickname(), name_chan, msg + ENDLINE_MSG);
 			}
 			else if (channel->ifLimitUser() && channel->checkOverLimitUser())
 			{
 				msg = "Cannot join channel (+l)";
 				numeric = ERR_CHANNELISFULL;
-				sendNumericParam2(client, numeric, client.getNickname(), name_chan, msg + ENDLINE_MSG);
+				OutDataNumericParam2(client, numeric, client.getNickname(), name_chan, msg + ENDLINE_MSG);
 			}
 			else 
 			{
