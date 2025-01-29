@@ -197,6 +197,7 @@ void	Channel::sendMsgMembres(std::string msg, Server& serv)
 		//send(*it, msg.c_str(), msg.size(), MSG_NOSIGNAL);
 		Client* client = serv.getClientbyFd(*it);
 		client->setOutData(msg);
+		std::string am = "shit";
 	}
 }
 

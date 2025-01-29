@@ -191,14 +191,14 @@ bool Server::manageEvents()
 {
   while (Server::_signal == false)
   {
-	if (poll(&this->_fds[0], _fds.size(), -1) == -1)
+	if (poll(this->_fds.data(), _fds.size(), -1) < 0)
 	{
 		std::cerr << "poll: " << strerror(errno) << std::endl;
 		return (false);
 	}
 	for (size_t i = 0; i < _fds.size(); i++)
 	{
-	  if (_fds[i].revents & (POLLIN | POLLOUT) != 0)
+	  if (_fds[i].revents & POLLIN) // a revoir
 	  {
 		if (_fds[i].fd < 0) 
 		{
@@ -221,8 +221,9 @@ bool Server::manageEvents()
 			Client* client = getClientbyFd(_fds[i].fd);
 			if (client) 
 			{
-				std::string outData = client->getOutData();
+				std::string &outData = client->getOutData();
 				send(_fds[i].fd, outData.c_str(), outData.size(), MSG_NOSIGNAL);
+				outData.erase();
 			}
 		}
 	  }
@@ -257,7 +258,7 @@ bool Server::acceptClients()
 	  return (false);
 	}
 	_newClient.fd = clientSocket;
-	_newClient.events = POLLIN;
+	_newClient.events = POLLIN | POLLOUT;
 	_newClient.revents = 0;
 	newClient->setClientSocket(clientSocket);
 	newClient->setNickFilled(false);
