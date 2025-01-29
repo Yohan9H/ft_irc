@@ -41,7 +41,7 @@ void PRIVMSG::execCommand(Server &serv, Client &client, const com &cmd)
 		else
 		{
 			std::string privmsg = ":" + client.getNickname() + "!" + client.getUsername() + "@localhost PRIVMSG " + target + " :" + message + ENDLINE_MSG;
-			channel->sendMsgMembresExceptFd(privmsg, client.getClientSocket());
+			channel->sendMsgMembresExceptFd(privmsg, client.getClientSocket(), serv);
 		}	
 	} 
 	else 

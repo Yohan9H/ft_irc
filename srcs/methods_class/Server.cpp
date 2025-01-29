@@ -222,7 +222,7 @@ bool Server::manageEvents()
 			if (client) 
 			{
 				std::string outData = client->getOutData();
-				send()
+				send(_fds[i].fd, outData.c_str(), outData.size(), MSG_NOSIGNAL);
 			}
 		}
 	  }
@@ -516,7 +516,7 @@ void	Server::delClientChannelAssociate(Client &client)
 					it_lst->second->addOperators(it_lst->second->getMembresFd()[0]);
 				}
 				std::string msg = ":" + client.getNickname() + "!" + client.getUsername() + "@localhost QUIT :";
-				it_lst->second->sendMsgMembres(msg + ENDLINE_MSG);
+				it_lst->second->sendMsgMembres(msg + ENDLINE_MSG, *this);
 			}
 		}
 	}

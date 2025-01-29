@@ -82,10 +82,10 @@ void sendNotice(Client &client, const std::string& message) {
 }
 
 
-void sendModeParamMsg (Client &client, Channel &channel, std::string mode, std::string param)
+void sendModeParamMsg (Client &client, Channel &channel, std::string mode, std::string param, Server &serv)
 {
 	std::string msg = std::string(HOST) + "MODE " + channel.getName() + " " + mode + " " + param;
-	channel.sendMsgMembres(msg + ENDLINE_MSG);
+	channel.sendMsgMembres(msg + ENDLINE_MSG, serv);
 }
 
 std::vector<std::string> split(std::string const& str, char sep) {

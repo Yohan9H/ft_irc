@@ -142,30 +142,31 @@ std::string	Channel::formatJoinMessage(std::string name_new_client, Channel chan
 	return msg;
 }
 
-void	Channel::sendJoinMsgAll(Channel &channel, std::string name_serv, std::string username_client, int clientFd)
-{
-	for (std::vector<int>::iterator it = _membresFd.begin(); it != _membresFd.end(); it++)
-	{	
-		if (*it != clientFd)
-		{
-			std::string  msg = ":" + name_serv + " 366 " + username_client + " " + channel.getTopic() + " :End of /NAMES list\n";
-			send(clientFd, msg.c_str(), msg.size(), MSG_NOSIGNAL);
-		}
-	}
-}
+// void	Channel::sendJoinMsgAll(Channel &channel, std::string name_serv, std::string username_client, int clientFd)
+// {
+// 	for (std::vector<int>::iterator it = _membresFd.begin(); it != _membresFd.end(); it++)
+// 	{	
+// 		if (*it != clientFd)
+// 		{
+// 			std::string  msg = ":" + name_serv + " 366 " + username_client + " " + channel.getTopic() + " :End of /NAMES list\n";
+// 			send(clientFd, msg.c_str(), msg.size(), MSG_NOSIGNAL);
+// 		}
+// 	}
+// }
 
 void	Channel::infoJoinChannel(Server &serv, std::string name_serv, Channel &channel, Client &client)
 {
 	std::string msg = ":" + name_serv + " 332 " + client.getNickname() + " " + channel.getTopic() + " :Bienvenue dans le channel !\n";
-	send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
-	msg.clear();
+	// send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
+	// msg.clear();
 
-	msg = ":" + name_serv + " 353 " + client.getNickname() + " = " + channel.getTopic() + " :" + channel.giveAllNameMembres(serv) + "\n"; 
-	send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
-	msg.clear();
+	msg += ":" + name_serv + " 353 " + client.getNickname() + " = " + channel.getTopic() + " :" + channel.giveAllNameMembres(serv) + "\n"; 
+	// send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
+	// msg.clear();
 
-	msg = ":" + name_serv + " 366 " + client.getNickname() + " " + channel.getTopic() + " :End of /NAMES list\n";
-	send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
+	msg += ":" + name_serv + " 366 " + client.getNickname() + " " + channel.getTopic() + " :End of /NAMES list\n";
+	// send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
+	client.setOutData(msg);
 }
 
 std::string Channel::giveAllNameMembres(Server &serv)

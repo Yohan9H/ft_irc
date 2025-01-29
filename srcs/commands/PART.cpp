@@ -28,7 +28,7 @@ void PART::execCommand(Server &serv, Client &client, const com &cmd)
 		else 
 		{
 			std::string partmsg = ":" + client.getNickname() + "!" + client.getUsername() + "@localhost PART " + channel->getName() + " :" + reason + ENDLINE_MSG;
-			channel->sendMsgMembres(partmsg);
+			channel->sendMsgMembres(partmsg, serv);
 			channel->delMembres(client.getClientSocket());
 			channel->delOperatores(client.getClientSocket());
 			client.removeChan(channel->getName());

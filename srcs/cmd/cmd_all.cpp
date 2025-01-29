@@ -13,7 +13,8 @@ bool	join(Server &serv, Client &client, std::string name_chan, std::string mdp)
 	if (client.getIsAuth() == false)
 	{
 		msg = ":" + std::string(HOST) + " 451 You have not registered\n";
-		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
+		//send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
+		client.setOutData(msg);
 		return false;
 	}
 
@@ -24,21 +25,24 @@ bool	join(Server &serv, Client &client, std::string name_chan, std::string mdp)
 	if (channel->ifProtectedByPassWord() && !channel->checkPassWord(mdp))
 	{
 		msg = mdp_false(HOST, name_chan);
-		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
+		//send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
+		client.setOutData(msg);
 		return false;
 	}
 
 	if (channel->ifInvite() && !channel->checkClientIsInvited(client.getClientSocket()))
 	{
 		msg = invite_false(HOST, "JOIN", name_chan);
-		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
+		//send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
+		client.setOutData(msg);
 		return false;
 	}
 
 	if (channel->ifLimitUser() && !channel->checkOverLimitUser())
 	{
 		msg = limit_user_false(HOST, client.getUsername());
-		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
+		//send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
+		client.setOutData(msg);
 		return false;
 	}
 

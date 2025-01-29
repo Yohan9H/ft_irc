@@ -16,14 +16,16 @@ void USER::execCommand(Server &serv, Client &client, const com &cmd)
 	if (cmd.params[1] != "*" || cmd.params[2] != "0")
 	{
 		msg =  client.getUsername() + " " + cmd.command + " :Not enough parameters" ENDLINE_MSG;
-		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
+		//send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
+		client.setOutData(msg);
 		return ;
 	}
 
 	if (!client.getPasswordFilled() && !client.getIsAuth())
 	{
 		msg = "You may start by command PASS to log in with the password" ENDLINE_MSG;
-		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
+		//send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
+		client.setOutData(msg);
 		return ;
 	}
 
@@ -44,7 +46,8 @@ void USER::execCommand(Server &serv, Client &client, const com &cmd)
 		msg = std::string(HOST) + " 001 " + client.getNickname() + " :Welcome to the ft_irc " + client.getNickname() + "!" + client.getUsername() + "@" + "localhost\n";
 		msg += std::string(HOST) + " 002 " + client.getNickname() + " :Your host is ft_irc 1.0\n";
 		msg += std::string(HOST) + " 003 " + client.getNickname() + " :Created at [" + serv.getTime() + "]\n";
-		send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
+		//send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
+		client.setOutData(msg);
 	}
 	return ;
 }

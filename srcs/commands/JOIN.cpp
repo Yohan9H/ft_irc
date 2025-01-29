@@ -70,16 +70,16 @@ void JOIN::execCommand(Server &serv, Client &client, const com &cmd)
 				
 				//Envoyer les infos:
 				std::string msg1 = ":" + client.getNickname() + "!" + client.getUsername() + "@localhost JOIN " + channel->getName();
-				channel->sendMsgMembres(msg1 + ENDLINE_MSG);
+				channel->sendMsgMembres(msg1 + ENDLINE_MSG, serv);
 				if (!channel->getTopic().empty())
 				{
 					std::string msg2 = HOST + to_string(RPL_TOPIC) + " " + client.getNickname() + " " + channel->getTopic();
-					channel->sendMsgMembres(msg2 + ENDLINE_MSG);
+					channel->sendMsgMembres(msg2 + ENDLINE_MSG, serv);
 				}
 				std::string msg3 = HOST + to_string(RPL_NAMREPLY) + " "  + client.getNickname() + " = " + channel->getName() + " :" + channel->giveAllNameMembres(serv);
-				channel->sendMsgMembres(msg3 + ENDLINE_MSG);
+				channel->sendMsgMembres(msg3 + ENDLINE_MSG, serv);
 				std::string msg4 = HOST + to_string(RPL_ENDOFNAMES) + " " + client.getNickname() + " " + channel->getName() + " :End of /NAMES list";
-				channel->sendMsgMembres(msg4 + ENDLINE_MSG);
+				channel->sendMsgMembres(msg4 + ENDLINE_MSG, serv);
 			}
 		}
 	}

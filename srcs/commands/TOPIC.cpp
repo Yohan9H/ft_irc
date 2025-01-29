@@ -60,13 +60,13 @@ void TOPIC::execCommand(Server &serv, Client &client, const com &cmd)
 			// gerer le texte de la commande dans le cas du clearing
 			channel->setTopic("");
 			cmdmsg = "TOPIC " + channel_name + " :";
-			channel->sendMsgMembres(cmdmsg + ENDLINE_MSG);
+			channel->sendMsgMembres(cmdmsg + ENDLINE_MSG, serv);
 		}
 		else
 		{
 			channel->setTopic(topic);
 			cmdmsg = HOST + to_string(RPL_TOPIC) + " " + client.getNickname() + " " + channel->getName() + " " + topic;
-			channel->sendMsgMembres(cmdmsg + ENDLINE_MSG);
+			channel->sendMsgMembres(cmdmsg + ENDLINE_MSG, serv);
 		}
 	}
 }

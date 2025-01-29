@@ -23,5 +23,4 @@ void PASS::execCommand(Server &serv, Client &client, const com &cmd)
 	else {
 		client.setPasswordFilled(true);
 	}
-	
 }

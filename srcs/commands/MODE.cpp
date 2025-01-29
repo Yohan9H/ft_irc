@@ -49,12 +49,12 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 					if (sign == '+')
 					{
 						channel->addMode('i');
-						sendModeParamMsg(client, *channel, mode, param);
+						sendModeParamMsg(client, *channel, mode, param, serv);
 					}
 					else if (sign == '-') 
 					{
 						channel->errMode('i');
-						sendModeParamMsg(client, *channel, mode, param);
+						sendModeParamMsg(client, *channel, mode, param, serv);
 					}
 					break;
 				};
@@ -63,12 +63,12 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 					if (sign == '+')
 					{
 						channel->addMode('t');
-						sendModeParamMsg(client, *channel, mode, param);
+						sendModeParamMsg(client, *channel, mode, param, serv);
 					}
 					else if (sign == '-')
 					{
 						channel->errMode('t');
-						sendModeParamMsg(client, *channel, mode, param);
+						sendModeParamMsg(client, *channel, mode, param, serv);
 					}
 					break;
 				};
@@ -82,12 +82,12 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 						} else {
 							channel->setPass(param);
 							channel->addMode('k');
-							sendModeParamMsg(client, *channel, mode, param);
+							sendModeParamMsg(client, *channel, mode, param, serv);
 						}
 					}
 					else if (sign == '-') {
 						channel->errMode('k');
-						sendModeParamMsg(client, *channel, mode, param);
+						sendModeParamMsg(client, *channel, mode, param, serv);
 					}
 					break;
 				};
@@ -120,14 +120,14 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 								} else {
 									channel->addOperators(modeOperator->getClientSocket());
 									channel->addMode('o');
-									sendModeParamMsg(client, *channel, mode, param);
+									sendModeParamMsg(client, *channel, mode, param, serv);
 								}
 							} else if (sign == '-') {
 								if (channel->getOperatorsFd().size() > 1)
 								{
 									channel->delOperatores(modeOperator->getClientSocket());
 									channel->errMode('o');
-									sendModeParamMsg(client, *channel, mode, param);
+									sendModeParamMsg(client, *channel, mode, param, serv);
 								} else {
 									msg = "Cannot have no operator";
 									numeric = ERR_USERNOTINCHANNEL;
@@ -157,13 +157,13 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 							} else {
 								channel->addMode('l');
 								channel->setLimit(limit);
-								sendModeParamMsg(client, *channel, mode, param); 
+								sendModeParamMsg(client, *channel, mode, param, serv); 
 							}
 						}
 					} else {
 							channel->errMode('l');
 							channel->setLimit(-1);
-							sendModeParamMsg(client, *channel, mode, param);
+							sendModeParamMsg(client, *channel, mode, param, serv);
 					}
 					break ;
 				}
