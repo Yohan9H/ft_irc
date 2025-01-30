@@ -256,6 +256,7 @@ bool Server::acceptClients()
 	{
 	  std::cout << RED << "Max number of connexions reached" << std::endl;
 	  close(clientSocket);
+	  delete newClient;
 	  return (false);
 	}
 	_newClient.fd = clientSocket;

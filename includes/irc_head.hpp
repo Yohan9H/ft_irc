@@ -193,7 +193,7 @@ void	showMapClient(Server &serv);
 void	showMapChannel(Server &serv);
 void	normalizeCRLF(std::string& input);
 
-# define MAX_CONNEXIONS 5
+# define MAX_CONNEXIONS 2
 # define BUFFER_MAX 1024
 # define HOST ":localhost "
 # define ENDLINE_MSG "\r\n"
