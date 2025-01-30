@@ -56,29 +56,19 @@ std::string to_string(int value) {
 void	OutDataNumericParam1(Client &client, int numeric, std::string param, const std::string& message)
 {
 	std::string fullMessage = std::string(HOST) + to_string(numeric) + " " + param + " :" + message;
-	//send(client.getClientSocket(), fullMessage.c_str(), fullMessage.size(), MSG_NOSIGNAL);
 	client.appendOutData(fullMessage);
 }
 
 void	OutDataNumericParam2(Client &client, int numeric, const std::string param, const std::string param2, const std::string& message)
 {
 	std::string fullMessage = std::string(HOST) + to_string(numeric) + " " + param + " " + param2 + " :" + message;
-	//send(client.getClientSocket(), fullMessage.c_str(), fullMessage.size(), MSG_NOSIGNAL);
 	client.appendOutData(fullMessage);
 }
 
 void	OutDataNumericParam3(Client &client, int numeric, const std::string param, const std::string param2, const std::string param3, const std::string& message)
 {
 	std::string fullMessage = std::string(HOST) + to_string(numeric) + " " + param + " " + param2 + " " + param3 + " :" + message;
-	//send(client.getClientSocket(), fullMessage.c_str(), fullMessage.size(), MSG_NOSIGNAL);
 	client.appendOutData(fullMessage);
-}
-
-
-
-void sendNotice(Client &client, const std::string& message) {
-	std::string notice = std::string(HOST) + "NOTICE " + client.getNickname() + " :" + message;
-	send(client.getClientSocket(), notice.c_str(), notice.size(), 0);
 }
 
 

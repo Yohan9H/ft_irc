@@ -12,7 +12,6 @@ void NICK::execCommand(Server &serv, Client &client, const com &cmd)
 	if (!client.getPasswordFilled() && !client.getIsAuth())
 	{
 		msg = "You may start by command PASS to log in with the password" ENDLINE_MSG;
-		//send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
 		client.appendOutData(msg);
 		return ;
 	}
@@ -60,7 +59,6 @@ void NICK::execCommand(Server &serv, Client &client, const com &cmd)
 			msg += std::string(HOST) + " 003 " + nick + " :Created at [" + serv.getTime() + "]" + ENDLINE_MSG;
 
 		}
-		//send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
 		client.appendOutData(msg);
 	}
 	// Informe tous les channels dont il fait partie de son changement

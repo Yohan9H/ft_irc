@@ -69,7 +69,6 @@ void KICK::execCommand(Server &serv, Client &client, const com &cmd)
 				else if (channel->getOperatorsFd().empty())
 					channel->addOperators(channel->getMembresFd()[0]);
 				std::string kickedmsg = "You have been kicked from " + chan_name + " by " + client.getNickname() + " (Reason: " + reason + ")" + ENDLINE_MSG;
-				//send(kickClient->getClientSocket(), kickedmsg.c_str(), kickedmsg.size(), MSG_NOSIGNAL);
 				kickClient->appendOutData(kickedmsg);
 			}
 		}

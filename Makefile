@@ -17,7 +17,6 @@ SRCS = $(SRC_DIR)/main.cpp \
 	   $(MTH_DIR)/Channel.cpp \
 	   $(CMD_DIR)/manip_chan.cpp \
 	   $(CMD_DIR)/msg.cpp \
-	   $(CMD_DIR)/cmd_all.cpp \
 	   $(CDM_DIR2)/JOIN.cpp \
 	   $(CDM_DIR2)/KICK.cpp \
 	   $(CDM_DIR2)/MODE.cpp \

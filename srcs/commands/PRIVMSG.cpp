@@ -24,7 +24,7 @@ void PRIVMSG::execCommand(Server &serv, Client &client, const com &cmd)
 		numeric = ERR_NOTEXTTOSEND;
 		OutDataNumericParam1(client, numeric, client.getNickname(), msg + ENDLINE_MSG);
 	} 
-	else if (target[0] == '#') 
+	else if (target[0] == '#')
 	{
 		Channel* channel = serv.getChannelbyName(target);
 		if (!channel)
@@ -56,7 +56,6 @@ void PRIVMSG::execCommand(Server &serv, Client &client, const com &cmd)
 		}
 		else {
 			std :: string privmsg = ":" + client.getNickname() + "!" + client.getUsername() + "@localhost PRIVMSG " + targetclient->getNickname() + " :" + message + ENDLINE_MSG;
-			//send(targetclient->getClientSocket(), privmsg.c_str(), privmsg.size(), MSG_NOSIGNAL);
 			targetclient->appendOutData(msg);
 		}
 	}

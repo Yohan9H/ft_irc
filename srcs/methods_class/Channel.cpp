@@ -157,15 +157,8 @@ std::string	Channel::formatJoinMessage(std::string name_new_client, Channel chan
 void	Channel::infoJoinChannel(Server &serv, std::string name_serv, Channel &channel, Client &client)
 {
 	std::string msg = ":" + name_serv + " 332 " + client.getNickname() + " " + channel.getTopic() + " :Bienvenue dans le channel !\n";
-	// send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
-	// msg.clear();
-
 	msg += ":" + name_serv + " 353 " + client.getNickname() + " = " + channel.getTopic() + " :" + channel.giveAllNameMembres(serv) + "\n"; 
-	// send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
-	// msg.clear();
-
 	msg += ":" + name_serv + " 366 " + client.getNickname() + " " + channel.getTopic() + " :End of /NAMES list\n";
-	// send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
 	client.appendOutData(msg);
 }
 
@@ -194,7 +187,6 @@ void	Channel::sendMsgMembres(std::string msg, Server& serv)
 {
 	for (std::vector<int>::iterator it = _membresFd.begin(); it != _membresFd.end() ;it++)
 	{
-		//send(*it, msg.c_str(), msg.size(), MSG_NOSIGNAL);
 		Client* client = serv.getClientbyFd(*it);
 		client->appendOutData(msg);
 		std::string am = "shit";
@@ -206,7 +198,6 @@ void	Channel::sendMsgMembresExceptFd(std::string msg, int clientFd, Server& serv
 	{
 		if (*it != clientFd)
 		{
-			//send(*it, msg.c_str(), msg.size(), MSG_NOSIGNAL);
 			Client* client = serv.getClientbyFd(*it);
 			client->appendOutData(msg);
 		}
