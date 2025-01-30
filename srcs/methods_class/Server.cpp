@@ -244,6 +244,7 @@ bool Server::acceptClients()
 
 	if (clientSocket < 0) {
 		std::cerr << RED << "accept: " << strerror(errno) << COL_END <<std::endl;
+		delete newClient;
 		return false;
 	}
 	if (fcntl(clientSocket, F_SETFL, O_NONBLOCK) == -1) 
