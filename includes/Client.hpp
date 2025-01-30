@@ -51,7 +51,7 @@ public:
 	void			setPasswordFilled(bool isPasswordFilled);
 	void			setNickFilled(bool isNickFilled);
 	void			setUserFilled(bool isNickFilled);
-	void			setOutData(std::string message);
+	void			appendOutData(std::string message);
 
 	// methods
 	void			sendMsgAllChan(Server &serv, std::string msg);

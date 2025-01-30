@@ -57,7 +57,7 @@ void PRIVMSG::execCommand(Server &serv, Client &client, const com &cmd)
 		else {
 			std :: string privmsg = ":" + client.getNickname() + "!" + client.getUsername() + "@localhost PRIVMSG " + targetclient->getNickname() + " :" + message + ENDLINE_MSG;
 			//send(targetclient->getClientSocket(), privmsg.c_str(), privmsg.size(), MSG_NOSIGNAL);
-			targetclient->setOutData(msg);
+			targetclient->appendOutData(msg);
 		}
 	}
 }

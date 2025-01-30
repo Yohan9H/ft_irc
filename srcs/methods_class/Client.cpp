@@ -98,9 +98,9 @@ void	Client::setUserFilled(bool isUserFilled)
 	_userfilled = isUserFilled;
 }
 
-void	Client::setOutData(std::string message)
+void	Client::appendOutData(std::string message)
 {
-	_outdata = message;
+	_outdata += message;
 }
 
 void	Client::sendMsgAllChan(Server &serv, std::string msg)

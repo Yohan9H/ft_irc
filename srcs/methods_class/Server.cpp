@@ -198,37 +198,39 @@ bool Server::manageEvents()
 	}
 	for (size_t i = 0; i < _fds.size(); i++)
 	{
-	  if (_fds[i].revents & POLLIN) // a revoir
-	  {
-		if (_fds[i].fd < 0) 
+		if (_fds[i].revents & POLLIN)
 		{
-			std::cerr << RED << "Invalid file descriptor: " << COL_END << _fds[i].fd << std::endl;
-			return (false);
+			if (_fds[i].fd < 0) 
+			{
+				std::cerr << RED << "Invalid file descriptor: " << COL_END << _fds[i].fd << std::endl;
+				return (false);
+			}
+			if (_fds[i].fd == this->_serverSocket) // nouveau client
+			{
+			if (!acceptClients())
+				std::cerr << RED << "Failed to accept new client." << COL_END << std::endl;
+			continue;
+			}
+			if (!receiveData(this->_fds[i].fd))
+			{
+				close(_fds[i].fd);
+				_fds.erase(_fds.begin() + i);
+				--i;
+			}
 		}
-		if (_fds[i].fd == this->_serverSocket) // nouveau client
+		else if (_fds[i].revents & POLLOUT)
 		{
-		  if (!acceptClients())
-			std::cerr << RED << "Failed to accept new client." << COL_END << std::endl;
-		  continue;
-		}
-		if (!receiveData(this->_fds[i].fd))
-		{
-			close(_fds[i].fd);
-			_fds.erase(_fds.begin() + i);
-			--i;
-		}
-		else {
 			Client* client = getClientbyFd(_fds[i].fd);
 			if (client) 
 			{
 				std::string &outData = client->getOutData();
-				send(_fds[i].fd, outData.c_str(), outData.size(), MSG_NOSIGNAL);
-				outData.erase();
+				std::string end_cmd = outData.substr(0, outData.find("\n") + 2);
+				outData.erase(0, outData.find("\n") + 2);
+				send(_fds[i].fd, end_cmd.c_str(), end_cmd.size(), MSG_NOSIGNAL);
 			}
 		}
 	  }
 	}
-  }
   close(this->_serverSocket);
   return (true);
 }

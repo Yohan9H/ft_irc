@@ -17,7 +17,7 @@ void USER::execCommand(Server &serv, Client &client, const com &cmd)
 	{
 		msg =  client.getUsername() + " " + cmd.command + " :Not enough parameters" ENDLINE_MSG;
 		//send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
-		client.setOutData(msg);
+		client.appendOutData(msg);
 		return ;
 	}
 
@@ -25,7 +25,7 @@ void USER::execCommand(Server &serv, Client &client, const com &cmd)
 	{
 		msg = "You may start by command PASS to log in with the password" ENDLINE_MSG;
 		//send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
-		client.setOutData(msg);
+		client.appendOutData(msg);
 		return ;
 	}
 
@@ -47,7 +47,7 @@ void USER::execCommand(Server &serv, Client &client, const com &cmd)
 		msg += std::string(HOST) + " 002 " + client.getNickname() + " :Your host is ft_irc 1.0\n";
 		msg += std::string(HOST) + " 003 " + client.getNickname() + " :Created at [" + serv.getTime() + "]\n";
 		//send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
-		client.setOutData(msg);
+		client.appendOutData(msg);
 	}
 	return ;
 }

@@ -13,7 +13,7 @@ void NICK::execCommand(Server &serv, Client &client, const com &cmd)
 	{
 		msg = "You may start by command PASS to log in with the password" ENDLINE_MSG;
 		//send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
-		client.setOutData(msg);
+		client.appendOutData(msg);
 		return ;
 	}
 
@@ -61,7 +61,7 @@ void NICK::execCommand(Server &serv, Client &client, const com &cmd)
 
 		}
 		//send(client.getClientSocket(), msg.c_str(), msg.size(), MSG_NOSIGNAL);
-		client.setOutData(msg);
+		client.appendOutData(msg);
 	}
 	// Informe tous les channels dont il fait partie de son changement
 	else

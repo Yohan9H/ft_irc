@@ -40,15 +40,15 @@ void KICK::execCommand(Server &serv, Client &client, const com &cmd)
 		else
 		{
 			Client* kickClient = serv.getClientbyName(nick);
-			std::string nick_name = kickClient->getNickname();
 			if (!kickClient)
 			{
 				msg = "No such nick/channel";
 				numeric = ERR_NOSUCHNICK;
-				OutDataNumericParam2(client, numeric, client.getUsername(), nick_name, msg + ENDLINE_MSG);
+				OutDataNumericParam2(client, numeric, client.getUsername(), cmd.params[1], msg + ENDLINE_MSG);
 			}
 			else if (!channel->checkClientIsMembre(kickClient->getClientSocket()))
 			{
+				std::string nick_name = kickClient->getNickname();
 				msg = "They aren't on that channel";
 				numeric = ERR_USERNOTINCHANNEL;
 				OutDataNumericParam3(client, numeric, client.getUsername(), nick_name, chan_name, msg + ENDLINE_MSG);
@@ -70,7 +70,7 @@ void KICK::execCommand(Server &serv, Client &client, const com &cmd)
 					channel->addOperators(channel->getMembresFd()[0]);
 				std::string kickedmsg = "You have been kicked from " + chan_name + " by " + client.getNickname() + " (Reason: " + reason + ")" + ENDLINE_MSG;
 				//send(kickClient->getClientSocket(), kickedmsg.c_str(), kickedmsg.size(), MSG_NOSIGNAL);
-				kickClient->setOutData(kickedmsg);
+				kickClient->appendOutData(kickedmsg);
 			}
 		}
 	}
