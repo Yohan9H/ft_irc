@@ -250,6 +250,7 @@ bool Server::acceptClients()
 	{
 		std::cerr << "fcntl: " << strerror(errno) << std::endl;
 		close(clientSocket);
+		delete newClient;
 		return false;
 	}
 	if (_fds.size() == MAX_CONNEXIONS + 1)
