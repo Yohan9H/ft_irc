@@ -302,9 +302,17 @@ bool Server::receiveData(int fd)
 		}
 		std::string bufferToParse;
 		bufferToParse = std::string(buffer);
-		parseCommand(*(this->getClientbyFd(fd)), bufferToParse);
-
-	  return (true);
+		Client *client = this->getClientbyFd(fd);
+		client->appendInData(bufferToParse);
+		std::string &inData = client->getInData();
+		if (inData.find("\n") != std::string::npos)
+		{
+			std::string end_cmd = inData.substr(0, inData.find("\n") + 2);
+			inData.erase(0, inData.find("\n") + 2);
+			parseCommand(*(this->getClientbyFd(fd)), end_cmd);
+		}
+		
+		return (true);
 	}
 	else
 	{
@@ -318,6 +326,7 @@ void Server::parseCommand(Client &client, const std::string &input) {
 	size_t pos = 0;
 	std::string data = input;
 	normalizeCRLF(data);
+
 	while ((pos = data.find("\r\n")) != std::string::npos) {
 		std::string line = input.substr(0, pos);
 		std::string token;

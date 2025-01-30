@@ -24,6 +24,7 @@ private:
 	bool							_nickfilled;
 	bool							_userfilled;
 	std::string						_outdata;
+	std::string						_indata;
 	
 
 public:
@@ -43,6 +44,7 @@ public:
 	bool						getNickFilled();
 	bool						getUserFilled();
 	std::string					&getOutData();
+	std::string					&getInData();
 
 	// setters
 	void			setClientSocket(int clientFd);
@@ -52,6 +54,7 @@ public:
 	void			setNickFilled(bool isNickFilled);
 	void			setUserFilled(bool isNickFilled);
 	void			appendOutData(std::string message);
+	void			appendInData(std::string command);
 
 	// methods
 	void			sendMsgAllChan(Server &serv, std::string msg);

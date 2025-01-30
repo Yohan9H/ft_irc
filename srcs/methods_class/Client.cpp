@@ -68,6 +68,11 @@ std::string& Client::getOutData()
 	return this->_outdata;
 }
 
+std::string& Client::getInData()
+{
+	return this->_indata;
+}
+
 void	Client::setClientSocket(int clientFd)
 {
 	_clientSocket = clientFd;
@@ -101,6 +106,11 @@ void	Client::setUserFilled(bool isUserFilled)
 void	Client::appendOutData(std::string message)
 {
 	_outdata += message;
+}
+
+void	Client::appendInData(std::string command)
+{
+	_indata += command;
 }
 
 void	Client::sendMsgAllChan(Server &serv, std::string msg)
