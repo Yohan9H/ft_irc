@@ -12,18 +12,19 @@ void PART::execCommand(Server &serv, Client &client, const com &cmd)
 
 	for (std::vector<std::string>::iterator it = channel_list.begin(); it != channel_list.end(); it++)
 	{
+		std::string chan_name = *it;
 		Channel* channel = serv.getChannelbyName(*it);
 		if (!channel)
 		{
 			msg = "No such channel";
 			numeric = ERR_NOSUCHCHANNEL;
-			OutDataNumericParam2(client, numeric, client.getNickname(), channel->getName(), msg + ENDLINE_MSG);
+			OutDataNumericParam2(client, numeric, client.getNickname(), chan_name, msg + ENDLINE_MSG);
 		}
 		else if (!channel->checkClientIsMembre(client.getClientSocket()))
 		{
 			msg = "You're not on that channel";
 			numeric = ERR_NOTONCHANNEL;
-			OutDataNumericParam2(client, numeric, client.getNickname(), channel->getName(), msg + ENDLINE_MSG);
+			OutDataNumericParam2(client, numeric, client.getNickname(), chan_name, msg + ENDLINE_MSG);
 		}
 		else 
 		{
@@ -31,7 +32,7 @@ void PART::execCommand(Server &serv, Client &client, const com &cmd)
 			channel->sendMsgMembres(partmsg, serv);
 			channel->delMembres(client.getClientSocket());
 			channel->delOperatores(client.getClientSocket());
-			client.removeChan(channel->getName());
+			client.removeChan(chan_name);
 			if (channel->getMembresFd().empty())
 			{
 				delete channel;

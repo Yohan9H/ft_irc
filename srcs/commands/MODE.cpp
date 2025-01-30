@@ -103,7 +103,7 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 						{
 							msg = "No such nick";
 							numeric = ERR_NOSUCHNICK;
-							OutDataNumericParam2(client, numeric, client.getNickname(), modeOperator->getNickname(), msg + ENDLINE_MSG);
+							OutDataNumericParam2(client, numeric, client.getNickname(), cmd.params[2], msg + ENDLINE_MSG);
 						}
 						else if (!channel->checkClientIsMembre(modeOperator->getClientSocket()))
 						{
