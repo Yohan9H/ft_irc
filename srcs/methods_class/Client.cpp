@@ -219,26 +219,6 @@ void Client::executeCommand(Server &serv, const com &cmd)
 	}
 }
 
-// void Client::handlePrivmsg(const com &cmd) {
-// 	if (cmd.params.size() < 2) {
-// 		std::string errorCode = "461";
-// 		std::string errorMessage = "PRIVMSG :Not enough parameters";
-// 		throw std::logic_error(errorCode + " " + errorMessage);
-// 	}
-
-// 	const std::string &target = cmd.params[0];
-// 	const std::string &message = cmd.trailing;
-
-// 	if (target.empty() || message.empty()) {
-// 		std::string errorCode = "412";
-// 		std::string errorMessage = "No text to send";
-// 		throw std::logic_error(errorCode + " " + errorMessage);
-// 	}
-
-	// Logique métier (envoyer le message au destinataire)
-// }
-
-
 void	Client::removeChan(std::string channel)
 {
 	std::vector<std::string>::iterator it = std::find(_listChan.begin(), _listChan.end(), channel);

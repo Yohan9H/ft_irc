@@ -78,7 +78,6 @@ void Server::closeAndClear()
 
 Server::~Server()
 {
-	//Clear all the opened clients in case of premature exit (signals ?)
 	closeAndClear();
 	close(this->_serverSocket);
 }
@@ -267,8 +266,6 @@ bool Server::acceptClients()
 	newClient->setUserFilled(false);
 	newClient->setPasswordFilled(false);
 
-	// newClient->setClientAddress(_cliAddress);
-	// newClient->setIPAdd(inet_ntoa(_cliAddress.sin_addr));
 	_listClients.insert(std::make_pair(newClient->getClientSocket(), newClient));
 	_fds.push_back(_newClient); 
 
@@ -290,7 +287,7 @@ bool Server::receiveData(int fd)
 		return (false);
 	}
 	else if (errno == EAGAIN || errno == EWOULDBLOCK)
-		return (true); //Checker si OK eval
+		return (true);
 	else if (bytesRead > 0)
 	{
 		buffer[bytesRead] = '\0';
@@ -300,21 +297,10 @@ bool Server::receiveData(int fd)
 		  std::cout << RED << "The client wants to cut the connexion" << COL_END << std::endl;
 		  return (false);
 		}
-		// //Merge partie Arthur 
 		std::string bufferToParse;
 		bufferToParse = std::string(buffer);
 		parseCommand(*(this->getClientbyFd(fd)), bufferToParse);
 
-	// //Just some tests 
-	//   std::string ar = (std::string)"You sent";
-	//   ar += YELLOW;
-	//   ar += ": ";
-	//   ar += (std::string)buffer;
-	//   ar += COL_END;
-	//   // Just a test to reply to the client
-	//   const char *reply = ar.c_str();
-	//   send(fd, reply, strlen(reply), MSG_NOSIGNAL);
-	//   //End of sending messages test 
 	  return (true);
 	}
 	else
