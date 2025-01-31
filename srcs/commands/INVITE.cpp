@@ -22,19 +22,19 @@ void INVITE::execCommand(Server &serv, Client &client, const com &cmd)
 	{
 		msg = "No such channel";
 		numeric = ERR_NOSUCHCHANNEL;
-		OutDataNumericParam2(client, numeric, client.getNickname(), chan_name, msg);
+		OutDataNumericParam2(client, numeric, client.getNickname(), chan_name, msg + ENDLINE_MSG);
 	}
 	else if (!channel->checkClientIsMembre(client.getClientSocket()))
 	{
 		msg = "You're not on that channel";
 		numeric = ERR_NOTONCHANNEL;
-		OutDataNumericParam2(client, numeric, client.getNickname(), chan_name, msg);
+		OutDataNumericParam2(client, numeric, client.getNickname(), chan_name, msg + ENDLINE_MSG);
 	}
 	else if (!channel->isOperator(client.getClientSocket()) && channel->hasMode('i')) // rajouter condition pour Channel mode invite only
 	{
 		msg = "You're not channel operator";
 		numeric = ERR_CHANOPRIVSNEEDED;
-		OutDataNumericParam2(client, numeric, client.getNickname(), chan_name, msg);
+		OutDataNumericParam2(client, numeric, client.getNickname(), chan_name, msg + ENDLINE_MSG);
 	}
 	else 
 	{
@@ -62,7 +62,7 @@ void INVITE::execCommand(Server &serv, Client &client, const com &cmd)
 		{
 			channel->addInvited(invitedClient->getClientSocket());
 			numeric = RPL_INVITING;
-			std::string invitedMsg = std::string(HOST) + " " + to_string(numeric) + " " + client.getNickname() + " " + invitedClient->getNickname() + " " + chan_name + ENDLINE_MSG;
+			std::string invitedMsg = std::string(HOST) + to_string(numeric) + " " + client.getNickname() + " " + invitedClient->getNickname() + " " + chan_name + ENDLINE_MSG;
 			invitedClient->appendOutData(invitedMsg);
 			return ;
 		}
