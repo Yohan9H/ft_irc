@@ -47,7 +47,6 @@ class Channel
 		void		delMembres(int clientFd);
 		void		delInvited(int clientFd);
 		std::string	formatJoinMessage(std::string name_new_client, Channel channel);
-		//void		sendJoinMsgAll(Channel &channel, std::string name_serv, std::string username_client, int clientFd);
 		void		infoJoinChannel(Server &serv, std::string name_serv, Channel &channe, Client &client);
 		std::string giveAllNameMembres(Server &serv);
 		void		sendMsgMembres(std::string msg, Server& serv);

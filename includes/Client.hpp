@@ -66,5 +66,4 @@ public:
 	void			print_for_test();
 
 	void 	executeCommand(Server &serv, const com &cmd);
-	void 	parseline(const std::string &line);
 };

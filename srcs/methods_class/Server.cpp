@@ -518,3 +518,15 @@ void	Server::delClientChannelAssociate(Client &client)
 		}
 	}
 }
+
+void	Server::delClientInFds(int fd)
+{
+	for (std::vector<struct pollfd>::iterator it = this->_fds.begin(); it != this->_fds.end(); it++)
+	{
+		if (it->fd == fd)
+		{
+			this->_fds.erase(it);
+			break;
+		}
+	}
+}

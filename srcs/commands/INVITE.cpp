@@ -5,13 +5,6 @@ INVITE::~INVITE() {};
 
 void INVITE::execCommand(Server &serv, Client &client, const com &cmd)
 { 
-	//verify if client is already invited =_> checkClientisInvited
-	//verify if the channel exist => ERR_NOSUCHCHANNEL
-	//verify if the user belong to the channel => ERR_NOTONCHANNEL
-	//vin invite only mode, verify user is opreator => ERR_CHANOPRIVSNEEDED
-	//verify if the nickname exist
-	//verify if the user already belong to channel => ERR_USERONCHANNEL
-
 	std::string msg;
 	int	numeric;
 	std::string nick = cmd.params[0];
@@ -51,7 +44,6 @@ void INVITE::execCommand(Server &serv, Client &client, const com &cmd)
 			numeric = ERR_USERONCHANNEL;
 			OutDataNumericParam3(client, numeric, client.getNickname(), nick, chan_name, msg + ENDLINE_MSG);
 		}
-		//verifier si on garde cette confition
 		else if (channel->checkClientIsInvited(invitedClient->getClientSocket()))
 		{
 			msg = "is already invited";

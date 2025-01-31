@@ -169,12 +169,6 @@ void	Client::print_for_test()
 	std::cout << "----- END TEST -----" << std::endl;
 }
 
-void Client::parseline(const std::string &line)
-{
-   (void)line;
-	//split when you find /r/n
-}
-
 void Client::executeCommand(Server &serv, const com &cmd)
 {
 	std::string msg;

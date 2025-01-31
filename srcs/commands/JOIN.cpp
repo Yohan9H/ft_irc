@@ -12,8 +12,6 @@ void JOIN::execCommand(Server &serv, Client &client, const com &cmd)
 	
 	std::map<std::string,std::string> chan_mdp = createMap(channel_list, mdp_list);
 
-	//refaire join en verifiant que quand quelqu'un a ete invite puisqu'il join, il faut retirer
-	// de la liste des invited
 	for (std::map<std::string,std::string>::iterator it = chan_mdp.begin(); it != chan_mdp.end(); it++)
 	{
 		std::string name_chan = it->first;

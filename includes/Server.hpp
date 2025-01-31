@@ -40,7 +40,6 @@ public:
 	bool			createServerSocket();
 	bool 			manageEvents();
 	int 			getServSocket() const;
-	// int 			getPort() const;
 	bool 			acceptClients();
 	bool 			receiveData(int fd);
 	void 			clearClient(int fd);
@@ -67,6 +66,7 @@ public:
 	void					setTime();
 	std::string				getTime();
 	void					delClientWithFd(int fd);	
+	void					delClientInFds(int fd);
 
 	void					parseCommand(Client &client, const std::string &input);
 };

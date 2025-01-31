@@ -5,7 +5,6 @@ MODE::~MODE() {};
 
 void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 {
-	//rajouter message qui annonce le changement de mode
 	std::string msg;
 	int numeric;
 	std::string channel_name = cmd.params[0];

@@ -57,7 +57,6 @@ void TOPIC::execCommand(Server &serv, Client &client, const com &cmd)
 		}
 		else if (topic == "")
 		{
-			// gerer le texte de la commande dans le cas du clearing
 			channel->setTopic("");
 			cmdmsg = "TOPIC " + channel_name + " :";
 			channel->sendMsgMembres(cmdmsg + ENDLINE_MSG, serv);
