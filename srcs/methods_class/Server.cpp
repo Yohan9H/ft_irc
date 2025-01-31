@@ -152,7 +152,7 @@ bool Server::createServerSocket()
 	int en = 1;
 	  if (setsockopt(this->_serverSocket, SOL_SOCKET, SO_REUSEADDR, &en, sizeof(en)) == -1 || setsockopt(this->_serverSocket, SOL_SOCKET, SO_REUSEPORT, &en, sizeof(en)) == -1)
 	{
-	  std::cerr << RED "setsockopt: " << strerror(errno) << COL_END << std::endl;
+	  std::cerr << RED "setsockopt: couldn't create server" << COL_END << std::endl;
 	  close (this->_serverSocket);
 	  return (false);
 	}
@@ -165,14 +165,14 @@ bool Server::createServerSocket()
 	//3 - Binding the server socket to a port and an address, as defined in sockaddr_in + checking the return value of bind
 	if (bind(this->_serverSocket, (struct sockaddr*)&this->_serverAddress, sizeof(this->_serverAddress)) == -1)
 	{
-		std::cerr << RED << "bind: " << strerror(errno) << COL_END << std::endl;
+		std::cerr << RED << "bind: couldn't affect sockaddr" << COL_END << std::endl;
 		close(this->_serverSocket);
 		return (false);
 	}
 	// std::cout << "Socket _serverSocket is bound to the port " << ntohs(_serverAddress.sin_port) << std::endl;
 	if (listen(this->_serverSocket, MAX_CONNEXIONS) == -1)
 	{
-		std::cerr << RED  "listen: " << strerror(errno) << COL_END << std::endl;
+		std::cerr << RED  "listen: couldn't listen socket" << COL_END << std::endl;
 		close(_serverSocket);
 		return (false);
 	}
@@ -192,7 +192,7 @@ bool Server::manageEvents()
   {
 	if (poll(this->_fds.data(), _fds.size(), -1) < 0)
 	{
-		std::cerr << "poll: " << strerror(errno) << std::endl;
+		std::cerr << "poll: couldn't initialize poll" << std::endl;
 		return (false);
 	}
 	for (size_t i = 0; i < _fds.size(); i++)
@@ -243,13 +243,13 @@ bool Server::acceptClients()
 	int clientSocket = accept(this->_serverSocket, (struct sockaddr*)&_cliAddress, &clientLength);
 
 	if (clientSocket < 0) {
-		std::cerr << RED << "accept: " << strerror(errno) << COL_END <<std::endl;
+		std::cerr << RED << "accept: couldn't accept client" << COL_END <<std::endl;
 		delete newClient;
 		return false;
 	}
 	if (fcntl(clientSocket, F_SETFL, O_NONBLOCK) == -1) 
 	{
-		std::cerr << "fcntl: " << strerror(errno) << std::endl;
+		std::cerr << "fcntl: couldn't accept client" << std::endl;
 		close(clientSocket);
 		delete newClient;
 		return false;
@@ -289,8 +289,6 @@ bool Server::receiveData(int fd)
 		this->delClientWithFd(fd);
 		return (false);
 	}
-	else if (errno == EAGAIN || errno == EWOULDBLOCK)
-		return (true);
 	else if (bytesRead > 0)
 	{
 		buffer[bytesRead] = '\0';
@@ -316,7 +314,7 @@ bool Server::receiveData(int fd)
 	}
 	else
 	{
-		std::cerr << RED << "recv: " << strerror(errno) << COL_END << std::endl;
+		std::cerr << RED << "recv: couldn't receive data" << COL_END << std::endl;
 		return false;
 	}
 }

@@ -5,7 +5,6 @@
 #include <sys/socket.h> //socket functions 
 #include <netinet/in.h> //data type sockaddr
 #include <iostream>
-#include <errno.h>
 #include <cstring>
 #include <cstdlib>
 #include <string>
