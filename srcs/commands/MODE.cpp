@@ -125,11 +125,27 @@ void MODE::execCommand(Server &serv, Client &client, const com &cmd)
 							} else if (sign == '-') {
 								if (channel->getOperatorsFd().size() > 1)
 								{
-									channel->delOperatores(modeOperator->getClientSocket());
-									channel->errMode('o');
-									sendModeParamMsg(client, *channel, mode, param, serv);
-								} else {
+									if (channel->checkClientIsOperator(modeOperator->getClientSocket()))
+									{
+										channel->delOperatores(modeOperator->getClientSocket());
+										channel->errMode('o');
+										sendModeParamMsg(client, *channel, mode, param, serv);
+									}
+									else
+									{
+										msg = "They are not an operator";
+										numeric = ERR_USERNOTINCHANNEL;
+										OutDataNumericParam3(client, numeric, client.getNickname(), modeOperator->getNickname(), channel_name, msg + ENDLINE_MSG);
+									}
+
+								} else if (channel->checkClientIsOperator(modeOperator->getClientSocket())) {
 									msg = "Cannot have no operator";
+									numeric = ERR_USERNOTINCHANNEL;
+									OutDataNumericParam3(client, numeric, client.getNickname(), modeOperator->getNickname(), channel_name, msg + ENDLINE_MSG);
+								}
+								else
+								{
+									msg = "They are not an operator";
 									numeric = ERR_USERNOTINCHANNEL;
 									OutDataNumericParam3(client, numeric, client.getNickname(), modeOperator->getNickname(), channel_name, msg + ENDLINE_MSG);
 								}
