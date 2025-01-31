@@ -5,14 +5,6 @@ TOPIC::~TOPIC() {};
 
 void TOPIC::execCommand(Server &serv, Client &client, const com &cmd)
 {
-
-// TOPIC #test :New topic  ; Setting the topic on "#test" to "New topic".
-// TOPIC #test :           ; Clearing the topic on "#test"
-// TOPIC #test             ; Checking the topic for "#test"
-// channel exist ? => NOSUCHCHANNEL
-// user appartient au channel => NOTONCHANNEL
-// si private, user n'a pas les permissions => CHANOPRIVSNEEDED
-// 
 	std::string msg;
 	std::string cmdmsg;
 	int numeric;

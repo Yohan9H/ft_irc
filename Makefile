@@ -31,7 +31,7 @@ SRCS = $(SRC_DIR)/main.cpp \
 
 OBJS = $(addprefix $(OBJ_DIR)/, $(notdir $(SRCS:.cpp=.o)))
 
-CXX = g++ -g
+CXX = g++
 CXXFLAGS = -std=c++98 -I$(INCLUDE)
 
 $(NAME): $(OBJS)
