@@ -29,7 +29,8 @@ void QUIT::execCommand(Server &serv, Client &client, const com &cmd)
 	// 	}
 	// }
 	
-	close(client.getClientSocket());
-	serv.delClientWithFd(client.getClientSocket());
-	serv.delClientInFds(client.getClientSocket());
+	int	fd_tmp = client.getClientSocket();
+	close(fd_tmp);
+	serv.delClientWithFd(fd_tmp);
+	serv.delClientInFds(fd_tmp);
 }
